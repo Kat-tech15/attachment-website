@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <style>
+    table{
+        width: 100;
+        border-collapse: collapse;
+    }
+    th, td{
+        padding: 8px;
+        border: 1px solid #ccc;
+    }
+    th{
+        background-color: #e3e3e3;
+    }
+  </style>
+  <div class="application_container">
+    <h2>Attachment Applications</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Phone_No</th>
+                <th>Institution</th>
+                <th>Gender</th>
+                <th>Course</th>
+                <th>Placed_Attached</th>
+                <th>Rent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in appplications %}
+            <tr>
+                <tr>{{ app.full_name }}</tr>
+                <td>{{ app.phone_no }}</td>
+                <td>{{ app.institution }}</td>
+                <td>{{ app.gender }}</td>
+                <td>{{ app.course }}</td>
+                <td>{{ app.place_attached }}</td>
+                <td>{{app.rent }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No applications found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extendes 'base.html'%}
+<h2>Apply for Attachment </h2>
+<form method="PoST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}
