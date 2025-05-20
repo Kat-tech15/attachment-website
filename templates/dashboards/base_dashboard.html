@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <header>
+        <h1>{% block header %}Welcome to Dashboard{% endblock %}</h1>
+        <nav>
+            <ul>
+                {% block menu %}{% endblock %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Specific content for each user role -->
+        {% endblock %}
+    </main>
+</body>
+</html>

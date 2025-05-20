@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import AttacheeInfo
 from .forms import AttachmentApplicationForm
 # Create your views here.
@@ -52,3 +53,45 @@ def apply_attachment(request):
         form = AttachmentApplicationForm()
     return render(request, 'apply_attachment.html', {'form': form})
         
+
+def post_attachments(request):
+    return render(request, 'post_attachments.html')
+
+def house(request):
+    return render(request, 'rentals.html')
+
+def book_house(request):
+    return render(request, 'book_house.html')
+
+def view_attachments(request):
+    return render(request, 'view_attachments.html')
+
+@ login_required
+def attachee_dashboard(request):
+    return render(request, 'dashboards/attachee_dashboard.html')
+
+@ login_required
+def admin_dashboard(request):
+    return render(request, 'dashboards/admin_dashboard.html')
+
+@ login_required
+def company_dashboard(request):
+    return render(request, 'dashboards/company_dashboard.html')
+
+
+@ login_required
+def tenant_dashboard(request):
+    return render(request, 'dashboards/tenants_dashboard.html')
+
+
+def redirect_dashboard(request):
+    if request.user is superuser:
+        return redirect('admin_dashboard')
+    elif hasattr(request.user, 'attacheeprofile'):
+        return redirect('attachee_dashboard')
+    elif hasattr(request.user, 'companyfrofile'):
+        return redirect('company_dashboard')
+    elif hasattr(request.user, 'tenantprofile'):
+        return redirect('tenant_dashboard')
+    else:
+        return redirect('login')

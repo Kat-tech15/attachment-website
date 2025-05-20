@@ -1,0 +1,16 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block header %}Admin Panel{% endblock %}
+
+{% block menu %}
+    <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
+    <li><a href="{% url 'manage_posts' %}">Manage Posts</a></li>
+    <li><a href="{% url 'analytics' %}">Site Analytics</a></li>
+{% endblock %}
+
+{% block content %}
+    <h2>System Overview</h2>
+    <!-- Admin overview here -->
+{% endblock %}

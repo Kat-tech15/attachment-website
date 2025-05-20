@@ -1,0 +1,16 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% block title %}Attachee Dashboard{% endblock %}
+
+{% block header %}Hello, {{ user.username }} (Attachee){% endblock %}
+
+{% block menu %}
+    <li><a href="{% url 'view_attachments' %}">Available Attachments</a></li>
+    <li><a href="{% url 'my_applications' %}">My Applications</a></li>
+    <li><a href="{% url 'rental_houses' %}">View Rental Houses</a></li>
+{% endblock %}
+
+{% block content %}
+    <h2>Your Applications</h2>
+    <!-- Loop through user's applications -->
+{% endblock %}

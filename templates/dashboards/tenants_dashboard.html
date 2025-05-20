@@ -1,0 +1,16 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% block title %}Tenant Dashboard{% endblock %}
+
+{% block header %}Welcome, {{ user.username }} (Tenant){% endblock %}
+
+{% block menu %}
+    <li><a href="{% url 'post_house' %}">Post New House</a></li>
+    <li><a href="{% url 'my_houses' %}">My Houses</a></li>
+    <li><a href="{% url 'house_inquiries' %}">Inquiries</a></li>
+{% endblock %}
+
+{% block content %}
+    <h2>My Posted Houses</h2>
+    <!-- Loop through tenant's posted houses -->
+{% endblock %}
