@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bookHouseform">
+    <h3>Book Renta House</h3>
+    <form action="">
+        <label for="house id/name">House ID/Name :</label>
+        <input type="text" readonly value="To be integrated" placeholder="Enter house Id/name" required><br>
+
+        <label for="check-in-date">Check-in Date :</label>
+        <input type="date" placeholder="Enter check-in-date" required><br>
+
+        <label for="duration">Duration (months) :</label>
+        <input type="number" placeholder="Enter the no of months to rent"><br>
+
+        <label for="name">Your Name :</label>
+        <input type="text" placeholder="Enter your name" required> <br>
+
+        <label for="contact">Contact :</label>
+        <input type="number" placeholder="Enter your contact"> <br>
+
+        <button class="submit">Book</button>
+    </form>
+</div>
+{% endblock %}
