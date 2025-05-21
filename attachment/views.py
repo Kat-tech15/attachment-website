@@ -57,7 +57,7 @@ def apply_attachment(request):
 def post_attachments(request):
     return render(request, 'post_attachments.html')
 
-def house(request):
+def rentals(request):
     return render(request, 'rentals.html')
 
 def book_house(request):

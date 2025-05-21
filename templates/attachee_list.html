@@ -2,16 +2,38 @@
 {% block content %}
 
   <style>
+    .application-container{
+        display: flex; 
+        justify-content: center;
+        margin-top: 20px;
+     }
+     thead{  
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        color: blue;
+     }
     table{
-        width: 100;
+        text-align: center;
+        background-color: aqua;
+        border-radius: 3px;
+        width: 60%;
+    }
+    th {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: medium;
+        color: white;
+        background-color: green;
         border-collapse: collapse;
+        justify-content: center;
+        border-radius: 3px;
     }
-    th, td{
-        padding: 8px;
-        border: 1px solid #ccc;
-    }
-    th{
-        background-color: #e3e3e3;
+    
+    td {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: large;
+        color: white;
+        background-color: rgb(250, 65, 250);
+        border-collapse: collapse;
     }
   </style>
   <div class="application_container">
@@ -37,7 +59,7 @@
                 <td>{{ app.gender }}</td>
                 <td>{{ app.course }}</td>
                 <td>{{ app.place_attached }}</td>
-                <td>{{app.rent }}</td>
+                <td>{{ app.rent }}</td>
             </tr>
             {% empty %}
             <tr>
