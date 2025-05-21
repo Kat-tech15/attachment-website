@@ -16,10 +16,14 @@ class AttacheeInfo(models.Model):
 class AttacheeFirmInfo(models.Model):
     name = models.CharField(max_length= 255)
     email  = models.EmailField(max_length= 55)
-    phone_number = models.CharField(max_length= 10)
     location = models.CharField(max_length= 255)
-    specialization  = models.CharField(max_length =255)
+    department = models.CharField(max_length=255)
     slots = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+    
 
 class ContactInfo(models.Model):
     full_name = models.CharField(max_length= 255)

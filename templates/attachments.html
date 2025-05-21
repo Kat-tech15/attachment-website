@@ -70,16 +70,16 @@
                 <td>Action</td>
             </th>
             <tbody>
-                {% for message in messages %}
+                {% for firm in firms %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ message.name }}</td>
-                    <td>{{ message.email }}</td>
-                    <td>{{ message.locstion }}</td>
-                    <td>{{ message.deprtment }}</td>
-                    <td>{{ message.slots }}</td>
-                    <td>{{ message.action}}</td>
-                   
+                    <td>{{ firm.id }}</td>
+                    <td>{{ firm.name }}</td>
+                    <td>{{ firm.email }}</td>
+                    <td>{{ firm.location }}</td>
+                    <td>{{ firm.department }}</td>
+                    <td>{{ firm.slots }}</td>
+                    <td><a href="{% url 'apply_attachment' firm.id %}">Apply</a></td>
+
                 </tr>
                 {% endfor %}
             </tbody>
