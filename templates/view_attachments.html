@@ -48,7 +48,20 @@
         border-collapse: collapse;
     }
         </style>
-        <tbody></tbody>
+        <tbody>
+            {% for firm in firms %}
+                <tr>
+                    <td>{{ firm.id }}</td>
+                    <td>{{ firm.name }}</td>
+                    <td>{{ firm.email }}</td>
+                    <td>{{ firm.location }}</td>
+                    <td>{{ firm.department }}</td>
+                    <td>{{ firm.slots }}</td>
+                    <td><a href="{% url 'apply_attachment' firm.id %}">Apply</a></td>
+
+                </tr>
+                {% endfor %}
+        </tbody>
     </table>
 </div>
 {% endblock %}
