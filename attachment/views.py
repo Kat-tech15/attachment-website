@@ -1,16 +1,16 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import AttacheeInfo
+from .models import Attachee
 from .forms import AttachmentApplicationForm
 # Create your views here.
 def home(request):
     query = request.GET.get('q')
     if query:
-        applications = AttacheeInfo.objects.filter(full_name__icontains=query)
+        applications = Attachee.objects.filter(name__icontains=query)
     else:
-        applications = AttacheeInfo.objects.all()
+        applications = Attachee.objects.all()
 
-    return render(request, 'home.html',{'appplications': applications})
+    return render(request, 'home.html',{'applications': applications})
 
 def about(request):
     return render(request, 'about.html')
@@ -40,7 +40,7 @@ def accomodation(request):
     return render(request, 'accomodation.html')
 
 def attachee_list(request):
-    applications = AttacheeInfo.objects.all()
+    applications = Attachee.objects.all()
     return render(request, 'attachee_list.html',{'applications': applications})
 
 def apply_attachment(request):

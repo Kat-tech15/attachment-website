@@ -1,51 +1,68 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-class AttacheeInfo(models.Model):
+
+class CustomUser(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ('student', 'Student'),
+        ('company', 'Company'),
+        ('tenant', 'Tenant'),
+    )
+    user_type = models.CharField(max_length = 10, choices=USER_TYPE_CHOICES)
+
+
+class Attachee(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length= 255)
-    phone_number = models.IntegerField()
-    gender = models.CharField(max_length=10)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=10)
     institution = models.CharField(max_length= 255)
     course = models.CharField(max_length=255)
-    place_attached = models.CharField(max_length=255)
-    rent = models.DecimalField(max_digits= 10, decimal_places= 2)
-
-    def __str__(self):
-        return self.full_name
-
-class AttacheeFirmInfo(models.Model):
-    name = models.CharField(max_length= 255)
-    email  = models.EmailField(max_length= 55)
-    location = models.CharField(max_length= 255)
-    department = models.CharField(max_length=255)
-    slots = models.IntegerField()
-
-    def __str__(self):
-        return self.name
+    preferred_start = models.DateField()
 
     
 
-class ContactInfo(models.Model):
-    full_name = models.CharField(max_length= 255)
-    email = models.EmailField(max_length=255)
-    message = models.TextField()
+class Company(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length= 255)
+    email  = models.EmailField()
+    phone_number = models.CharField(max_length=10)
+    location = models.CharField(max_length= 255)
 
-class TenantsInfo(models.Model):
-    full_name = models.CharField(max_length=255)
+class AttachmentPost(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    title = models.CharField(max_length=25)
+    descrition = models.TextField()
+    slots = models.IntegerField()
+    start_date = models.DateField()
+    post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Application(models.Model):
+    attachee = models.ForeignKey(Attachee,on_delete=models.CASCADE)
+    post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE)
+    date_applied = models.DateTimeField(auto_now_add=True)
+
+
+
+class Tenant(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
     location = models.CharField(max_length=255)
-    rent_cost = models.DecimalField(max_digits= 10, decimal_places= 2)
-    house_description = models.CharField(max_length=255)
+    
 
-class AttachmentApplication(models.Model):
-    full_name = models.CharField(max_length=255)
+class RentalListing(models.Model):
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+    description = models.TextField()
+    rent = models.DecimalField(max_digits=10, decimal_places=2)
+    location = models.CharField(max_length=255)
+    photo =models.ImageField(upload_to='rentals/')
+    posted_at = models.DateTimeField(auto_now_add=True)
+
+
+class Contact(models.Model):
+    name = models.CharField(max_length=30)
     email = models.EmailField()
-    phone = models.CharField(max_length=10)
-    institution = models.CharField(max_length=255)
-    course = models.CharField(max_length=255)
-    cover_letter =models.FileField(upload_to='cover_letters/')
-    cv = models.FileField(upload_to='cvs/')
-    recommedation_letter = models.FileField(upload_to='recommedations/')
-
-    def __str__(self):
-        return self.full_name
+    message = models.TextField()

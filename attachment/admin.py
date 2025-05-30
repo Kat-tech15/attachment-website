@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import AttacheeInfo, AttacheeFirmInfo, ContactInfo, TenantsInfo
+from .models import Attachee, Company, Contact, Tenant
 # Register your models here.
 
-admin.site.register( AttacheeFirmInfo)
-admin.site.register( TenantsInfo)
-admin.site.register( ContactInfo )
-admin.site.register(AttacheeInfo )
+admin.site.register(Company)
+admin.site.register(Tenant)
+admin.site.register(Contact)
+admin.site.register(Attachee)
