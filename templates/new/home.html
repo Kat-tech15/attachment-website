@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<main>
+    <p class="paragraph">We are a link between attachees Attachment firms and Tenants.
+         We aim at making it simple and easy for attachees to get attachment  and accomodations
+         as well as enabling the attachment firms get attachees who suit their specifications.</p>
+        <li class="short-cut">
+            <a href="{% url 'about' %}">Learn more</a>
+            <a href="{% url 'contact' %}">Contac US</a>
+            <a href="{% url 'login' %}">Login</a>
+        </li>
+</main>
+<div class="footer-container">
+    <div class="footer-icons">
+        <a href="https://github.com/Kat-tech15" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/kelvin-katwai-b7557824a" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://www.facebook.com/kelvin.katwai.5" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i></a>
+        <a href="https://x.com/KKatwai" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-twitter"></i></a>
+        <a href="https://www.instagram.com/katwaikelvin" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+    <footer>
+        <p class="footer">&copy; Attachment seek Website 2025 . All Rights Reserved.</p>
+    </footer>
+</div>
+<style>
+        .paragraph{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 50px;
+            text-align: center;
+            color: deeppink;
+        }
+        .short-cut{
+            text-align: center;
+            text-decoration: overline;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            list-style: none;
+            gap: 20px;
+        }
+        .footer {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            text-align: center;
+            color: rgb(96, 41, 184);
+        }
+        .footer-icons{
+            background-color: blue;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+    
+{% endblock %}

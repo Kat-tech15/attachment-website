@@ -3,17 +3,11 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class CustomUser(AbstractUser):
-    USER_TYPE_CHOICES = (
-        ('student', 'Student'),
-        ('company', 'Company'),
-        ('tenant', 'Tenant'),
-    )
-    user_type = models.CharField(max_length = 10, choices=USER_TYPE_CHOICES)
+#
 
 
 class Attachee(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    #user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length= 255)
     email = models.EmailField()
     phone_number = models.CharField(max_length=10)
@@ -24,7 +18,7 @@ class Attachee(models.Model):
     
 
 class Company(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    #user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length= 255)
     email  = models.EmailField()
     phone_number = models.CharField(max_length=10)
@@ -47,7 +41,7 @@ class Application(models.Model):
 
 
 class Tenant(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    #user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
     location = models.CharField(max_length=255)

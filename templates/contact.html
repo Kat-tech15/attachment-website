@@ -1,72 +1,41 @@
+<!-- templates/contact.html -->
 {% extends "base.html" %}
+{% block title %}Contact Us{% endblock %}
+
 {% block content %}
-
 <style>
-    h2{
-        color: blue;
+    .contact {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
     }
-    .contact{
-        text-align: center;
-        justify-content: center;
-    }
-    .contact-container{
-        background-color: whitesmoke;
-        border: none;
-        border-radius: 10px;
-        justify-content: center;
-        width: 600px;
-        height: 300px;
-        margin: 80px;
-        
-        
-    }
-    .contact-form{
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-     }
-    input{
-        color: white;
-        border: none;
-        margin: 10px;
-        border-radius: 5px;
 
-    }
-    label{
-        color: black;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: bold;
-        color: green;
-    }
-    textarea{
-        border-radius: 5px;
-        border: none;
-    }
-    button{
-        background-color: rgb(42, 173, 59);
-        border: none;
-        border-radius: 5px;
+    .contact h2 {
         text-align: center;
+        margin-bottom: 20px;
     }
-    button:hover{
-        background-color: fuchsia;
+
+    .contact p {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .contact .info {
+        margin-top: 20px;
     }
 </style>
-   {% csrf_token %}
-   <section class="contact" method="POST">
+
+<div class="contact">
     <h2>Contact Us</h2>
-    <div class="contact-container">
-        <label for="name">Name :</label>
-        <input type="text" name="name" placeholder="Enter your name"><br><br>
-    
-        <label for="email"> Email :</label>
-        <input type="text" name="email" placeholder="Enter your email"><br><br>
-    
-        <label for="message">Message :</label>
-        <textarea name="Message" placeholder="Enter your message" rows="5"></textarea><br>
-    
-        <button type="submit">Send</button>
-       </div>
-   </section>
-    
+    <p>
+        For any inquiries, support or feedback, please reach out to us:
+    </p>
+    <div class="info">
+        <p><strong>Email:</strong> support@attachmentportal.com</p>
+        <p><strong>Phone:</strong> +254 712 345 678</p>
+        <p><strong>Location:</strong> Nairobi, Kenya</p>
+    </div>
+</div>
 {% endblock %}

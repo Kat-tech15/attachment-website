@@ -54,7 +54,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'attachment_website.urls'
 
-AUTH_USER_MODEL = 'attachment.CustomUser'
+#AUTH_USER_MODEL = 'attachment.CustomUser'
 
 TEMPLATES = [
     {
