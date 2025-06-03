@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'attachment',
+
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'attachment_website.urls'
+
+AUTH_USER_MODEL = 'attachment.CustomUser'
 
 TEMPLATES = [
     {

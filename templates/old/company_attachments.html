@@ -1,0 +1,54 @@
+<!-- templates/company/company_attachments.html -->
+{% extends "base.html" %}
+{% block title %}Your Attachments{% endblock %}
+
+{% block content %}
+<style>
+    .attachment-list {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .attachment-list h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .attachment-item {
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .attachment-item:last-child {
+        border-bottom: none;
+    }
+
+    .attachment-item h3 {
+        margin: 0;
+        font-size: 20px;
+        color: #333;
+    }
+
+    .attachment-item p {
+        margin: 5px 0;
+    }
+</style>
+
+<div class="attachment-list">
+    <h2>Your Posted Attachments</h2>
+    {% for attachment in attachments %}
+        <div class="attachment-item">
+            <h3>{{ attachment.title }}</h3>
+            <p><strong>Location:</strong> {{ attachment.location }}</p>
+            <p><strong>Posted On:</strong> {{ attachment.created_at|date:"M d, Y" }}</p>
+            <p>{{ attachment.description|truncatewords:20 }}</p>
+        </div>
+    {% empty %}
+        <p>No attachments posted yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

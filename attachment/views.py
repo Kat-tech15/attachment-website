@@ -15,6 +15,9 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
+def login(request):
+    return render(request, 'login.html')
+
 def contact(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name')

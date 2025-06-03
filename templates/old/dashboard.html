@@ -1,0 +1,49 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .dashboard a {
+        display: block;
+        margin: 15px 0;
+        padding: 12px;
+        background-color: #28a745;
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .dashboard a:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="dashboard">
+    <h2>Dashboard</h2>
+    {% if user.is_authenticated %}
+        {% if user.is_company %}
+            <a href="{% url 'post_attachment' %}">Post New Attachment</a>
+            <a href="{% url 'company_attachments' %}">View Your Attachments</a>
+        {% else %}
+            <a href="{% url 'view_attachments' %}">Browse Available Attachments</a>
+            <a href="{% url 'my_applications' %}">My Applications</a>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

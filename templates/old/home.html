@@ -1,0 +1,46 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<style>
+    .home-container {
+        text-align: center;
+        padding: 50px 20px;
+    }
+
+    .home-container h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+
+    .home-container p {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    .home-container a {
+        display: inline-block;
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: bold;
+    }
+
+    .home-container a:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="home-container">
+    <h1>Welcome to the Attachment Portal</h1>
+    <p>Your gateway to attachment opportunities and talent connections.</p>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}">Get Started</a>
+    {% else %}
+        <a href="{% url 'dashboard' %}">Go to Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}

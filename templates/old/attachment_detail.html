@@ -1,0 +1,52 @@
+<!-- templates/attachee/attachment_detail.html -->
+{% extends "base.html" %}
+{% block title %}Attachment Detail{% endblock %}
+
+{% block content %}
+<style>
+    .detail-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 25px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-container h2 {
+        margin-bottom: 15px;
+    }
+
+    .detail-container p {
+        margin: 10px 0;
+    }
+
+    .detail-container form button {
+        padding: 10px 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+    }
+
+    .detail-container form button:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="detail-container">
+    <h2>{{ attachment.title }}</h2>
+    <p><strong>Company:</strong> {{ attachment.company.name }}</p>
+    <p><strong>Location:</strong> {{ attachment.location }}</p>
+    <p><strong>Description:</strong></p>
+    <p>{{ attachment.description }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Apply for Attachment</button>
+    </form>
+</div>
+{% endblock %}

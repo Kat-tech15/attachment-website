@@ -1,7 +1,7 @@
 from django import forms
-from .models import AttachmentApplication
+from .models import Application
 
 class AttachmentApplicationForm(forms.ModelForm):
     class Meta:
-        model = AttachmentApplication
+        model = Application
         fields = '__all__'
