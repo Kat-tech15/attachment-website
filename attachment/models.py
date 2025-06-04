@@ -3,11 +3,20 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-#
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = (
+        ('attachee', 'Attachee'),
+        ('company', 'Company'),
+        ('tenant', 'Tenant'),
+        ('admin', 'Admin'),
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='attachee')
 
+    def __str__(self):
+        return f"{self.username}({self.role})"
 
 class Attachee(models.Model):
-    #user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length= 255)
     email = models.EmailField()
     phone_number = models.CharField(max_length=10)
@@ -18,7 +27,7 @@ class Attachee(models.Model):
     
 
 class Company(models.Model):
-    #user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length= 255)
     email  = models.EmailField()
     phone_number = models.CharField(max_length=10)
@@ -27,7 +36,7 @@ class Company(models.Model):
 class AttachmentPost(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     title = models.CharField(max_length=25)
-    descrition = models.TextField()
+    description = models.TextField()
     slots = models.IntegerField()
     start_date = models.DateField()
     post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
@@ -41,7 +50,7 @@ class Application(models.Model):
 
 
 class Tenant(models.Model):
-    #user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
     location = models.CharField(max_length=255)

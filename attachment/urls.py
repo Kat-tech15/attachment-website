@@ -17,10 +17,10 @@ urlpatterns = [
     path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
     path('dashboard/attachee/', views.attachee_dashboard, name='attachee_dashboard'),
     path('dashboard/company/', views.company_dashboard, name='company_dashboard'),
-    path('dashboard/tenants/', views.tenant_dashboard, name='tenants_dashboard'),
+    path('dashboard/tenants/', views.tenants_dashboard, name='tenants_dashboard'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
-    path('dashboard/', views.dashboard_index, name='dashboard'),
+    path('dashboard/', views.dashboard_router, name='dashboard'),
 
 ]

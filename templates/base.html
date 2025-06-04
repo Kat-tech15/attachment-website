@@ -27,62 +27,46 @@
     display: flex;
 }
 
-/* Nav items */
 .nav-list > li {
+    position: relative;
     margin-left: 20px;
-    position: relative; /* Needed for dropdown positioning */
 }
 
-/* Nav links */
 .nav-list a {
     color: white;
     text-decoration: none;
-    font-weight: 500;
-    padding: 8px 12px;
+    padding: 10px 15px;
     display: inline-block;
 }
 
-/* Hover effect for nav links */
-.nav-list a:hover {
-    text-decoration: underline;
-}
-
-/* Dropdown button styling */
-.dropbtn {
-    cursor: pointer;
-}
-
-/* Dropdown content container */
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #444;
-    min-width: 160px;
+    min-width: 180px;
     border-radius: 5px;
-    padding: 0;
-    margin: 0;
-    top: 100%;  /* Position below the dropdown button */
+    top: 100%;
     left: 0;
     z-index: 1000;
     list-style: none;
 }
 
-/* Dropdown links */
 .dropdown-content li a {
-    padding: 10px 15px;
     display: block;
+    padding: 10px 15px;
     color: white;
+    text-align: left;
 }
 
-/* Hover effect for dropdown links */
 .dropdown-content li a:hover {
     background-color: #666;
 }
 
-/* Show dropdown on hover */
+/* Show the dropdown when hovering */
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
         
 
         header h1 {
@@ -125,16 +109,9 @@
         <li class="dropdown">
             <a href="#" class="dropbtn">Dashboard ▾</a>
             <ul class="dropdown-content">
-                {% if user.user_type == 'student' %}
-                    <li><a href="{% url 'attachee_dashboard' %}">Attachee Dashboard</a></li>
-                {% elif user.user_type == 'company' %}
-                    <li><a href="{% url 'company_dashboard' %}">Company Dashboard</a></li>
-                {% elif user.user_type == 'tenant' %}
-                    <li><a href="{% url 'tenant_dashboard' %}">Tenant Dashboard</a></li>
-                {% endif %}
-                {% if user.is_superuser %}
-                    <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
-                {% endif %}
+              <li><a href="{% url 'attachee_dashboard' %}">Attachee Dashboard</a></li>
+              <li><a href="{% url 'company_dashboard' %}">Company Dashboard</a></li>
+              <li><a href="{% url 'tenants_dashboard' %}">Tenants Dashboard</a></li>
             </ul>
         </li>
 

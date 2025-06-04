@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p>Welcome, {{ user.username }}!</p>
+
+{% if admin_role == 'superadmin' %}
+    <h3>Super Admin Controls</h3>
+    <ul>
+        <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
+        <li><a href="{% url 'site_settings' %}">Site Settings</a></li>
+        <li><a href="{% url 'view_reports' %}">View Reports</a></li>
+    </ul>
+
+{% elif admin_role == 'content_manager' %}
+    <h3>Content Management</h3>
+    <ul>
+        <li><a href="{% url 'manage_content' %}">Manage Content</a></li>
+        <li><a href="{% url 'approve_submissions' %}">Approve Submissions</a></li>
+    </ul>
+
+{% elif admin_role == 'user_support' %}
+    <h3>User Support</h3>
+    <ul>
+        <li><a href="{% url 'support_tickets' %}">Support Tickets</a></li>
+        <li><a href="{% url 'user_feedback' %}">User Feedback</a></li>
+    </ul>
+
+{% elif admin_role == 'finance_admin' %}
+    <h3>Finance Administration</h3>
+    <ul>
+        <li><a href="{% url 'billing' %}">Billing</a></li>
+        <li><a href="{% url 'transactions' %}">Transactions</a></li>
+    </ul>
+
+{% else %}
+    <p>You do not have a specific admin role assigned.</p>
+{% endif %}
+
+{% endblock %}
