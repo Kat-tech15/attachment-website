@@ -1,0 +1,19 @@
+<!-- templates/dashboards/dashboard.html -->
+{% extends 'base.html' %}
+{% block title %}All Dashboards{% endblock %}
+
+{% block content %}
+<h2>Select a Dashboard</h2>
+<ul>
+    {% if user.user_type == 'student' %}
+        <li><a href="{% url 'attachee_dashboard' %}">Attachee Dashboard</a></li>
+    {% elif user.user_type == 'company' %}
+        <li><a href="{% url 'company_dashboard' %}">Company Dashboard</a></li>
+    {% elif user.user_type == 'tenant' %}
+        <li><a href="{% url 'tenant_dashboard' %}">Tenant Dashboard</a></li>
+    {% endif %}
+    {% if user.is_superuser %}
+        <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
+    {% endif %}
+</ul>
+{% endblock %}

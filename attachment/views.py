@@ -104,7 +104,9 @@ def book_house(request):
 def view_attachments(request):
     return render(request, 'view_attachments.html')
 
-def dashboard(request):
+
+@login_required
+def dashboard_index(request):
     return render(request, 'dashboards/dashboard.html')
 
 #@ login_required
