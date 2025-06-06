@@ -121,6 +121,17 @@ def rentals(request):
 
 def book_house(request):
     return render(request, 'book_house.html')
+ 
+def post_house(request):
+    return render(request, 'post_house.html')
+
+def make_inquiry(request):
+    return render(request, 'make_inquiry.html')
+
+
+def view_rentals(request):
+    return render(request, 'view_rentals.html')
+
 
 def view_attachments(request):
     return render(request, 'view_attachments.html')

@@ -2,15 +2,44 @@
 
 {% block title %}Tenant Dashboard{% endblock %}
 
-{% block header %}Welcome, {{ user.username }} (Tenant){% endblock %}
 
-{% block menu %}
-    <li><a href="{% url 'post_house' %}">Post New House</a></li>
-    <li><a href="{% url 'my_houses' %}">My Houses</a></li>
-    <li><a href="{% url 'house_inquiries' %}">Inquiries</a></li>
-{% endblock %}
+
 
 {% block content %}
-    <h2>My Posted Houses</h2>
+<div class="dashboard-container">
+<h2>Welcome to Tenenant Dashboard , {{ user.username }} </h2>
     <!-- Loop through tenant's posted houses -->
+     <div class="dashboard-actions">
+       <li> <a href="{% url 'post_house'%}" class="btn">Post a House</a></li>
+       <li><a href="{% url 'make_inquiry'%}" class="btn">Make an Inquiry</a></li> 
+        <li><a href="{% url 'book_house'%}" class="btn">Book a House</a></li>
+        <li><a href="{% url 'view_rentals'%}" class="btn">View All Rentals</a></li>
+     </div>
+</div>
+
+<style>
+    .dashboard-container {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .dashboard-actions {
+        margin-top: 30px;
+    }
+
+    .btn {
+        display: inline-block;
+        margin: 10px;
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+    
 {% endblock %}

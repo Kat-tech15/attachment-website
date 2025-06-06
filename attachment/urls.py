@@ -10,7 +10,7 @@ urlpatterns = [
     path('attachee/', views.attachee_list, name='attachee_list'),
     path('apply/', views.apply_attachment, name='apply_attachment.html'),
     path('attachments/', views.attachments, name='attachments.html'),
-    path('book_house/', views.book_house, name='book_house.html'),
+    path('book_house/', views.book_house, name='book_house'),
     path('rentals/', views.rentals, name='rentals.html'),
     path('post-attachments/', views.post_attachments, name='post_attachments.html'),
     path('view_attachments/', views.view_attachments, name='view_attachments.html'),
@@ -22,5 +22,8 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('dashboard/', views.dashboard_router, name='dashboard'),
+    path('tenants/post-house/', views.post_house, name='post_house'),
+    path('make_inquiry/', views.make_inquiry, name='make_inquiry'),
+    path('view_rentals/', views.view_rentals, name='view_rentals'),
 
 ]
