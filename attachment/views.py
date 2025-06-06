@@ -92,11 +92,16 @@ def contact(request):
 
     return render(request, 'contact.html')
 
-def attachments(request):
-    return render(request, 'attachments.html')
+# Attachee's views
+
+def view_attachments(request):
+    return render(request, 'view_attachments.html')
 
 def accomodation(request):
     return render(request, 'accomodation.html')
+
+def my_applications(request):
+    return render(request, 'my_applications.html')
 
 def attachee_list(request):
     applications = Attachee.objects.all()
@@ -113,8 +118,9 @@ def apply_attachment(request):
     return render(request, 'apply_attachment.html', {'form': form})
         
 
-def post_attachments(request):
-    return render(request, 'post_attachments.html')
+
+# Tenant's Views 
+
 
 def rentals(request):
     return render(request, 'rentals.html')
@@ -136,8 +142,18 @@ def view_rentals(request):
 def view_attachments(request):
     return render(request, 'view_attachments.html')
 
+# companys' Views 
 
+def post_attachments(request):
+    return render(request, 'post_attachments.html')
 
+def opportunities(request):
+    return render(request, 'opportunities.html')
+
+def view_applicants(request):
+    return render(request, 'view_applicants.html')
+
+# Login views
 @login_required
 def dashboard_router(request):
     role = request.user.role

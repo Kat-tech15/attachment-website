@@ -4,13 +4,45 @@
 
 {% block header %}Welcome, {{ user.username }} (Company){% endblock %}
 
-{% block menu %}
-    <li><a href="{% url 'post_attachments' %}">Post Attachment</a></li>
-    <li><a href="{% url 'company_opportunities' %}">My Posted Opportunities</a></li>
-    <li><a href="{% url 'view_applicants' %}">View Applicants</a></li>
-{% endblock %}
+
 
 {% block content %}
+<div class="dashboard-container">
     <h2>Your Opportunities</h2>
-    <!-- Loop through company's posted attachments -->
+    
+     <div class="dashboard-actions">
+            <a href="{% url 'post_attachments' %}" class="btn">Post Attachment</a>
+            <a href="{% url 'opportunities' %}" class="btn">Posted Opportunities</a>
+            <a href="{% url 'view_applicants' %}" class="btn">View Applicants</a>
+      </div>
+</div>
+
+    <style>
+    .dashboard-container {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .dashboard-actions {
+        margin-top: 30px;
+    }
+
+    .btn {
+        display: inline-block;
+        margin: 10px;
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
 {% endblock %}
+    
+
+
+    

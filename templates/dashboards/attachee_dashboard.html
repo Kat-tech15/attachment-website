@@ -4,13 +4,44 @@
 
 {% block header %}Hello, {{ user.username }} (Attachee){% endblock %}
 
-{% block menu %}
-    <li><a href="{% url 'view_attachments' %}">Available Attachments</a></li>
-    <li><a href="{% url 'my_applications' %}">My Applications</a></li>
-    <li><a href="{% url 'rental_houses' %}">View Rental Houses</a></li>
-{% endblock %}
 
 {% block content %}
+<div class="dashboard-container">
     <h2>Your Applications</h2>
-    <!-- Loop through user's applications -->
+
+     <div class="dashboard-actions">
+            <a href="{% url 'view_attachments' %}" class="btn">Available Attachments</a>
+            <a href="{% url 'my_applications' %}" class="btn">My Applications</a>
+            <a href="{% url 'apply_attachment'%}" class="btn">View Attachments</a>
+            <a href="{% url 'view_rentals'%}" class="btn">View All Rentals</a>
+     </div>
+</div>
+      
+     
+     <style>
+    .dashboard-container {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .dashboard-actions {
+        margin-top: 30px;
+    }
+
+    .btn {
+        display: inline-block;
+        margin: 10px;
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+    
 {% endblock %}

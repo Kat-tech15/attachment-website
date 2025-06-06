@@ -1,62 +1,26 @@
-<!-- templates/company/post_attachment.html -->
-{% extends "base.html" %}
-{% block title %}Post Attachment{% endblock %}
-
+{% extends 'base.html'%}
 {% block content %}
-<style>
-    .post-form {
-        background: white;
-        padding: 30px;
-        max-width: 600px;
-        margin: 50px auto;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+<div class="form-section" id="firmform">
+    <h2>Post Attachment Firm</h2>
+    <div id="firmPostFirm">
+        <label for="name">Firm Name :</label>
+        <input type="text" name="name" placeholder="Enter firm's name" required><br>
+        
+        <label for="email">Email :</label>
+        <input type="text" name="email" placeholder="Enter firm's email" required><br>
 
-    .post-form h2 {
-        text-align: center;
-        margin-bottom: 25px;
-    }
+        <label for="location">Location :</label>
+        <input type="text" name="location" placeholder="Enter firm's location" required><br>
 
-    .post-form form {
-        display: flex;
-        flex-direction: column;
-    }
+        <label for="description">Description :</label>
+        <textarea id="firm_description" placeholder="Enter description" required></textarea><br>
 
-    .post-form form p {
-        margin-bottom: 15px;
-    }
+        <label for="slots">Slots :</label>
+        <input type="number" name="slots" placeholder="Enter no of slots" required><br>
 
-    .post-form input,
-    .post-form textarea,
-    .post-form select {
-        width: 100%;
-        padding: 10px;
-        box-sizing: border-box;
-    }
+        <button type="submit">Submit Firm</button>
 
-    .post-form button {
-        margin-top: 15px;
-        padding: 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-    }
 
-    .post-form button:hover {
-        background-color: #0056b3;
-    }
-</style>
-
-<div class="post-form">
-    <h2>Post New Attachment</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Post Attachment</button>
-    </form>
+    </div>
 </div>
 {% endblock %}
