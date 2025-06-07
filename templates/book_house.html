@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="bookHouseform">
+<div class="book-form">
     <h3>Book Rental House</h3>
-    <form action="">
+    <form class="booking">
         <label for="house id/name">House ID/Name :</label>
         <input type="text" readonly value="To be integrated" placeholder="Enter house Id/name" required><br>
 
@@ -20,5 +20,58 @@
 
         <button class="submit">Book</button>
     </form>
+    <style>
+        .book-form{
+            background-color: #48d165;
+            justify-content: center;
+            border-radius: 5px;
+            width: 30%;
+            height: 450px;
+            align-self: center ;
+            margin: auto;
+            padding: 20px 20px;
+        }
+         .book-form h3 {
+            text-align: center;
+        }
+        .booking{
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .booking label{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: medium;
+            font-weight: 400;
+            font-weight: 200;
+            margin-left: 30px;
+
+        }
+        .booking input{
+            border: none;
+            color: #00b7ff;
+            border-radius: 3px;
+            padding: 6px 10px;
+            width: 70%;
+            margin-left: 30px;
+
+
+        }
+        .booking button{
+            background-color: #007bff;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            align-self: center;
+        }
+        .booking button:hover{
+            background-color: #0056b3;
+        }
+    </style>
 </div>
+
 {% endblock %}
