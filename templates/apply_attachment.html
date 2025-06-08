@@ -23,16 +23,17 @@
 
 
         <label for="cv">Resume :</label>
-        <input type="file" name="resume" placeholder="Upload your resume here"><br>
+        <input type="file" name="resume" required><br>
 
+        
+        <label for="cv">Cover Letter :</label>
+        <input type="file" name="cover-letter" required><br>
 
-        <label for="start-date">Start Date :</label>
-        <input type="date" name="date" placeholder="Enter your start-date" required><br>
-
+    
         <button type="submit">Apply</button>
     </form>
 </div>
-<style>
+<style> 
     .attachees-form{
         background-color: #2ece8b;
         height: 730px;
@@ -42,7 +43,7 @@
         margin: auto;
 
     }
-    form{
+    form{ 
         display: flex;
         flex-direction: column;
     }
