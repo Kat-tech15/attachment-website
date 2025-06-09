@@ -39,8 +39,41 @@
     .attachment-item a:hover {
         background: #0056b3;
     }
+    .attachment_table{
+        background-color: #007bff;
+        width: 40%;
+        height: 100px;
+        border-radius: 3px;
+        align-self: center;
+    }h2{
+        text-align: center;
+    }
+    table{
+        border-collapse: collapse;
+        
+    }
+    th{
+        color: white;
+        border-collapse: collapse;
+    }
+    td{
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 400;
+    }
 </style>
-
+<div class="attachment_table">
+    <h2> Available Attachments</h2>
+    <table>
+        <th>
+            <td>Company Name</td>
+            <td>Location</td>
+            <td>Slots</td>
+            <td>Deadline</td>
+            <td>Actions</td>
+        </th>
+    </table>
+</div>
 <div class="attachment-list">
     <h2>Available Attachments</h2>
     {% for attachment in attachments %}
