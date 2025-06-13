@@ -10,7 +10,7 @@ urlpatterns = [
     path('apply/', views.apply_attachment, name='apply_attachment'),
     path('view_attachments/', views.view_attachments, name='view_attachments'),
     path('my_applications/', views.my_applications, name='my_applications'),
-    path('book_house/', views.book_house, name='book_house'),
+    path('book_house/<int:house_id>/', views.book_house, name='book_house'),
     path('rentals/', views.rentals, name='rentals.html'),
     path('view_attachments/', views.view_attachments, name='view_attachments.html'),
     path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
@@ -27,5 +27,5 @@ urlpatterns = [
     path('opportunites/', views.opportunities, name='opportunities'),
     path('view_applicants', views.view_applicants, name='view_applicants'),
     path('post-attachments/', views.post_attachments, name='post_attachments'),
-
+    path('my_bookings/', views.my_bookings, name='my_bookings'),
 ]

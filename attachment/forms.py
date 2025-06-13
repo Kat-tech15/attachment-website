@@ -2,6 +2,7 @@ from django import forms
 from .models import Application
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from .models import House
 
 class AttachmentApplicationForm(forms.ModelForm):
     class Meta:
@@ -23,3 +24,8 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = user
         fields = ['username', 'email', 'role', 'password1', 'password2']
+
+class HouseForm(forms.ModelForm):
+    class Meta:
+        model = House
+        fields = ['title', 'location', 'description', 'rent','photo']

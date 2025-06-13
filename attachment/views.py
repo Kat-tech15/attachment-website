@@ -1,12 +1,13 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
-from django.contrib.auth import login, logout, authenticate , get_user_model  
-from .models import Attachee
+from django.contrib.auth import login, logout, authenticate , get_user_model 
+from django.http import HttpResponseForbidden 
+from .models import Attachee, House
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 
-from .forms import AttachmentApplicationForm
+from .forms import AttachmentApplicationForm, HouseForm
 # Create your views here.
 
 user = get_user_model()
@@ -107,17 +108,36 @@ def attachee_list(request):
     applications = Attachee.objects.all()
     return render(request, 'attachee_list.html',{'applications': applications})
 
-def apply_attachment(request):
-    if request.method == 'POST':
-        form = AttachmentApplicationForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('application_success')
-    else:
-        form = AttachmentApplicationForm()
-    return render(request, 'apply_attachment.html', {'form': form})
-        
+@login_required
+def apply_attachment(request, attachment_id):
+    if request.user.role != 'attachee':
+        return HttpResponseForbidden()
 
+    attachment = get_object_or_404(Attachment, id=attachment_id)
+    Application.objects.created(attachee=request.user, attachment=attachment)
+
+    return render(request, 'apply_attachment.html', {'form': form})
+
+@login_required
+def book_house(request, house_id):
+    if request.user.role != 'attachee':
+        return HttpResponseForbidden("Only Attachees can book houses.")
+
+    house = get_object_or_404(House, id=house_id)
+
+    # Check if already booked
+    already_booked = Booking.objects.filter(house=house, attachee=request.user).exists()
+    if not already_booked:
+        Booking.objects.create(house=house, attachee=request.user)
+ 
+    return redirect('my_bookings')    
+
+def my_bookings(request):
+    if request.user.role in ['attachee', 'tenant']:
+        return HttpResponseForbidden("Only Attachees and Tenants can view bookings.")
+
+    bookings = Booking.objects.filter(attachee=request.user).select_related('house')
+    return render(request, 'my_bookings.html', {'bookings': bookings})
 
 # Tenant's Views 
 
@@ -125,11 +145,25 @@ def apply_attachment(request):
 def rentals(request):
     return render(request, 'rentals.html')
 
-def book_house(request):
-    return render(request, 'book_house.html')
- 
+
+@login_required
 def post_house(request):
-    return render(request, 'post_house.html')
+    if request.user.role != 'tenant':
+        return HttpResponseForbidden()
+
+    if request.method == 'POST':
+        form = HouseForm(request.POST, request.FILES)
+        if form.is_valid():
+            house = form.save(commit=False)
+            house.owner = request.user
+            house.posted_by = request.user
+            house.save()
+            return redirect('rentals')
+    
+    else:
+        form = HouseForm()
+
+    return render(request, 'post_house.html', {'form': form})
 
 def make_inquiry(request):
     return render(request, 'make_inquiry.html')
@@ -143,9 +177,23 @@ def view_attachments(request):
     return render(request, 'view_attachments.html')
 
 # companys' Views 
-
+@login_required
 def post_attachments(request):
-    return render(request, 'post_attachments.html')
+    if request.user.role not in ['admin', 'company']:
+        return HttpResponseForbidden()
+
+    if request.method == 'POST':
+        form = AttachmentForm(request.POST)
+        if form.is_valid():
+            attachment = form.save(commit=False)
+            attachment.posted_by=request.user
+            attachment.save()
+            return redirect('view_attachments')
+        
+        else:
+            form = AttachmentForm()
+
+    return render(request, 'post_attachments.html', {'form': form})
 
 def opportunities(request):
     return render(request, 'opportunities.html')
@@ -175,7 +223,8 @@ def admin_dashboard(request):
 
 @login_required
 def attachee_dashboard(request):
-    return render(request, 'dashboards/attachee_dashboard.html')
+    house = House.objects.all()
+    return render(request, 'dashboards/attachee_dashboard.html', {'house': house})
 
 @login_required
 def company_dashboard(request):
@@ -184,3 +233,4 @@ def company_dashboard(request):
 @login_required
 def tenants_dashboard(request):
     return render(request, 'dashboards/tenants_dashboard.html')
+

@@ -68,4 +68,23 @@ class RentalListing(models.Model):
 class Contact(models.Model):
     name = models.CharField(max_length=30)
     email = models.EmailField()
-    message = models.TextField()
+
+
+class House(models.Model):
+    title = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+    description = models.TextField()
+    rent  = models.DecimalField(max_digits=10, decimal_places=2)
+    photo = models.ImageField(upload_to='house_photos/')
+    posted_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return self.title
+
+class Booking(models.Model):
+    tenant =models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+

@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Attachee, Company, Contact, Tenant, CustomUser
+from .models import  Attachee, Company, Contact, Tenant, CustomUser, Application,AttachmentPost, RentalListing
 # Register your models here.
+
 
 admin.site.register(Company)
 admin.site.register(Tenant)
 admin.site.register(Contact)
 admin.site.register(Attachee)
+admin.site.register(Application)
+admin.site.register(AttachmentPost)
+admin.site.register(RentalListing)
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + ( 
