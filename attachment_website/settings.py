@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'attachment_website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'attachment',
+        'NAME': 'attachment_db',
         'USER': 'root',
         'PASSWORD': '200315',
         'HOST': 'localhost',

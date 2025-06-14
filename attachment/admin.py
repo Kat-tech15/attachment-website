@@ -18,3 +18,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
 admin.site.register(CustomUser, CustomUserAdmin)
+
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone_number', 'location')
+    search_fields = ['user']
