@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
-# Create your models here.
+
+
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
@@ -86,7 +88,7 @@ class House(models.Model):
 
 
     def __str__(self):
-        return self.title
+        return self.name
 
 class Booking(models.Model):
     tenant =models.ForeignKey(CustomUser, on_delete=models.CASCADE)

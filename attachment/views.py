@@ -6,11 +6,13 @@ from django.http import HttpResponseForbidden
 from .models import Attachee, House, AttachmentApplication, Booking
 from .forms import CustomUserCreationForm
 from django.contrib import messages
-
 from .forms import AttachmentPostForm, HouseForm
 # Create your views here.
 
+
+
 user = get_user_model()
+
 
 def home(request):
     query = request.GET.get('q')
