@@ -15,19 +15,6 @@
             <a href="{% url 'view_rentals'%}" class="btn">View All Rentals</a>
            
      </div>
-     <hr>
-     <h3>Available Houses for Booking</h3>
-     {% if houses %}
-            {% for house in houses %}
-            <div class="house-card">
-                    <h4>{{ house.title }}</h4>
-                    <p>{{ house.description }}</p>
-                    <a href="{% url 'book_house' house.id%}" class="btn">Book {{ house.title }}</a>
-            </div>
-            {% endfor %}
-        {% else %}
-            <p>No houses available for booking at the moment.</p>
-        {% endif %}
 </div>
       
      

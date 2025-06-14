@@ -51,23 +51,44 @@
     p {
         text-align: center;
     }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    thead {
+        background-color: #f2f2f2;
+    }
 </style>
- 
 <div class="attachment-list">
     <h2>Available Attachments</h2>
-    {% for attachment in attachments %}
-        <div class="attachment-item">
-            <h3>{{ attachment.title }}</h3>
-            <p><strong>Company:</strong> {{ attachment.company.name }}</p>
-            <p><strong>Location:</strong> {{ attachment.location }}</p>
-            <p><strong>Email:</strong>{{ attachment.enail }}</p>
-            <p><strong>Description</strong>{{ attachment.description|truncatewords:25 }}</p>
-            <p><strong>Slots Available</strong>{{ attachment.slots }}</p>
-            <p><strong>Application Deadline</strong>{{ attachment.application_deadline }}</p>
-            
-        </div>
-    {% empty %}
-        <p>No attachments available at the moment.</p>
-    {% endfor %}
+    <table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Email</th>
+            <th>Description</th>
+            <th>Slots</th>
+            <th>Deadline</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attachment in attachments %}
+        <tr>
+            <td>{{ attachment.company}}</td>
+            <td>{{ attachment.location}}</td>
+            <td>{{ attachment.email}}</td>
+            <td>{{ attachment.description}}</td>
+            <td>{{ attachment.slots}}</td>
+            <td>{{ attachment.application_deadline}}</td>
+        </tr>
+    </tbody>
+        {% endfor %}
+</table>
 </div>
+<hr>
 {% endblock %}

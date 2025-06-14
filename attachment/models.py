@@ -59,7 +59,7 @@ class AttachmentApplication(models.Model):
 class Tenant(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    phone_number = models.IntegerField()
+    phone_number = models.CharField(max_length=10)
     location = models.CharField(max_length=255)
     
 

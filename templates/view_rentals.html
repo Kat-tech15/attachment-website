@@ -2,18 +2,31 @@
 {% block content %}
 <div class="rental-list">
      <h2>Available Rentals</h2>
-    {% for rental in rentals %}
-        <div class="rental-item">
-            <p><strong>Owner_Name:</strong> {{ rental.owner_name }}</p>
-            <p><strong>Contact:</strong>{{ rental.contact }}</p>
-            <p><strong>Location:</strong> {{ rental.location }}</p>
-            <p><strong>Description:</strong>{{ rental.description }}</p>
-            <p><strong>Rent:</strong>{{ rental.rent}}</p>
-            <p><strong>Image:</strong>{{ rental.image}}</p>
-        </div>
-    {% empty %}
-        <p>No rentals available at the moment.</p>
-    {% endfor %}
+    <table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Rent</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rental in rentals %}
+        <tr>
+            <td>{{ rental.owner_name}}</td>
+            <td>{{ rental.contact}}</td>
+            <td>{{ rental.location}}</td>
+            <td>{{ rental.description}}</td>
+            <td>{{ rental.rent}}</td>
+            <td>{{ rental.image }}</td>     
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div> 
 <style>
     .rental-list {
@@ -62,6 +75,17 @@
     }
     p {
         text-align: center;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    thead {
+        background-color: #f2f2f2;
     }
 </style>
 {% endblock %}
