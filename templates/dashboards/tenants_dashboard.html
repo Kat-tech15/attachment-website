@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="dashboard-container">
-<h2>Welcome to Tenants Dashboard , {{ user.username }} .</h2>
+<h2>Welcome to Tenants Dashboard {{ user.username }} .</h2>
     <!-- Loop through tenant's posted houses -->
      <div class="dashboard-actions">
         <a href="{% url 'post_house'%}" class="btn">Post a House</a>
@@ -29,7 +29,7 @@
     .btn {
         display: inline-block;
         margin: 10px;
-        padding: 12px 20px;
+        padding: 5px 10px;
         background-color: #007bff;
         color: white;
         text-decoration: none;

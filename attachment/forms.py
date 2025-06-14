@@ -1,13 +1,13 @@
 from django import forms
-from .models import Application
+from .models import AttachmentApplication, House, AttachmentPost
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from .models import House
+
 
 class AttachmentApplicationForm(forms.ModelForm):
     class Meta:
-        model = Application
-        fields = '__all__'
+        model = AttachmentApplication
+        fields = ['full_name', 'email', 'cv', 'cover_letter', 'recommendation']
 
 
 user = get_user_model()
@@ -28,4 +28,9 @@ class CustomUserCreationForm(UserCreationForm):
 class HouseForm(forms.ModelForm):
     class Meta:
         model = House
-        fields = ['title', 'location', 'description', 'rent','photo']
+        fields = ['name', 'location', 'description', 'rent','image']
+
+class AttachmentPostForm(forms.ModelForm):
+    class Meta:
+        model = AttachmentPost
+        fields = ['company', 'location', 'email', 'description', 'slots', 'application_deadline',]

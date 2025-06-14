@@ -22,7 +22,7 @@ class Attachee(models.Model):
     phone_number = models.CharField(max_length=10)
     institution = models.CharField(max_length= 255)
     course = models.CharField(max_length=255)
-    preferred_start = models.DateField()
+   
 
     
 
@@ -35,17 +35,22 @@ class Company(models.Model):
 
 class AttachmentPost(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    title = models.CharField(max_length=25)
+    location = models.CharField(max_length=25)
     description = models.TextField()
     slots = models.IntegerField()
-    start_date = models.DateField()
+    application_deadline = models.DateField()
     post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
     created_at = models.DateTimeField(auto_now_add=True)
+    email = models.EmailField()
 
-class Application(models.Model):
-    attachee = models.ForeignKey(Attachee,on_delete=models.CASCADE)
-    post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE)
-    date_applied = models.DateTimeField(auto_now_add=True)
+class AttachmentApplication(models.Model):
+    full_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    cv = models.ImageField()
+    cover_letter = models.ImageField()
+    recommendation = models.ImageField()
+    preferred_start = models.DateField()
+
 
 
 
@@ -71,11 +76,11 @@ class Contact(models.Model):
 
 
 class House(models.Model):
-    title = models.CharField(max_length=200)
+    name  = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
     description = models.TextField()
     rent  = models.DecimalField(max_digits=10, decimal_places=2)
-    photo = models.ImageField(upload_to='house_photos/')
+    image = models.ImageField(upload_to='house_photos/')
     posted_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
 

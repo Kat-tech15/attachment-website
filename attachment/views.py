@@ -3,11 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden 
-from .models import Attachee, House
+from .models import Attachee, House, AttachmentApplication, Booking
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 
-from .forms import AttachmentApplicationForm, HouseForm
+from .forms import AttachmentPostForm, HouseForm
 # Create your views here.
 
 user = get_user_model()
@@ -46,7 +46,7 @@ def login_view(request):
                     return redirect('company_dashboard')
 
                 elif role == 'tenant':
-                    return redirect('tenant_dashboard')
+                    return redirect('tenants_dashboard')
                 else:
                     return redirect('home')
             else:
@@ -113,8 +113,8 @@ def apply_attachment(request, attachment_id):
     if request.user.role != 'attachee':
         return HttpResponseForbidden()
 
-    attachment = get_object_or_404(Attachment, id=attachment_id)
-    Application.objects.created(attachee=request.user, attachment=attachment)
+    attachment = get_object_or_404(AttachmentApplication, id=attachment_id)
+    AttachmentApplication.objects.created(attachee=request.user, attachment=attachment)
 
     return render(request, 'apply_attachment.html', {'form': form})
 
@@ -148,7 +148,7 @@ def rentals(request):
 
 @login_required
 def post_house(request):
-    if request.user.role != 'tenant':
+    if request.user.role not in ['tenant', 'admin']:
         return HttpResponseForbidden()
 
     if request.method == 'POST':
@@ -158,7 +158,7 @@ def post_house(request):
             house.owner = request.user
             house.posted_by = request.user
             house.save()
-            return redirect('rentals')
+            return redirect('tenants_dashboard')
     
     else:
         form = HouseForm()
@@ -177,23 +177,23 @@ def view_attachments(request):
     return render(request, 'view_attachments.html')
 
 # companys' Views 
-@login_required
-def post_attachments(request):
+@login_required 
+def post_attachment(request):
     if request.user.role not in ['admin', 'company']:
         return HttpResponseForbidden()
 
     if request.method == 'POST':
-        form = AttachmentForm(request.POST)
+        form = AttachmentPostForm(request.POST, request.FILES)
         if form.is_valid():
             attachment = form.save(commit=False)
             attachment.posted_by=request.user
             attachment.save()
-            return redirect('view_attachments')
+            return redirect('company_dashboard')
         
-        else:
-            form = AttachmentForm()
+    else:
+        form = AttachmentPostForm()
 
-    return render(request, 'post_attachments.html', {'form': form})
+    return render(request, 'post_attachment.html', {'form': form})
 
 def opportunities(request):
     return render(request, 'opportunities.html')
@@ -212,7 +212,7 @@ def dashboard_router(request):
     elif role == 'company':
         return redirect('company_dashboard')
     elif role == 'tenant':
-        return redirect('tenant_dashboard')
+        return redirect('tenants_dashboard')
     else:
         return redirect(request, 'erro.html', {'message': 'unknown role'})
     

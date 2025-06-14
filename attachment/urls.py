@@ -26,6 +26,6 @@ urlpatterns = [
     path('view_rentals/', views.view_rentals, name='view_rentals'),
     path('opportunites/', views.opportunities, name='opportunities'),
     path('view_applicants', views.view_applicants, name='view_applicants'),
-    path('post-attachments/', views.post_attachments, name='post_attachments'),
+    path('post_attachment/', views.post_attachment, name='post_attachment'),
     path('my_bookings/', views.my_bookings, name='my_bookings'),
 ]

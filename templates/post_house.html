@@ -1,5 +1,5 @@
 {% extends 'base.html'%}
-{ block content }
+{% block content %}
    <div class="form-container">
     <h2>Post a New House</h2>
     <form method="post" enctype="multipart/form-data">
@@ -10,23 +10,55 @@
    </div>
    <style>
       .form-container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        background: white;
+        padding: 30px;
+        margin: 50px auto;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    button {
-      padding: 10px 20px;
-      background: #4CAF50;
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 4px;
+
+    .form-container h2 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-containerform {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-container form p {
+        margin-bottom: 15px;
+    }
+
+    .form-container input {
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 5px;
+    }
+
+    .form-container button {
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        margin-top: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+        
+    }
+
+    .form-container button:hover {
+        background-color: #0056b3
+    }
+
+    .form-container-form p {
+        text-align: center;
     }
   </style>
-   </style>
 
-   
-{ endblock }
+{% endblock %}
