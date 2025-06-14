@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden 
-from .models import Attachee, House, AttachmentApplication, Booking
+from .models import Attachee, House, AttachmentApplication, Booking, AttachmentPost
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from .forms import AttachmentPostForm, HouseForm
@@ -97,8 +97,6 @@ def contact(request):
 
 # Attachee's views
 
-def view_attachments(request):
-    return render(request, 'view_attachments.html')
 
 def accomodation(request):
     return render(request, 'accomodation.html')
@@ -135,7 +133,7 @@ def book_house(request, house_id):
     return redirect('my_bookings')    
 
 def my_bookings(request):
-    if request.user.role in ['attachee', 'tenant']:
+    if request.user.role in ['admin', 'attachee', 'tenant']:
         return HttpResponseForbidden("Only Attachees and Tenants can view bookings.")
 
     bookings = Booking.objects.filter(attachee=request.user).select_related('house')
@@ -150,14 +148,14 @@ def rentals(request):
 
 @login_required
 def post_house(request):
-    if request.user.role not in ['tenant', 'admin']:
+    if request.user.role not in ['admin','tenant']:
         return HttpResponseForbidden()
 
     if request.method == 'POST':
         form = HouseForm(request.POST, request.FILES)
         if form.is_valid():
             house = form.save(commit=False)
-            house.owner = request.user
+            house.owner_name = request.user.username
             house.posted_by = request.user
             house.save()
             return redirect('tenants_dashboard')
@@ -172,11 +170,11 @@ def make_inquiry(request):
 
 
 def view_rentals(request):
-    return render(request, 'view_rentals.html')
+    return render(request, 'view_rentals.html',{'houses': House.objects.all()})
 
 
 def view_attachments(request):
-    return render(request, 'view_attachments.html')
+    return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
 
 # companys' Views 
 @login_required 

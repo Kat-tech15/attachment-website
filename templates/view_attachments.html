@@ -60,8 +60,11 @@
             <h3>{{ attachment.title }}</h3>
             <p><strong>Company:</strong> {{ attachment.company.name }}</p>
             <p><strong>Location:</strong> {{ attachment.location }}</p>
-            <p>{{ attachment.description|truncatewords:25 }}</p>
-            <a href="{% url 'attachment_detail' attachment.id %}">View Details</a>
+            <p><strong>Email:</strong>{{ attachment.enail }}</p>
+            <p><strong>Description</strong>{{ attachment.description|truncatewords:25 }}</p>
+            <p><strong>Slots Available</strong>{{ attachment.slots }}</p>
+            <p><strong>Application Deadline</strong>{{ attachment.application_deadline }}</p>
+            
         </div>
     {% empty %}
         <p>No attachments available at the moment.</p>

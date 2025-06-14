@@ -1,66 +1,67 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3>Availble Rental Houses</h3>
-<table class="table-container">
-    <thead>
-        <tr>
-            <th>Owner</th>
-            <th>Contact</th>  
-            <th>Location</th>
-            <th>Description</th>
-            <th>Rent(Ksh)</th>
-        </tr>
-        <tbody>
-       {% for house in houses %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ house.owner }}</td>
-            <td>{{ house.contact }}</td>
-            <td>{{ house.location }}</td>
-            <td>{{ house.description }}</td>
-            <td>{{ house.rent }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    </thead>
-</table>   
+<div class="rental-list">
+     <h2>Available Rentals</h2>
+    {% for rental in rentals %}
+        <div class="rental-item">
+            <p><strong>Owner_Name:</strong> {{ rental.owner_name }}</p>
+            <p><strong>Contact:</strong>{{ rental.contact }}</p>
+            <p><strong>Location:</strong> {{ rental.location }}</p>
+            <p><strong>Description:</strong>{{ rental.description }}</p>
+            <p><strong>Rent:</strong>{{ rental.rent}}</p>
+            <p><strong>Image:</strong>{{ rental.image}}</p>
+        </div>
+    {% empty %}
+        <p>No rentals available at the moment.</p>
+    {% endfor %}
+</div> 
 <style>
-     .table-container{
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-     }
-     thead{
-        font-size: 20px;
-        font-family: Arial, Helvetica, sans-serif;
-        color: blue;
-     }
-    .table{
-        text-align: center;
-        background-color: aqua;
-        border-radius: 3px;
-        width: 60%;
+    .rental-list {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    h3{
-        text-align: center;
-        color: forestgreen;
+
+    .rental-item {
+        border-bottom: 1px solid #ccc;
+        padding: 15px 0;
     }
-    th {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: large;
+
+    .rental-item h3 {
+        margin: 0 0 8px 0;
+    }
+
+    .rental-item p {
+        margin: 4px 0;
+    }
+
+    .rental-item a {
+        display: inline-block;
+        margin-top: 10px;
+        background: #007bff;
         color: white;
-        background-color: green;
-        border-collapse: collapse;
-        justify-content: center;
-        border-radius: 3px;
+        padding: 8px 14px;
+        border-radius: 5px;
+        text-decoration: none;
     }
-    
-    td {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: large;
-        color: white;
-        background-color: rgb(250, 65, 250);
-        border-collapse: collapse;
+
+    .rental-item a:hover {
+        background: #0056b3;
+    }
+    .rental_table{
+        background-color: #007bff;
+        width: 40%;
+        height: 100px;
+        border-radius: 3px;
+        align-self: center;
+    }h2{
+        text-align: center;
+    }
+    p {
+        text-align: center;
     }
 </style>
 {% endblock %}

@@ -78,7 +78,8 @@ class Contact(models.Model):
 
 
 class House(models.Model):
-    name  = models.CharField(max_length=200)
+    owner_name  = models.CharField(max_length=200)
+    contact = models.CharField(max_length=10, null=True)
     location = models.CharField(max_length=200)
     description = models.TextField()
     rent  = models.DecimalField(max_digits=10, decimal_places=2)
@@ -88,7 +89,7 @@ class House(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return self.owner_name
 
 class Booking(models.Model):
     tenant =models.ForeignKey(CustomUser, on_delete=models.CASCADE)

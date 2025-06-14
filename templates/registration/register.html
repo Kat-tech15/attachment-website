@@ -58,11 +58,12 @@
 
 <div class="auth-form">
     <h2>Sign Up</h2>
-    <form method="post">
+    <form method="post" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Register</button>
     </form>
+    <ul class="errorlist"><li></li></ul>
     <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
 </div>
 {% endblock %}
