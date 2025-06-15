@@ -74,6 +74,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'attachment_website.wsgi.application'
 
+LOGIN_URL = '/login/'
+
+LOGIN_REDIRECT_URL = '/dashboard/'  
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

@@ -110,27 +110,62 @@ def attachee_list(request):
 
 @login_required
 def apply_attachment(request, attachment_id):
-    if request.user.role != 'attachee':
-        return HttpResponseForbidden()
+    if request.user.role not in ['admin','attachee']:
+        return HttpResponseForbidden("Only attachees can apply for attachments.")
 
-    attachment = get_object_or_404(AttachmentApplication, id=attachment_id)
-    AttachmentApplication.objects.created(attachee=request.user, attachment=attachment)
+    attachment_post  = get_object_or_404(AttachmentPost, id=attachment_id)
 
-    return render(request, 'apply_attachment.html', {'form': form})
+    # check if the user already applied
+    application, created = AttachmentApplication.objects.get_or_create(
+        attachee = request.user,
+        attachment_post = attachment_post,
+        defaults={
+            'full_name': request.user.attachee.full_name,
+            'email': request.user.attachee.email,
+            'cv': 'cv_placeholder.jpg',
+            'cover_letter': 'cover_letter_placeholder.jpg',
+            'recommendation': 'recommendation_placeholder.jpg',
+            'preferred_start': '2025-07-02',
+
+        }
+    )
+
+    if created:
+        message = "Application submitted successfully!"
+    else:
+        message ="You have already applied for this post."
+
+    return render(request, 'apply_attachment.html', {
+        'attachment': attachment_post,
+        'message': message
+    })
 
 @login_required
 def book_house(request, house_id):
-    if request.user.role != 'attachee':
-        return HttpResponseForbidden("Only Attachees can book houses.")
+    if request.user.role not in ['admin', 'attachee']:
+        return HttpResponseForbidden("Only Admins and Attachees have access to this page.")
 
-    house = get_object_or_404(House, id=house_id)
+    rental_post = get_object_or_404(House, id=house_id)
 
-    # Check if already booked
-    already_booked = Booking.objects.filter(house=house, attachee=request.user).exists()
-    if not already_booked:
-        Booking.objects.create(house=house, attachee=request.user)
- 
-    return redirect('my_bookings')    
+    booking, booked = Booking.objects.get_or_create(
+        attachee = request.user,
+        rental_post = rental_post,
+        defaults= {
+            'full_name': request.user.attachee.full_name,
+            'contact': request.user.attachee.contact,
+            'board_date': '2025-07-02',
+        }
+    )
+    if booked:
+        message = "House booked sucessfully!"
+    else:
+        message = "You have already booked this house."
+
+    return render(request, 'book_house.html', {
+        'rental': rental_post,
+        'message': message
+    })
+        
 
 def my_bookings(request):
     if request.user.role in ['admin', 'attachee', 'tenant']:

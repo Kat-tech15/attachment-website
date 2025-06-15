@@ -47,6 +47,9 @@ class AttachmentPost(models.Model):
    
 
 class AttachmentApplication(models.Model):
+    attachee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    attachment_post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE, null=True, blank=True)
+
     full_name = models.CharField(max_length=200)
     email = models.EmailField()
     cv = models.ImageField()
@@ -54,6 +57,9 @@ class AttachmentApplication(models.Model):
     recommendation = models.ImageField()
     preferred_start = models.DateField()
 
+
+    class Meta:
+        unique_together = ('attachee', 'attachment_post')
 
 
 
@@ -93,7 +99,9 @@ class House(models.Model):
         return self.owner_name
 
 class Booking(models.Model):
-    tenant =models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    house = models.ForeignKey(House, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    full_name = models.CharField(max_length=200)
+    contact = models.CharField(max_length=10, null=True)
+    create_at = models.DateTimeField(auto_created=True)
+    board_date = models.DateTimeField(auto_created=True)
+
 
