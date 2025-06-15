@@ -23,7 +23,7 @@
             <td>{{ rental.description}}</td>
             <td>{{ rental.rent }}</td>
             <td> <img src="{{ rental.image.url}}" width="100"></td>  
-            <td><a href="{% url 'book_house' house.id%}" class="btn">Book</a></td>   
+            <td><a href="{% url 'book_rental' rental.id%}" class="btn">Book</a></td>   
         </tr>
         
         {% endfor %}

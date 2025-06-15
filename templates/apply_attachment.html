@@ -1,86 +1,12 @@
-{% extends 'base.html'%}
+{% extends "base.html" %}
+{% block title %}Apply for Attachment{% endblock %}
 {% block content %}
-<div class="attachees-form">
-    <h3>Apply For Attachment</h3>
-    <form>
-        <label for="name">Name :</label>
-        <input type="text" name="naem" placeholder="Enter your name " required><br>
-
-        <label for="email">Email :</label>
-        <input type="text" name="email" placeholder="Enter your email" required><br>
-
-        <label for="phone-number">Phone Number :</label>
-        <input type="number" name="phone-number" placeholder="Enter your phone-number" required ><br>
-
-        <label for="institution">Institution :</label>
-        <input type="text" name="Institution" placeholder="Enter name for your institution" required><br>
-
-        <label for="course">Course :</label>
-        <input type="text" name="course" placeholder="Enter your course" required><br>
-
-        <label for="year of study">Year of Study :</label>
-        <input type="number" name="year of study" placeholder="Enter your current year of study" required><br>
-
-
-        <label for="cv">Resume :</label>
-        <input type="file" name="resume" required><br>
-
-        
-        <label for="cv">Cover Letter :</label>
-        <input type="file" name="cover-letter" required><br>
-
-    
-        <button type="submit">Apply</button>
+<div class="attachment-list">
+    <h2>Apply for: {{ attachment.description }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Submit Application</button>
     </form>
 </div>
-<style> 
-    .attachees-form{
-        background-color: #2ece8b;
-        height: 730px;
-        width: 40%;
-        border-radius: 5px;
-        align-self: center;
-        margin: auto;
-
-    }
-    form{ 
-        display: flex;
-        flex-direction: column;
-    }
-    h3{
-        margin-top: 20px;
-        text-align: center;
-    }
-    input{
-        padding: 10px 10px;
-        border: none;
-        border-radius: 3px;
-        width: 70%;
-        margin-left: 40px;
-        color: #007bff;
-    }
-    label{
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: large;
-        font-weight: 400;
-        margin-left: 40px;
-
-    }
-    button{
-        background-color: #007bff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 3px;
-        color: white;
-        text-decoration: none;
-        align-self: center;
-        background-color: #007bff;
-        display: inline-block;
-        margin: 10px;
-            
-    }
-    button:hover{
-       background-color: #0056b3
-    }
-</style>
 {% endblock %}

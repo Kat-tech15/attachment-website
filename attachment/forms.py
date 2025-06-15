@@ -42,7 +42,15 @@ class HouseForm(forms.ModelForm):
 class AttachmentPostForm(forms.ModelForm):
     class Meta:
         model = AttachmentPost
-        fields = ['company', 'location', 'email', 'description', 'slots', 'application_deadline',]
+        fields = ['location', 'email', 'description', 'slots', 'application_deadline',]
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if self.user and hasattr(self.user, 'company'):
+           self.fields['email'].initial = self.user.company.email
+           self.fields['location'].initial = self.user.company.location
 
 class RentalListingForm(forms.ModelForm):
     class Meta:

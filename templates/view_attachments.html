@@ -81,7 +81,7 @@
     <table border="1" cellpadding="10">
     <thead>
         <tr>
-            <th>Company</th>
+            <th>Company Name</th>
             <th>Location</th>
             <th>Email</th>
             <th>Description</th>
@@ -93,7 +93,7 @@
     <tbody>
         {% for attachment in attachments %}
         <tr>
-            <td>{{ attachment.company}}</td>
+            <td>{{ attachment.company.name}}</td>
             <td>{{ attachment.location}}</td>
             <td>{{ attachment.email}}</td>
             <td>{{ attachment.description}}</td>
@@ -101,11 +101,6 @@
             <td>{{ attachment.application_deadline}}</td>
             <td><a href="{% url 'apply_attachment' attachment.id%}" class="btn">Apply</a></td>
         </tr>
-        {% if user.is_authenticated %}
-            <a href="{% url 'apply_attachment' attachment.id %}">Apply</a>
-        {% else %}
-            <a href="{% url 'login' %}?next={% url 'apply_attachment' attachment.id %}">Login to Apply</a>
-        {% endif %}
 
     </tbody>
         {% endfor %}

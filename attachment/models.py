@@ -35,34 +35,39 @@ class Company(models.Model):
     phone_number = models.CharField(max_length=10)
     location = models.CharField(max_length= 255)
 
+    def __str__(self):
+        return self.user.username
+    
 class AttachmentPost(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey('Company', on_delete=models.CASCADE)
     email = models.EmailField()
     location = models.CharField(max_length=25)
     description = models.CharField(max_length=255)
     slots = models.IntegerField()
-    application_deadline = models.DateField()
+    application_deadline = models.DateField(auto_created=True)
     post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
     created_at = models.DateTimeField(auto_now_add=True)
    
 
 class AttachmentApplication(models.Model):
     attachee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    attachment_post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE, null=True, blank=True)
+    attachment_post = models.ForeignKey('AttachmentPost', on_delete=models.CASCADE, null=True, blank=True)
+
 
     full_name = models.CharField(max_length=200)
     email = models.EmailField()
     cv = models.ImageField()
     cover_letter = models.ImageField()
     recommendation = models.ImageField()
-    preferred_start = models.DateField()
+    preferred_start = models.DateField(auto_created=True)
 
 
     class Meta:
         unique_together = ('attachee', 'attachment_post')
 
-
-
+    def __str__(self):
+        return f"{self.full_name} applied to {self.attachment.company.name}"
+    
 class Tenant(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -101,7 +106,6 @@ class House(models.Model):
 class Booking(models.Model):
     full_name = models.CharField(max_length=200)
     contact = models.CharField(max_length=10, null=True)
-    create_at = models.DateTimeField(auto_created=True)
-    board_date = models.DateTimeField(auto_created=True)
+    board_date = models.DateField(auto_created=True)
 
 

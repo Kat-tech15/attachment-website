@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden 
-from .models import Attachee, House, AttachmentApplication, Booking, AttachmentPost, RentalListing
+from .models import Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from .forms import AttachmentPostForm, HouseForm
@@ -71,6 +71,15 @@ def register_view(request):
 
         if form.is_valid():
             user = form.save()
+            if user.role == 'company':
+                Company.objects.create(
+                    user=user,
+                    name=user.username,
+                    email=user.email,
+                    phone_number='',
+                    location=''
+                )
+
             login(request, user)
             return redirect('home')
     else:
@@ -83,7 +92,7 @@ def contact(request):
         email =request.POST.get('email')
         message = request.POST.get('message')
 
-        contact = ContactMessage.objects.create(
+        contact = Contact.objects.create(
             full_name=full_name,
             email=email,
             message=message,
@@ -114,14 +123,13 @@ def apply_attachment(request, attachment_id):
         return HttpResponseForbidden("Only attachees can apply for attachments.")
 
     attachment_post  = get_object_or_404(AttachmentPost, id=attachment_id)
+    attachee,_=get_object_or_404(Attachee, user=request.user)
 
     # check if the user already applied
-    application, created = AttachmentApplication.objects.get_or_create(
-        attachee = request.user,
+    application, created = Attachee.objects.get_or_create(
+        attachee,_ = attachee,
         attachment_post = attachment_post,
         defaults={
-            'full_name': request.user.attachee.full_name,
-            'email': request.user.attachee.email,
             'cv': 'cv_placeholder.jpg',
             'cover_letter': 'cover_letter_placeholder.jpg',
             'recommendation': 'recommendation_placeholder.jpg',
@@ -141,11 +149,11 @@ def apply_attachment(request, attachment_id):
     })
 
 @login_required
-def book_house(request, house_id):
-    if request.user.role not in ['admin', 'attachee']:
+def book_rental(request, rental_id):
+    if request.user.role not in ['admin','attachee']:
         return HttpResponseForbidden("Only Admins and Attachees have access to this page.")
 
-    rental_post = get_object_or_404(House, id=house_id)
+    rental_post = get_object_or_404(House, id=rental_id)
 
     booking, booked = Booking.objects.get_or_create(
         attachee = request.user,
@@ -161,7 +169,7 @@ def book_house(request, house_id):
     else:
         message = "You have already booked this house."
 
-    return render(request, 'book_house.html', {
+    return render(request, 'book_rental.html', {
         'rental': rental_post,
         'message': message
     })
@@ -182,7 +190,7 @@ def rentals(request):
 
 
 @login_required
-def post_house(request):
+def post_rental(request):
     if request.user.role not in ['admin','tenant']:
         return HttpResponseForbidden()
 
@@ -198,7 +206,7 @@ def post_house(request):
     else:
         form = HouseForm()
 
-    return render(request, 'post_house.html', {'form': form})
+    return render(request, 'post_rental.html', {'form': form})
 
 def make_inquiry(request):
     return render(request, 'make_inquiry.html')
@@ -215,18 +223,25 @@ def view_attachments(request):
 @login_required 
 def post_attachment(request):
     if request.user.role not in ['admin', 'company']:
-        return HttpResponseForbidden()
+        return HttpResponseForbidden("You have no permission to post attachments.")
+
+    
+    try:
+        company = request.user.company
+    except Company.DoesNotExist:
+        return HttpResponseForbidden("You must complete your company profile first.")
+
 
     if request.method == 'POST':
-        form = AttachmentPostForm(request.POST, request.FILES)
+        form = AttachmentPostForm(request.POST, user=request.user)
         if form.is_valid():
             attachment = form.save(commit=False)
-            attachment.posted_by=request.user
+            attachment.company = company
             attachment.save()
-            return redirect('company_dashboard')
+            return redirect('view_attachments')
         
     else:
-        form = AttachmentPostForm()
+        form = AttachmentPostForm(user=request.user)
 
     return render(request, 'post_attachment.html', {'form': form})
 
