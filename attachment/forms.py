@@ -1,5 +1,5 @@
 from django import forms
-from .models import AttachmentApplication, House, AttachmentPost, CustomUser
+from .models import AttachmentApplication, House, AttachmentPost, CustomUser,RentalListing
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
@@ -43,3 +43,8 @@ class AttachmentPostForm(forms.ModelForm):
     class Meta:
         model = AttachmentPost
         fields = ['company', 'location', 'email', 'description', 'slots', 'application_deadline',]
+
+class RentalListingForm(forms.ModelForm):
+    class Meta:
+        model = RentalListing
+        fields = '__all__'

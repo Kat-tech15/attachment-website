@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden 
-from .models import Attachee, House, AttachmentApplication, Booking, AttachmentPost
+from .models import Attachee, House, AttachmentApplication, Booking, AttachmentPost, RentalListing
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from .forms import AttachmentPostForm, HouseForm
@@ -155,7 +155,7 @@ def post_house(request):
         form = HouseForm(request.POST, request.FILES)
         if form.is_valid():
             house = form.save(commit=False)
-            house.owner_name = request.user.username
+            house.tenant = request.user.username
             house.posted_by = request.user
             house.save()
             return redirect('tenants_dashboard')
@@ -170,7 +170,7 @@ def make_inquiry(request):
 
 
 def view_rentals(request):
-    return render(request, 'view_rentals.html',{'houses': House.objects.all()})
+    return render(request, 'view_rentals.html',{'rentals': House.objects.all()})
 
 
 def view_attachments(request):

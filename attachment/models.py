@@ -37,13 +37,14 @@ class Company(models.Model):
 
 class AttachmentPost(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    email = models.EmailField()
     location = models.CharField(max_length=25)
-    description = models.TextField()
+    description = models.CharField(max_length=255)
     slots = models.IntegerField()
     application_deadline = models.DateField()
     post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
     created_at = models.DateTimeField(auto_now_add=True)
-    email = models.EmailField()
+   
 
 class AttachmentApplication(models.Model):
     full_name = models.CharField(max_length=200)
@@ -81,7 +82,7 @@ class House(models.Model):
     owner_name  = models.CharField(max_length=200)
     contact = models.CharField(max_length=10, null=True)
     location = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.CharField(max_length=255)
     rent  = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='house_photos/')
     posted_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

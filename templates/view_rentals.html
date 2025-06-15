@@ -5,7 +5,7 @@
     <table border="1" cellpadding="10">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Owner</th>
             <th>Contact</th>
             <th>Location</th>
             <th>Description</th>
@@ -21,14 +21,30 @@
             <td>{{ rental.contact}}</td>
             <td>{{ rental.location}}</td>
             <td>{{ rental.description}}</td>
-            <td>{{ rental.rent}}</td>
-            <td>{{ rental.image }}</td>     
+            <td>{{ rental.rent }}</td>
+            <td> <img src="{{ rental.image.url}}" width="100"></td>  
+            <td><a href="{% url 'dashboard'%}" class="btn">Book</a></td>   
         </tr>
+        
         {% endfor %}
+
     </tbody>
 </table>
 </div> 
 <style>
+    .btn {
+        display: inline-block;
+        margin: 10px;
+        padding: 1px 3px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+  
+    .btn:hover {
+        background-color: #0056b3;
+    }
     .rental-list {
         max-width: 900px;
         margin: 50px auto;
@@ -70,7 +86,8 @@
         height: 100px;
         border-radius: 3px;
         align-self: center;
-    }h2{
+    }
+    h2 {
         text-align: center;
     }
     p {
