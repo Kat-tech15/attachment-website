@@ -130,17 +130,17 @@ def apply_attachment(request, attachment_id):
         print("Attachee instance found:", attachee_instance)
     except Attachee.DoesNotExist:
         print("Attachee instance not found for user:", request.user)
-        
+
         # If the user does not have an Attachee profile, redirect to home with an error message
         messages.error(request, "You need an Attachee profile to apply for attachment.")
-        return redirect('home') 
+        return redirect('view_attachments') 
     
      # Get the attachment post
     attachment_post = get_object_or_404(AttachmentPost, id=attachment_id)
 
     # Prevent double applications
     try: 
-        application = AttachmentApplication.objects.get(attachee=attachee_instance, post=attachment_post)
+        application = AttachmentApplication.objects.get(attachee=attachee_instance, attachment_post=attachment_post)
         already_applied = True
     except AttachmentApplication.DoesNotExist:
         already_applied = False
@@ -151,7 +151,7 @@ def apply_attachment(request, attachment_id):
         if form.is_valid():
             new_application = form.save(commit=False)
             new_application.attachee = attachee_instance
-            new_application.post = attachment_post
+            new_application.attachment_post = attachment_post
             new_application.save()
             messages.success(request, "Application submitted successfully!")
             return redirect('view_attachments')

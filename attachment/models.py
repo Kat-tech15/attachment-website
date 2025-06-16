@@ -50,7 +50,7 @@ class AttachmentPost(models.Model):
    
 
 class AttachmentApplication(models.Model):
-    attachee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True, blank=True)
     attachment_post = models.ForeignKey('AttachmentPost', on_delete=models.CASCADE, null=True, blank=True)
 
 
@@ -104,7 +104,7 @@ class House(models.Model):
         return self.owner_name
 
 class Booking(models.Model):
-    attachee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True)
     rental_post = models.ForeignKey(House, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200)
     contact = models.CharField(max_length=10, null=True)
