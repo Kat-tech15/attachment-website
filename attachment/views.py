@@ -119,29 +119,31 @@ def attachee_list(request):
 
 @login_required
 def apply_attachment(request, attachment_id):
-    if request.user.role not in ['admin','attachee']:
+    if request.user.role not in ['admin', 'attachee']:
         return HttpResponseForbidden("Only attachees can apply for attachments.")
 
-    attachment_post  = get_object_or_404(AttachmentPost, id=attachment_id)
-    attachee,_=get_object_or_404(Attachee, user=request.user)
+    # Get the attachment post
+    attachment_post = get_object_or_404(AttachmentPost, id=attachment_id)
 
-    # check if the user already applied
+    # Get or create the attachee
+    attachee_instance, created = get_object_or_404(Attachee, user=request.user)
+
+    # Check if the user already applied
     application, created = Attachee.objects.get_or_create(
-        attachee,_ = attachee,
-        attachment_post = attachment_post,
+        user=request.user,
+        attachment_post=attachment_post,
         defaults={
             'cv': 'cv_placeholder.jpg',
             'cover_letter': 'cover_letter_placeholder.jpg',
             'recommendation': 'recommendation_placeholder.jpg',
             'preferred_start': '2025-07-02',
-
         }
     )
 
     if created:
         message = "Application submitted successfully!"
     else:
-        message ="You have already applied for this post."
+        message = "You have already applied for this post."
 
     return render(request, 'apply_attachment.html', {
         'attachment': attachment_post,
@@ -152,7 +154,7 @@ def apply_attachment(request, attachment_id):
 def book_rental(request, rental_id):
     if request.user.role not in ['admin','attachee']:
         return HttpResponseForbidden("Only Admins and Attachees have access to this page.")
-
+ 
     rental_post = get_object_or_404(House, id=rental_id)
 
     booking, booked = Booking.objects.get_or_create(
