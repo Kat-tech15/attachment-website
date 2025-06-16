@@ -9,7 +9,7 @@ user = get_user_model()
 class AttachmentApplicationForm(forms.ModelForm):
     class Meta:
         model = AttachmentApplication
-        fields = ['full_name', 'email', 'cv', 'cover_letter', 'recommendation']
+        fields = ['full_name', 'email', 'cv', 'cover_letter', 'recommendation','preferred_start']
 
 
 

@@ -104,8 +104,13 @@ class House(models.Model):
         return self.owner_name
 
 class Booking(models.Model):
+    attachee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    rental_post = models.ForeignKey(House, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200)
     contact = models.CharField(max_length=10, null=True)
-    board_date = models.DateField(auto_created=True)
+    board_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.full_name} booked {self.rental_post} "
 
 

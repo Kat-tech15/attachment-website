@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
@@ -6,7 +7,8 @@ from django.http import HttpResponseForbidden
 from .models import Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact
 from .forms import CustomUserCreationForm
 from django.contrib import messages
-from .forms import AttachmentPostForm, HouseForm
+from django.utils import timezone
+from .forms import AttachmentPostForm, HouseForm, AttachmentApplicationForm
 # Create your views here.
 
 
@@ -122,32 +124,35 @@ def apply_attachment(request, attachment_id):
     if request.user.role not in ['admin', 'attachee']:
         return HttpResponseForbidden("Only attachees can apply for attachments.")
 
-    # Get the attachment post
+     
+    try:
+        attachee_instance = Attachee.objects.get(user=request.user)
+    except Attachee.DoesNotExist:
+        messages.error(request, "You need an Attachee profile to apply for attachment.")
+        return redirect('home') 
+    
+     # Get the attachment post
     attachment_post = get_object_or_404(AttachmentPost, id=attachment_id)
 
-    # Get or create the attachee
-    attachee_instance, created = get_object_or_404(Attachee, user=request.user)
+    # Prevent double applications
+    if AttachmentApplication.objects.filter(attachee=attachee_instance, post=attachment_post).exists():
+        messages.info(request, "You have already applied for this post.")
+        return redirect('view_attachments')
 
-    # Check if the user already applied
-    application, created = Attachee.objects.get_or_create(
-        user=request.user,
-        attachment_post=attachment_post,
-        defaults={
-            'cv': 'cv_placeholder.jpg',
-            'cover_letter': 'cover_letter_placeholder.jpg',
-            'recommendation': 'recommendation_placeholder.jpg',
-            'preferred_start': '2025-07-02',
-        }
-    )
-
-    if created:
-        message = "Application submitted successfully!"
+    if request.method == 'POST':
+        form = AttachmentApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.attachee = attachee_instance
+            application.post = attachment_post
+            application.save()
+            messages.success(request, "Application submitted successfully!")
+            return redirect('view_attachments')
     else:
-        message = "You have already applied for this post."
-
+        form = AttachmentApplicationForm()
     return render(request, 'apply_attachment.html', {
-        'attachment': attachment_post,
-        'message': message
+        'form': form,
+        'attachment_post': attachment_post
     })
 
 @login_required
@@ -157,19 +162,21 @@ def book_rental(request, rental_id):
  
     rental_post = get_object_or_404(House, id=rental_id)
 
-    booking, booked = Booking.objects.get_or_create(
-        attachee = request.user,
+    # check if attachee exists 
+    try:
+        attachee = request.user.attachee
+    except Attachee.DoesNotExist:
+        return HttpResponseForbidden("You must complete your attachee profile first.")
+
+    booking, created = Booking.objects.get_or_create(
+        attachee = attachee,
         rental_post = rental_post,
         defaults= {
-            'full_name': request.user.attachee.full_name,
-            'contact': request.user.attachee.contact,
-            'board_date': '2025-07-02',
+            'full_name': attachee.full_name,
+            'contact': attachee.phone_number,
         }
     )
-    if booked:
-        message = "House booked sucessfully!"
-    else:
-        message = "You have already booked this house."
+    message = "House booked successfully!" if created else "You have already booked this house."
 
     return render(request, 'book_rental.html', {
         'rental': rental_post,

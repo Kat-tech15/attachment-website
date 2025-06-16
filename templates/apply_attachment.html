@@ -3,7 +3,14 @@
 {% block content %}
 <div class="attachment-list">
     <h2>Apply for: {{ attachment.description }}</h2>
-    <form method="POST">
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn">Submit Application</button>
