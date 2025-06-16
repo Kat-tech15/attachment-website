@@ -2,12 +2,15 @@
 {% block title %}Apply for Attachment{% endblock %}
 {% block content %}
 <div class="attachment-list">
-    <h2>Apply for: {{ attachment.description }}</h2>
+    <h2>Apply for: {{ attachment_post.description }}</h2>
 
     {% if messages %}
         {% for message in messages %}
-            <p>{{ message }}</p>
+            <div class="alert">{{ message }}</div>
         {% endfor %}
+    {% endif %}
+    {% if already_applied %}
+    <p style="color: orange;">You have already applied for this attachment.</p>
     {% endif %}
 
     <form method="POST" enctype="multipart/form-data">

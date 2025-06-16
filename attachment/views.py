@@ -127,7 +127,11 @@ def apply_attachment(request, attachment_id):
      
     try:
         attachee_instance = Attachee.objects.get(user=request.user)
+        print("Attachee instance found:", attachee_instance)
     except Attachee.DoesNotExist:
+        print("Attachee instance not found for user:", request.user)
+        
+        # If the user does not have an Attachee profile, redirect to home with an error message
         messages.error(request, "You need an Attachee profile to apply for attachment.")
         return redirect('home') 
     
@@ -135,24 +139,29 @@ def apply_attachment(request, attachment_id):
     attachment_post = get_object_or_404(AttachmentPost, id=attachment_id)
 
     # Prevent double applications
-    if AttachmentApplication.objects.filter(attachee=attachee_instance, post=attachment_post).exists():
-        messages.info(request, "You have already applied for this post.")
-        return redirect('view_attachments')
+    try: 
+        application = AttachmentApplication.objects.get(attachee=attachee_instance, post=attachment_post)
+        already_applied = True
+    except AttachmentApplication.DoesNotExist:
+        already_applied = False
+        application = None
 
     if request.method == 'POST':
-        form = AttachmentApplicationForm(request.POST, request.FILES)
+        form = AttachmentApplicationForm(request.POST, request.FILES, instance=application)
         if form.is_valid():
-            application = form.save(commit=False)
-            application.attachee = attachee_instance
-            application.post = attachment_post
-            application.save()
+            new_application = form.save(commit=False)
+            new_application.attachee = attachee_instance
+            new_application.post = attachment_post
+            new_application.save()
             messages.success(request, "Application submitted successfully!")
             return redirect('view_attachments')
     else:
-        form = AttachmentApplicationForm()
+        form = AttachmentApplicationForm(instance=application)
+
     return render(request, 'apply_attachment.html', {
         'form': form,
-        'attachment_post': attachment_post
+        'attachment_post': attachment_post,
+        'already_applied': already_applied
     })
 
 @login_required
