@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden 
-from .models import Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact
+from .models import Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.utils import timezone
@@ -109,11 +109,13 @@ def contact(request):
 # Attachee's views
 
 
-def accomodation(request):
-    return render(request, 'accomodation.html')
 
 def my_applications(request):
-    return render(request, 'my_applications.html')
+    if request.user.role != 'attachee':
+        return HttpResponseForbidden("Only attachees have access to this page.")
+    
+    applications = AttachmentApplication.objects.filter(attachee__user=request.user)
+    return render(request, 'my_applications.html', {'applications': applications})
 
 def attachee_list(request):
     applications = Attachee.objects.all()
@@ -202,10 +204,30 @@ def my_bookings(request):
 
 # Tenant's Views 
 
+@login_required
+def all_rentals(request):
+    if request.user.role != 'Tenant':
+        return HttpResponseForbidden()
 
-def rentals(request):
-    return render(request, 'rentals.html')
+    own_rentals = RentalListing.objects.filter(tenant=request.user)
+    other_rentals = RentalListing.objects.exclude(tenant=request.user)
+     
+    return render(request, 'all_rentals.html', {
+        'own_rentals': own_rentals,
+        'other_rentals': other_rentals
+    })
 
+@login_required
+def all_attachment_posts(request):
+    if request.user.role != 'company':
+        return HttpResponseForbidden("Only companies have access to this page.")
+    
+    own_posts = AttachmentPost.objects.filter(Company__user=request.user)
+    other_posts = AttachmentPost.objects.filter(company=request.company.user)
+    return render(request, 'all_attachmemnts.html', {
+        'own_posts': own_posts,
+        'other_posts': other_posts
+    })
 
 @login_required
 def post_rental(request):

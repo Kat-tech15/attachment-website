@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
         ('attachee', 'Attachee'),
         ('company', 'Company'),
         ('tenant', 'Tenant'),
-        ('admin', 'Admin'),
+        ('admin', 'Admin')
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='attachee')
 
@@ -39,7 +39,7 @@ class Company(models.Model):
         return self.user.username
     
 class AttachmentPost(models.Model):
-    company = models.ForeignKey('Company', on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     email = models.EmailField()
     location = models.CharField(max_length=25)
     description = models.CharField(max_length=255)
@@ -51,7 +51,7 @@ class AttachmentPost(models.Model):
 
 class AttachmentApplication(models.Model):
     attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True, blank=True)
-    attachment_post = models.ForeignKey('AttachmentPost', on_delete=models.CASCADE, null=True, blank=True)
+    attachment_post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE, null=True, blank=True)
 
 
     full_name = models.CharField(max_length=200)

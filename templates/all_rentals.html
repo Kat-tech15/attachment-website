@@ -1,0 +1,17 @@
+<h2>My Rentals</h2>
+<ul>
+    {% for rent in own_rentals %}
+        <li>{{ rent.location }} - {{ rent.rent }}</li>
+    {% empty %}
+        <li>You have not posted rentals yet.</li>
+    {% endfor %}
+</ul>
+
+<h2>Other Rentals</h2>
+<ul>
+    {% for rent in other_rentals %}
+        <li>{{ rent.location }} - {{ rent.rent }}</li>
+    {% empty %}
+        <li>Other rentals are not available.</li>
+    {% endfor %}
+</ul>

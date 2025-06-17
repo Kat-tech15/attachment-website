@@ -47,3 +47,78 @@
     <button type="submit">Sign up here</button>
 </div>
 </body>
+<!-- templates/attachee/my_applications.html -->
+{% extends "base.html" %}
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<style>
+    .applications {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .applications h2 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .application-item {
+        border-bottom: 1px solid #ddd;
+        padding: 15px 0;
+    }
+
+    .application-item:last-child {
+        border-bottom: none;
+    }
+
+    .application-item h3 {
+        margin-bottom: 5px;
+    }
+
+    .application-item p {
+        margin: 4px 0;
+    }
+
+    .application-item span.status {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #ffc107;
+        color: black;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .application-item span.status.approved {
+        background: #28a745;
+        color: white;
+    }
+
+    .application-item span.status.rejected {
+        background: #dc3545;
+        color: white;
+    }
+</style>
+
+<div class="applications">
+    <h2>My Applications</h2>
+    {% for app in applications %}
+        <div class="application-item">
+            <h3>{{ app.attachment.title }}</h3>
+            <p><strong>Company:</strong> {{ app.attachment.company.name }}</p>
+            <p><strong>Applied On:</strong> {{ app.created_at|date:"M d, Y" }}</p>
+            <p><strong>Status:</strong>
+                <span class="status {% if app.status == 'approved' %}approved{% elif app.status == 'rejected' %}rejected{% endif %}">
+                    {{ app.status|capfirst }}
+                </span>
+            </p>
+        </div>
+    {% empty %}
+        <p>You have not applied for any attachments yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
