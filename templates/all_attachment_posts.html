@@ -43,10 +43,5 @@
     <p><strong>Location:</strong> {{ attachment.location }}</p>
     <p><strong>Description:</strong></p>
     <p>{{ attachment.description }}</p>
-
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Apply for Attachment</button>
-    </form>
 </div>
 {% endblock %}

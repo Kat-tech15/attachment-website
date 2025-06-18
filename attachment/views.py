@@ -206,25 +206,23 @@ def my_bookings(request):
 
 @login_required
 def all_rentals(request):
-    if request.user.role != 'Tenant':
+    if request.user.role != 'tenant':
         return HttpResponseForbidden()
 
-    own_rentals = RentalListing.objects.filter(tenant=request.user)
-    other_rentals = RentalListing.objects.exclude(tenant=request.user)
-     
-    return render(request, 'all_rentals.html', {
-        'own_rentals': own_rentals,
-        'other_rentals': other_rentals
-    })
+    rentals = RentalListing.objects.all(tenant__user=request.user)
+
+    return render(request, 'all_rentals.html',{'rentals': rentals})
 
 @login_required
 def all_attachment_posts(request):
     if request.user.role != 'company':
         return HttpResponseForbidden("Only companies have access to this page.")
     
-    own_posts = AttachmentPost.objects.filter(Company__user=request.user)
-    other_posts = AttachmentPost.objects.filter(company=request.company.user)
-    return render(request, 'all_attachmemnts.html', {
+    
+    
+    own_posts = AttachmentPost.objects.filter(company__user=request.user)
+    other_posts = AttachmentPost.objects.exclude(company__user=request.user)
+    return render(request, 'all_attachment_posts.html', {
         'own_posts': own_posts,
         'other_posts': other_posts
     })
