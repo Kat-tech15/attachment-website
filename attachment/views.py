@@ -209,7 +209,7 @@ def all_rentals(request):
     if request.user.role != 'tenant':
         return HttpResponseForbidden()
 
-    rentals = RentalListing.objects.all(tenant__user=request.user)
+    rentals = RentalListing.objects.all()
 
     return render(request, 'all_rentals.html',{'rentals': rentals})
 

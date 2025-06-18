@@ -1,41 +1,129 @@
-<!-- rentals/templates/rentals/rental_list.html -->
+<!-- templates/attachee/view_attachments.html -->
+{% extends "base.html" %}
+{% block title %}Available Attachments{% endblock %}
 
-{% extends 'base.html' %}
 {% block content %}
-<h2>Available Rentals</h2>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert alert-{{ message.tags }} mt-2" role="alert">
+        {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<style>
+    .rental-list {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-<table border="1" cellpadding="10">
+    .rental-item {
+        border-bottom: 1px solid #ccc;
+        padding: 15px 0;
+    }
+
+    .rental-item h3 {
+        margin: 0 0 8px 0;
+    }
+
+    .rental-item p {
+        margin: 4px 0;
+    }
+
+    .rental-item a {
+        display: inline-block;
+        margin-top: 10px;
+        background: #007bff;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .rental-item a:hover {
+        background: #0056b3;
+    }
+    .rental-table{
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+    .rental-table th, .rental-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+        vertical-align: top;
+        word-wrap: break-word;
+    }
+    .rental-table th{
+        background-color: #f8f8f8;
+    }
+    h2{
+        text-align: center;
+    }
+    p {
+        text-align: center;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    thead {
+        background-color: #f2f2f2;
+    }
+    .btn {
+        display: inline-block;
+        margin: 10px;
+        padding: 3px 3px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+  
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+<div class="rental-list">
+    <h2>Available Rentals</h2>
+    <table class="rental-table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Contact</th>
+            <th>Tenant Name</th>
             <th>Location</th>
             <th>Description</th>
             <th>Rent</th>
-            <th>Image</th>
+            <th>Photo</th>
         </tr>
     </thead>
     <tbody>
         {% for rental in rentals %}
         <tr>
-            <td>{{ rental.name }}</td>
-            <td>{{ rental.contact }}</td>
-            <td>{{ rental.location }}</td>
-            <td>{{ rental.description }}</td>
-            <td>{{ rental.rent }}</td>
+            <td>{{ rental.tenant.user.username}}</td>
+            <td>{{ rental.location}}</td>
+            <td>{{ rental.description}}</td>
+            <td>{{ rental.rent}}</td>
             <td>
-                {% if rental.image %}
-                    <img src="{{ rental.image.url }}" alt="Rental Image" width="100" height="100">
+                {% if rental.photo %}
+                    <img src="{{ rental.photo.url }}" alt="Rental Image" width="100" height="100">
                 {% else %}
                     No image
                 {% endif %}
             </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6">No rentals posted yet.</td>
+
         </tr>
         {% endfor %}
     </tbody>
+       
 </table>
+</div>
+<hr>
 {% endblock %}
