@@ -1,17 +1,41 @@
-<h2>My Rentals</h2>
-<ul>
-    {% for rent in own_rentals %}
-        <li>{{ rent.location }} - {{ rent.rent }}</li>
-    {% empty %}
-        <li>You have not posted any rental yet.</li>
-    {% endfor %}
-</ul>
+<!-- rentals/templates/rentals/rental_list.html -->
 
-<h2>Other Rentals</h2>
-<ul>
-    {% for rent in other_rentals %}
-        <li>{{ rent.location }} - {{ rent.rent }}</li>
-    {% empty %}
-        <li>Other rentals are not available.</li>
-    {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% block content %}
+<h2>Available Rentals</h2>
+
+<table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Rent</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rental in rentals %}
+        <tr>
+            <td>{{ rental.name }}</td>
+            <td>{{ rental.contact }}</td>
+            <td>{{ rental.location }}</td>
+            <td>{{ rental.description }}</td>
+            <td>{{ rental.rent }}</td>
+            <td>
+                {% if rental.image %}
+                    <img src="{{ rental.image.url }}" alt="Rental Image" width="100" height="100">
+                {% else %}
+                    No image
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No rentals posted yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
