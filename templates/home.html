@@ -32,15 +32,133 @@
     .home-container a:hover {
         background-color: #0056b3;
     }
-</style>
+    .about {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 8px;
+        border-right: 5px solid #007bff;
+        border-bottom: 5px solid #007bff;
+    }
 
-<div class="home-container">
-    <h1>Welcome to the Attachment Portal</h1>
-    <p>Your gateway to attachment opportunities and talent connections.</p>
-    {% if not user.is_authenticated %}
-        <a href="{% url 'login' %}">Get Started</a>
-    {% else %}
-        <a href="{% url 'dashboard' %}">Go to Dashboard</a>
-    {% endif %}
+    .about h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .about p {
+        line-height: 1.6;
+        font-size: 16px;
+    }
+    .services {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 20px;
+        background: #ffffff;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border-left: 5px solid #007bff;
+        border-bottom: 5px solid #007bff ;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .services h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .services ul {
+        list-style: none;
+        padding: 0;
+    }
+    .contact {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        border-top: 5px solid #007bff;
+        border-left: 5px solid #007bff;
+    }
+
+    .contact h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .contact p {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .contact .info {
+        margin-top: 20px;
+    }
+</style>
+<div>
+<section>
+    <div class="home-container">
+        <h2>Welcome to the Attachment Portal</h2>
+        <p>Your gateway to attachment opportunities and talent connections.</p>
+        <p>Here we link students to a variety of companies where they can take their industrial attachmnets as well as internships. <br><br>
+            We also make sure that the accomodation of the attachees is well catered for by having the tenants within their places of attachment post their rentals in the platform easening their process of searching for rentals.
+        </p>
+
+        {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}">Get Started</a>
+        {% else %}
+             <a href="{% url 'dashboard' %}">Go to Dashboard</a>
+        {% endif %}
+    </div>
+</section>
+<hr>
+<section>
+    <div class="about">
+        <h2>About Us</h2>
+        <p>
+            We are a bridge between the  students seeking for industrial attachment and internships,  and companies having slots for attachees as well as interns. 
+            By providing a seamless way to post and apply, we ensure that both parties can find the best fit with ease.
+            It also aimed at bridging students with tenants since in most cases, students usually secure an attachment in a strage place hence this platform will provide them with a chance to be able to secure a place to leave by having the tenants post there rentals in the platform.
+        </p>
+    </div>
+</section>
+<hr>
+<section>
+    <div class="services">
+        <h2>Our Services</h2>
+        <ul>
+            <p>Our sevices include the following: <br><br>
+                
+                Handling account creation for the attachees, companies and the tenants,<br><br>
+                <hr>
+                Posting attachment opportunities for the attachees to apply.
+                <br><br>
+                <hr>
+                Having the tenant post there rentals to easen the peocess of the attachees looking for places to stay while in there attachment.
+                <br><br> 
+                <hr>
+                We aslo carry out tracking of the processes carried out by each user registered in the platform to ensure <br> that intrgrity is upheld and ensuring that the intented purpse of the platform is attained.
+                <br><br><hr>
+            </p>
+        </ul>
+    </div>
+</section>
+    <hr>
+<section>
+    <div class="contact">
+        <h2>Contact Us</h2>
+        <p>
+         For any inquiries, support or feedback, please reach out to us:
+        </p>
+        <div class="info">
+            <p><strong>Email:</strong> support@attachmentportal.com</p>
+            <p><strong>Phone:</strong> +254 1112871337</p>
+            <p><strong>Location:</strong> Nairobi, Kenya</p>
+        </div>
+    </div>
+</section>
+    <hr>
 </div>
 {% endblock %}

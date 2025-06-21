@@ -1,4 +1,9 @@
 from datetime import timezone
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework import status
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
@@ -27,6 +32,11 @@ def home(request):
 
 def about(request):
     return render(request, 'about.html')
+
+def services(request):
+    return render(request, 'services.html')
+
+    
 
 def login_view(request):
     if request.method == 'POST':
@@ -60,7 +70,9 @@ def login_view(request):
             messages.error(request, "Invalid form submission.")
     else:
         form = AuthenticationForm()
-    return render(request, 'registration/login.html', {'form': form})
+    return render(request, 'registration/login.html', {'form': form}) 
+    
+      
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.')
