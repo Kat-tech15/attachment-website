@@ -3,13 +3,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm 
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden 
-from .models import Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing
+from .models import Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.utils import timezone
@@ -19,6 +20,8 @@ from .forms import AttachmentPostForm, HouseForm, AttachmentApplicationForm
 
 
 user = get_user_model()
+is_superuser = True
+is_staff =True
 
 
 def home(request):
@@ -225,6 +228,34 @@ def all_rentals(request):
 
     return render(request, 'all_rentals.html',{'rentals': rentals})
 
+def book_room(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    rental = room.rental
+
+    if room.is_booked:
+        messages.warning(request, "Sorry, this room is already booked.")
+
+    else:
+        room.is_booked=True
+        room.save()
+        messages.success(request, "Room booked Successfully.")
+    return redirect('all_rentals', rental_id=rental.id)
+
+    # Proceed with the booking process
+    booking = Booking.objects.create(
+        attachee=request.user.attachee,
+        rental_post=room.house,
+        full_name=request.user.attachee.full_name,
+        contact=request.user.attachee.phone_number
+    )
+    room.is_booked = True
+    room.save()
+
+    return render(request, 'book_room.html', {
+        'room': room,
+        'booking': booking
+    })
+
 @login_required
 def all_attachment_posts(request):
     if request.user.role != 'company':
@@ -316,7 +347,7 @@ def dashboard_router(request):
     else:
         return redirect(request, 'erro.html', {'message': 'unknown role'})
     
-
+@staff_member_required
 @login_required
 def admin_dashboard(request):
     return render(request, 'dashboards/admin_dashboard.html')

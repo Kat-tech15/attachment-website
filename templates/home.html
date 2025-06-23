@@ -4,6 +4,24 @@
 
 {% block content %}
 <style>
+    .search-form {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;   
+    }
+    .search-form input {
+        width: 300px;
+        padding: 10px;
+        border-radius: 5px 0 0 5px;
+        border: 1px solid #ccc;
+    }
+    .search-form button{
+        padding: 10px 20px;
+        border: none;
+        background-color: #2b6cb0;
+        color: white;
+        border-radius: 0 5px 5px 0;
+    }
     .home-container {
         text-align: center;
         padding: 50px 20px;
@@ -98,6 +116,10 @@
     }
 </style>
 <div>
+    <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
+        <input type="text" name="q" placeholder="Search applications...">
+        <button type="submit">Search</button>
+    </form>
 <section>
     <div class="home-container">
         <h2>Welcome to the Attachment Portal</h2>

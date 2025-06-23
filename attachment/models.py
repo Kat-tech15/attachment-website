@@ -9,10 +9,9 @@ class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('attachee', 'Attachee'),
         ('company', 'Company'),
-        ('tenant', 'Tenant'),
-        ('admin', 'Admin')
+        ('tenant', 'Tenant')
     )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='attachee')
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
     def __str__(self):
         return f"{self.username}({self.role})"
@@ -44,6 +43,7 @@ class AttachmentPost(models.Model):
     location = models.CharField(max_length=25)
     description = models.CharField(max_length=255)
     slots = models.IntegerField()
+    application_link = models.URLField(help_text="Link to the application page.")
     application_deadline = models.DateField(auto_created=True)
     post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
     created_at = models.DateTimeField(auto_now_add=True)
@@ -102,6 +102,15 @@ class House(models.Model):
 
     def __str__(self):
         return self.owner_name
+
+class Room(models.Model):
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    room_number = models.CharField(max_length=10)
+    is_booked = models.BooleanField(default=False)
+    
+
+    def __str__(self):
+        return f"{self.room_number} - {'Booked' if self.is_booked else 'Available'}"
 
 class Booking(models.Model):
     attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True)
