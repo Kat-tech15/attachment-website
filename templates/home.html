@@ -114,7 +114,124 @@
     .contact .info {
         margin-top: 20px;
     }
+    .section {
+  padding: 40px 20px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.card-body h3 {
+  margin: 0 0 5px;
+}
+
+.card-body p {
+  margin: 4px 0;
+}
+
+.cta-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.cta-link a {
+  padding: 10px 20px;
+  background-color: #1e90ff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.cta-link a:hover {
+  background-color: #006fd6;
+}
+
+.portal-banner {
+  background-color: #f5f5f5;
+  padding: 30px 20px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.portal-banner h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.portal-banner p {
+  max-width: 600px;
+  margin: auto;
+  font-size: 16px;
+  color: #444;
+}
+
+.portal-banner a {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.portal-banner a:hover {
+  background-color: #218838;
+}
+@media (max-width: 600px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    .section-title {
+        font-size: 22px;
+    }
+    .card-body p {
+        font-size: 0.9rem;
+    }
+}
 </style>
+<div class="portal-banner">
+  <h2>Welcome to the Housing & Attachment Portal</h2>
+  <p>Discover top housing options and the latest attachment opportunities from trusted companies.</p>
+  <a href="{% url 'all_attachment_posts' %}">Explore Attachments</a>
+</div>
+
 <div>
     <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
         <input type="text" name="q" placeholder="Search applications...">
@@ -168,6 +285,54 @@
     </div>
 </section>
     <hr>
+
+<div class="section">
+  <h2 class="section-title">🏠 Featured Houses</h2>
+  <div class="card-grid">
+    {% for house in featured_houses %}
+      <div class="card">
+        {% if house.image %}
+          <img src="{{ house.image.url }}" alt="{{ house.title }} image" role="img">
+        {% endif %}
+        <div class="card-body">
+          <h3>{{ house.title }}</h3>
+          <p><strong>Location:</strong> {{ house.location }}</p>
+          <p><strong>Price:</strong> {{ house.price }}</p>
+          <p>{{ house.description|truncatewords:15 }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="cta-link">
+    <a href="{% url 'all_rentals' %}">Browse All Houses</a>
+  </div>
+</div>
+<div class="section">
+  <h2 class="section-title">📎 Recent Attachments</h2>
+  <div class="card-grid">
+    {% for att in recent_attachments %}
+      <div class="card">
+        <div class="card-body">
+          <h3>{{ att.title }}</h3>
+          <p><strong>Company:</strong> {{ att.company }}</p>
+          <p><strong>Location:</strong> {{ att.location }}</p>
+          <p><strong>Deadline:</strong> {{ att.deadline|date:"F d, Y" }}</p>
+          {% if att.link %}
+            <p><a href="{{ att.link }}" target="_blank">View More / Apply</a></p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="cta-link">
+    <a href="{% url 'all_attachment_posts' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
+  </div>
+</div>
+<div class="section" style="background-color: #f0f8ff;">
+  <h2 class="section-title">💬 What Our Users Say</h2>
+  <p style="text-align:center; color: #555;">“The platform helped me find an affordable house near campus and land my attachment!” — Brian, Student</p>
+</div>
+
 <section id="contact">
     <div class="contact">
         <h2>Contact Us</h2>

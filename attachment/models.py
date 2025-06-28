@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+
+
+
 
 
 
@@ -53,13 +57,22 @@ class AttachmentApplication(models.Model):
     attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True, blank=True)
     attachment_post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE, null=True, blank=True)
 
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approaved', 'Approaved'),
+        ('rejected', 'Rejected'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
 
     full_name = models.CharField(max_length=200)
     email = models.EmailField()
     cv = models.ImageField()
     cover_letter = models.ImageField()
     recommendation = models.ImageField()
-    preferred_start = models.DateField(auto_created=True)
+    start_date = models.DateField(auto_created=True)
+    end_date = models.DateField(auto_created=True)
+
 
 
     class Meta:
@@ -117,9 +130,33 @@ class Booking(models.Model):
     rental_post = models.ForeignKey(House, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200)
     contact = models.CharField(max_length=10, null=True)
-    board_date = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    move_in_date = models.DateField(auto_now_add=True)
+    move_out_date = models.DateField(null=True, blank=True)
+    STATUS_CHOICES = [
+        ('cancelled','Cancelled'),
+        ('pending', 'Pending'),
+        ('approaved', 'Approaved'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return f"{self.full_name} booked {self.rental_post} "
 
 
+from django.db import models
+from django.conf import settings
+
+class HouseReview(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rental = models.ForeignKey('housing.RentalListing', on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class CompanyReview(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    company = models.ForeignKey('attachment.Company', on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)

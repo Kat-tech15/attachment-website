@@ -1,8 +1,10 @@
-<h2>My Applications</h2>
-<ul>
-    {% for app in applications %}
-        <li>{{ app.attachment_post.company }} - status: {{ app.status }}</li>
-    {% empty %}
-        <li>You have not made any application yet.</li>
-    {% endfor %}
-</ul>
+<td>
+  {% if app.email_sent %}
+    ✅ Sent on {{ app.email_sent_at|date:"M d, Y H:i" }}
+  {% else %}
+    ❌ Not Sent
+    {% if app.email_error %}
+      <br><small>Error: {{ app.email_error|truncatechars:60 }}</small>
+    {% endif %}
+  {% endif %}
+</td>

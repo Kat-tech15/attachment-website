@@ -124,6 +124,22 @@
     </tbody>
        
 </table>
+<h3>⭐ Reviews ({{ rental.reviews.count }})</h3>
+<p>Average Rating: {{ rental.reviews.all|average:'rating' }} / 5</p>
+
+<ul>
+  {% for r in rental.reviews.all %}
+    <li>
+      ⭐ {{ r.rating }} - {{ r.comment }}<br>
+      <small>By {{ r.user.get_full_name }} on {{ r.created_at|date:"M d, Y" }}</small>
+    </li>
+  {% empty %}
+    <li>No reviews yet.</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'submit_house_review' rental.id %}">Write a review</a>
+
 </div>
 <hr>
 {% endblock %}

@@ -13,8 +13,53 @@
             <a href="{% url 'my_applications' %}" class="btn">My Applications</a>
             <a href="{% url 'view_attachments'%}" class="btn">View Attachments</a>
             <a href="{% url 'view_rentals'%}" class="btn">View All Rentals</a>
+            <a href="{% url 'print_application_letter' app.id %}" class="btn btn-outline-primary">🖨️ Print Letter</a>
+
            
      </div>
+     <h2>🏠 My House Bookings</h2>
+<table>
+  <thead>
+    <tr><th>House</th><th>Move-in</th><th>Status</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    {% for b in bookings %}
+      <tr>
+        <td>{{ b.rental.title }}</td>
+        <td>{{ b.move_in_date|date:"M d, Y" }}</td>
+        <td>{{ b.status }}</td>
+        <td>
+          {% if b.status == 'pending' and b.move_in_date > today %}
+            <a href="{% url 'cancel-booking' b.id %}" class="btn btn-danger">Cancel</a>
+          {% else %}
+            ---
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No bookings yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>📄 My Attachment Applications</h2>
+<table>
+  <thead>
+    <tr><th>Company</th><th>Status</th><th>Date</th></tr>
+  </thead>
+  <tbody>
+    {% for a in applications %}
+      <tr>
+        <td>{{ a.company.name }}</td>
+        <td>{{ a.status }}</td>
+        <td>{{ a.created_at|date:"M d, Y" }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="3">No applications submitted.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 </div>
       
      

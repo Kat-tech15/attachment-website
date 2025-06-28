@@ -7,3 +7,5 @@ class AttachmentAppConfig(AppConfig):
     verbose_name = 'Attachment Management'
 
         # Import signals to ensure they are registered
+    def ready(self):
+        import attachment.signals

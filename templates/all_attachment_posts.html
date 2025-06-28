@@ -1,47 +1,166 @@
-<!-- templates/attachee/attachment_detail.html -->
 {% extends "base.html" %}
-{% block title %}Attachment Detail{% endblock %}
-
 {% block content %}
+
 <style>
-    .detail-container {
-        max-width: 700px;
-        margin: 50px auto;
-        padding: 25px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+  .attachment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
 
-    .detail-container h2 {
-        margin-bottom: 15px;
-    }
+  .attachment-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 16px;
+    transition: transform 0.3s ease;
+  }
 
-    .detail-container p {
-        margin: 10px 0;
-    }
+  .attachment-card:hover {
+    transform: translateY(-5px);
+  }
 
-    .detail-container form button {
-        padding: 10px 15px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 15px;
-    }
+  .attachment-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+  }
 
-    .detail-container form button:hover {
-        background-color: #218838;
+  .attachment-info {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 4px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    color: white;
+  }
+
+  .tag-soon { background-color: red; }
+  .tag-upcoming { background-color: green; }
+
+  .attachment-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #1e90ff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .attachment-link:hover {
+    text-decoration: underline;
+  }
+
+  .search-sort {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .pagination {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .pagination span, .pagination a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+  }
+
+  .pagination .current {
+    background-color: #1e90ff;
+    color: white;
+  }
+  @media (max-width: 600px) {
+    .attachment-card {
+        padding: 12px;
     }
+    .attachment-title {
+        font-size: 1rem;
+    }
+    .attachment-info {
+        font-size: 0.85rem;
+    }
+  }
 </style>
 
-<div class="detail-container">
-    <h2>{{ attachment.title }}</h2>
-    <p><strong>Company:</strong> {{ attachment.company.name }}</p>
-    <p><strong>Location:</strong> {{ attachment.location }}</p>
-    <p><strong>Description:</strong></p>
-    <p>{{ attachment.description }}</p>
+<h1 style="text-align:center;">Attachment Opportunities</h1>
+
+<div class="search-sort">
+  <form method="get">
+    <input type="text" name="q" placeholder="Search by title or location" value="{{ query|default_if_none:'' }}">
+    <button type="submit">Search</button>
+    <select name="sort" onchange="this.form.submit()">
+      <option value="">Sort by</option>
+      <option value="deadline" {% if sort == 'deadline' %}selected{% endif %}>Deadline</option>
+    </select>
+  </form>
 </div>
+
+<div class="attachment-grid">
+  {% for att in page_obj %}
+    <div class="attachment-card">
+      <div class="attachment-title">{{ att.title }}</div>
+      <div class="attachment-info">Company: {{ att.company }}</div>
+      <div class="attachment-info">Location: {{ att.location }}</div>
+      <div class="attachment-info">Deadline: {{ att.deadline }}</div>
+
+      {% if att.deadline <= today %}
+        <span class="tag tag-soon">Deadline Passed</span>
+      {% elif att.deadline<= soon_threshold %}
+        <span class="tag tag-soon">Closing Soon</span>
+      {% else %}
+        <span class="tag tag-upcoming">Open</span>
+      {% endif %}
+
+      {% if att.link %}
+        <a href="{{ att.link }}" class="attachment-link" target="_blank" aria-label="Apply for {{ att.title }}">View More / Apply</a>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p>No attachments found.</p>
+  {% endfor %}
+</div>
+
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?q={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">Previous</a>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+      <span class="current">{{ num }}</span>
+    {% else %}
+      <a href="?q={{ query }}&sort={{ sort }}&page={{ num }}">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+    <a href="?q={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">Next</a>
+  {% endif %}
+
+  <h3>⭐ Company Reviews</h3>
+<p>Average: {{ company.reviews.all|average:'rating' }} / 5</p>
+<ul>
+  {% for r in company.reviews.all %}
+    <li>
+      ⭐ {{ r.rating }} – {{ r.comment }}
+      <br><small>{{ r.user.get_full_name }} – {{ r.created_at|date:"M d, Y" }}</small>
+    </li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'submit_company_review' company.id %}">Review this company</a>
+
+</div>
+
 {% endblock %}

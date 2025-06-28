@@ -3,40 +3,222 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<h2>Admin Dashboard</h2>
-<p>Welcome, {{ user.username }}!</p>
+<div class="dashboard-container">
+    <div class="stats">
+        <div class="card">Total Bookings: {{ boooking_count }}</div>
+        <div class="card">Total Applications: {{ application_count }}</div>
+    </div>
 
-{% if admin_role == 'superadmin' %}
-    <h3>Super Admin Controls</h3>
-    <ul>
-        <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
-        <li><a href="{% url 'site_settings' %}">Site Settings</a></li>
-        <li><a href="{% url 'view_reports' %}">View Reports</a></li>
-    </ul>
+    <div class="chart-container">
+      <canvas id="usersChart"></canvas>
+      <h3>Monthly Booking Trends</h3>
+        <canvas id="bookingTrendChart"></canvas>
+        <h3>Top Companies by Applications</h3>
+        <canvas id="topCompaniesChart"></canvas>
+        <h3>Applications By Course</h3>
+        <canvas id="courseChart"></canvas>
+        
+    </div>
+    <h3>Pending Attachment Applications</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Attachee</th>
+      <th>Company</th>
+      <th>Field</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for app in pending_apps %}
+      <tr>
+        <td>{{ app.attachee.username }}</td>
+        <td>{{ app.company.name }}</td>
+        <td>{{ app.attachee.attachee.field_of_study }}</td>
+        <td>{{ app.status }}</td>
+        <td>
+          <a href="{% url 'approve-application' app.id %}" class="btn btn-success btn-sm">Approve</a>
+          <a href="{% url 'reject-application' app.id %}" class="btn btn-danger btn-sm">Reject</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5">No pending applications.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div style="text-align: right; margin-bottom: 20px;">
+  <a href="{% url 'download-approved-pdf' %}" class="btn btn-primary">📥 Download Approved Applications (PDF)</a>
+</div>
 
-{% elif admin_role == 'content_manager' %}
-    <h3>Content Management</h3>
-    <ul>
-        <li><a href="{% url 'manage_content' %}">Manage Content</a></li>
-        <li><a href="{% url 'approve_submissions' %}">Approve Submissions</a></li>
-    </ul>
+</div>
 
-{% elif admin_role == 'user_support' %}
-    <h3>User Support</h3>
-    <ul>
-        <li><a href="{% url 'support_tickets' %}">Support Tickets</a></li>
-        <li><a href="{% url 'user_feedback' %}">User Feedback</a></li>
-    </ul>
 
-{% elif admin_role == 'finance_admin' %}
-    <h3>Finance Administration</h3>
-    <ul>
-        <li><a href="{% url 'billing' %}">Billing</a></li>
-        <li><a href="{% url 'transactions' %}">Transactions</a></li>
-    </ul>
 
-{% else %}
-    <p>You do not have a specific admin role assigned.</p>
-{% endif %}
+<script>
+  const ctx = document.getElementById('usersChart').getContext('2d');
+    const usersChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [{% for item in users_by_role %}'{{ item.role }}',{% endfor %}],
+        datasets: [{
+          label: 'Users by Role',
+          data: [{% for item in users_by_role %}{{ item.count }},{% endfor %}],
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+        }
+      }
+    });
 
+
+  const trendCtx = document.getElementById('bookingTrendChart').getContext('2d');
+  const trendChart = new Chart(trendCtx, {
+    type: 'bar',
+    data: {
+      labels: {{ booking_month_labels|safe }},
+      datasets: [{
+        label: 'Bookings per Month',
+        data: {{ booking_month_data|safe }},
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+      }
+    }
+  });
+
+  const companyCtx = document.getElementById('topCompaniesChart').getContext('2d');
+  const companyChart = new Chart(companyCtx, {
+    type: 'bar',
+    data: {
+      labels: {{ top_company_names|safe }},
+      datasets: [{
+        label: 'Applications',
+        data: {{ top_company_counts|safe }},
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+      }
+    }
+  });
+
+  const courseCtx = document.getElementById('courseChart').getContext('2d');
+  const courseChart = new Chart(courseCtx, {
+    data: {
+      lables: {{ course_labels|safe }},
+      datasets: [{
+        label: {{ course_counts|safe }},
+        backgroundcolor: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(153, 102, 255, 0.6)',
+          'rgba(255, 159, 64, 0.6)',
+        ],
+        bordercolor: '#fff',
+        borderwidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        }
+
+      }
+    }
+  });
+</script>
+
+<style>
+    body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 20px;
+}
+
+.dashboard-container {
+  max-width: 800px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.card {
+  background-color: #007bff;
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 48%;
+  font-size: 18px;
+  text-align: center;
+}
+
+.chart-container {
+  width: 100%;
+  height: 400px;
+}
+canvas {
+  margin-top: 30px;
+  max-width: 100%;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.btn {
+  padding: 5px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+}
+
+.btn-success {
+  background-color: green;
+}
+
+.btn-danger {
+  background-color: red;
+}
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+
+</style>
 {% endblock %}

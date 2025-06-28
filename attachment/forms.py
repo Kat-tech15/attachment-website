@@ -1,5 +1,5 @@
 from django import forms
-from .models import AttachmentApplication, House, AttachmentPost, CustomUser,RentalListing
+from .models import AttachmentApplication, House, AttachmentPost, CustomUser,RentalListing, HouseReview, CompanyReview
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
@@ -55,3 +55,15 @@ class RentalListingForm(forms.ModelForm):
     class Meta:
         model = RentalListing
         fields = '__all__'
+
+class HouseReviewForm(forms.ModelForm):
+    class Meta:
+        model = HouseReview
+        fields = ['rating', 'comment']
+
+
+class CompanyReviewForm(forms.ModelForm):
+    class Meta:
+        model = CompanyReview
+        fields = ['rating', 'comment']
+    
