@@ -1,5 +1,4 @@
 from datetime import timezone, timedelta
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
@@ -7,7 +6,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
 from notifications.signals import notify
 from django.template.loader import render_to_string
-from weasyprint import HTML
+from xhtml2pdf import pisa
 from notifications.models import Notification
 from django.db.models import Count
 from django.core.mail import EmailMessage
