@@ -6,8 +6,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
 from notifications.signals import notify
 from django.template.loader import render_to_string
+from weasyprint import HTML
 from xhtml2pdf import pisa
-from notifications.models import Notification
 from django.db.models import Count
 from django.core.mail import EmailMessage
 import tempfile
@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse
-from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room
+from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room, Notification
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.utils import timezone
@@ -457,7 +457,7 @@ def dashboard_router(request):
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def admin_dashboard(request):
-    users_by_role = CustomUser.objects.values('role').annotate(count=count('id'))
+    users_by_role = CustomUser.objects.values('role').annotate(count=Count('id'))
     booking_count =Booking.objets.count()
     application_count= AttachmentApplication.objects.count()
 
@@ -510,21 +510,27 @@ def admin_dashboard(request):
 
     return render(request, 'dashboards/admin_dashboard.html')
 
-@user_passes_test(lambda u:u.is_superuser or u.is_staff)
-def download_approved_applicatons_pdf(request):
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+@login_required
+def download_approved_applications_pdf(request):
     approved_apps = AttachmentApplication.objects.filter(status='approved')\
-        .select_related('attachee','company')
-    
+        .select_related('attachee', 'company')
+
     html_string = render_to_string('pdf/approved_applications.html', {
         'applications': approved_apps,
+        'requested_by': request.user,
     })
 
-    html = HTML(string=html_string)
-    pdf = html.write_pdf()
+    try:
+        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+        pdf = html.write_pdf()
 
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="approved_applications.pdf"'
-    return response
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="approved_applications.pdf"'
+        return response
+
+    except Exception as e:
+        return HttpResponse(f"Failed to generate PDF: {str(e)}", status=500)
 
 @login_required
 def attachee_dashboard(request):

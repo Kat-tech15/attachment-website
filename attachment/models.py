@@ -2,8 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
-
-
+from django.contrib.auth import get_user_model
 
 
 
@@ -144,12 +143,10 @@ class Booking(models.Model):
         return f"{self.full_name} booked {self.rental_post} "
 
 
-from django.db import models
-from django.conf import settings
 
 class HouseReview(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    rental = models.ForeignKey('housing.RentalListing', on_delete=models.CASCADE, related_name='reviews')
+    rental = models.ForeignKey('attachment.RentalListing', on_delete=models.CASCADE, related_name='reviews')
     rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -160,3 +157,16 @@ class CompanyReview(models.Model):
     rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+User = get_user_model()
+
+class Notification(models.Model):
+    recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
+    message = models.TextField()
+    link = models.URLField(blank=True, null=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"To {self.recipient}: {self.message}"
