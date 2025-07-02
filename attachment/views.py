@@ -490,11 +490,10 @@ def admin_dashboard(request):
         'top_company_counts': top_company_counts,
     })
 
-    course_data = AttachmentApplication.objects.values(
-        'attachee_course'
-    ).annotate(count=Count('id')).order_by('-count')[:6]
+    course_data = AttachmentApplication.objects.values('attachee__course')\
+        .annotate(count=Count('id')).order_by('-count')[:6]
 
-    course_labels =[item['attachee_course'] for item in course_data]
+    course_labels =[item['attachee__course'] for item in course_data]
     course_counts = [item['count'] for item in course_data]
 
     context.update({
