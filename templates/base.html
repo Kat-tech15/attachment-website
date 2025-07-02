@@ -20,11 +20,14 @@
             background-color: #bb9fba;
             padding: 15px 20px;
             color: white;
+            position: fixed;
+            width: 100%;
             display: flex;
             border-top: 5px solid #0ae71c;
             border-right: 5px solid #0ae71c;
             justify-content: space-between;
             align-items: center;
+            z-index: 999px;
         }.nav-list {
             list-style: none;
             margin: 0;
@@ -198,8 +201,7 @@
 
     <div class="container">
         {% block content %}
-        {% load notifications_tags %}
-        {% notifications_unread as unread_count %} 
+       
         <div class="notifications-dropdown" id="notificationsDropdown">
             <div class="notifications-icon" onclick="toggleDropdown()">
                     🔔

@@ -7,7 +7,8 @@
     .search-form {
         display: flex;
         justify-content: center;
-        margin: 20px 0;   
+        margin: 20px 0;
+        margin-top: 20px;   
     }
     .search-form input {
         width: 300px;
@@ -24,7 +25,8 @@
     }
     .home-container {
         text-align: center;
-        padding: 50px 20px;
+       margin-top: 20px;
+
     }
 
     .home-container h1 {
@@ -226,19 +228,14 @@
     }
 }
 </style>
-<div class="portal-banner">
-  <h2>Welcome to the Housing & Attachment Portal</h2>
-  <p>Discover top housing options and the latest attachment opportunities from trusted companies.</p>
-  <a href="{% url 'all_attachment_posts' %}">Explore Attachments</a>
-</div>
-
 <div>
-    <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
+    
+<section id="home">
+    <div class="home-container">
+      <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
         <input type="text" name="q" placeholder="Search applications...">
         <button type="submit">Search</button>
     </form>
-<section id="home">
-    <div class="home-container">
         <h2>Welcome to the Attachment Portal</h2>
         <p>Your gateway to attachment opportunities and talent connections.</p>
         <p>Here we link students to a variety of companies where they can take their industrial attachmnets as well as internships. <br><br>
@@ -327,6 +324,11 @@
   <div class="cta-link">
     <a href="{% url 'all_attachment_posts' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
   </div>
+</div>
+<div class="portal-banner">
+  <h2>Welcome to the Housing & Attachment Portal</h2>
+  <p>Discover top housing options and the latest attachment opportunities from trusted companies.</p>
+  <a href="{% url 'all_attachment_posts' %}">Explore Attachments</a>
 </div>
 <div class="section" style="background-color: #f0f8ff;">
   <h2 class="section-title">💬 What Our Users Say</h2>

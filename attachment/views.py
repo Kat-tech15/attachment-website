@@ -68,7 +68,8 @@ def login_view(request):
                 messages.success(request, f'Welcome back, {username}!')
 
                 role = user.role
-                if role == 'admin':
+                
+                if user.is_superuser or user.is_staff:
                     return redirect('admin_dashboard')
 
                 elif role == 'attachee':
@@ -141,7 +142,7 @@ def contact(request):
 
 
 def my_applications(request):
-    if request.user.role != 'attachee':
+    if not request.user.has_priviledge(['attachee']):
         return HttpResponseForbidden("Only attachees have access to this page.")
     
     applications = AttachmentApplication.objects.filter(attachee__user=request.user)
@@ -153,7 +154,7 @@ def attachee_list(request):
 
 @login_required
 def apply_attachment(request, attachment_id):
-    if request.user.role not in ['admin', 'attachee']:
+    if not request.user.has_priviledge(['attachee']):
         return HttpResponseForbidden("Only attachees can apply for attachments.")
 
      
@@ -230,7 +231,7 @@ def reject_application(request, app_id):
 
 @login_required
 def book_rental(request, rental_id):
-    if request.user.role not in ['admin','attachee']:
+    if  not request.user.has_priviledge(['attachee']):
         return HttpResponseForbidden("Only Admins and Attachees have access to this page.")
  
     rental_post = get_object_or_404(House, id=rental_id)
@@ -260,7 +261,7 @@ def book_rental(request, rental_id):
         
 
 def my_bookings(request):
-    if request.user.role in ['admin', 'attachee', 'tenant']:
+    if not request.user.has_priviledge(['attachee', 'tenant']):
         return HttpResponseForbidden("Only Attachees and Tenants can view bookings.")
 
     bookings = Booking.objects.filter(attachee=request.user).select_related('house')
@@ -270,7 +271,7 @@ def my_bookings(request):
 
 @login_required
 def all_rentals(request):
-    if request.user.role != 'tenant':
+    if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden()
 
     rentals = RentalListing.objects.all()
@@ -307,7 +308,7 @@ def book_room(request, room_id):
 
 @login_required
 def all_attachment_posts(request):
-    if request.user.role != 'company':
+    if not request.user.has_priviledge(['company']):
         return HttpResponseForbidden("Only companies have access to this page.")
     
     query = request.GET.get('q')
@@ -336,7 +337,7 @@ def all_attachment_posts(request):
 
 @login_required
 def post_rental(request):
-    if request.user.role not in ['admin','tenant']:
+    if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden()
 
     if request.method == 'POST':
@@ -352,8 +353,8 @@ def post_rental(request):
         form = HouseForm()
 
     notify.send(
-        sender = request.user,
-        recipient = post_rental.user,
+        sender = request.tenant,
+        recipient = post_rental.tenant,
         verb ='Your rental has been posted successfully',
     )
 
@@ -409,7 +410,7 @@ def view_attachments(request):
 # companys' Views 
 @login_required 
 def post_attachment(request):
-    if request.user.role not in ['admin', 'company']:
+    if request.user.role not in ['superuser', 'company']:
         return HttpResponseForbidden("You have no permission to post attachments.")
 
     
@@ -442,7 +443,7 @@ def view_applicants(request):
 @login_required
 def dashboard_router(request):
     role = request.user.role
-    if role == 'admin':
+    if user.is_superuser or user.is_staff:
         return redirect('admin_dashboard')
     elif role == 'attachee':
         return redirect('attachee_dashboard')
@@ -454,11 +455,10 @@ def dashboard_router(request):
         return redirect(request, 'erro.html', {'message': 'unknown role'})
     
 @staff_member_required
-
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def admin_dashboard(request):
     users_by_role = CustomUser.objects.values('role').annotate(count=Count('id'))
-    booking_count =Booking.objets.count()
+    booking_count =Booking.objects.count()
     application_count= AttachmentApplication.objects.count()
 
     context = {
@@ -478,11 +478,11 @@ def admin_dashboard(request):
         'booking_month_labels': labels,
         'booking_month_data': data,
     }
-    top_companies_data = AttachmentApplication.objects.values('company__name')\
-        .annotate(application_count=Count('id')\
-                  .order_by('-application_count')[:5])
-    
-    top_company_names  = [item['company__name'] for item in top_companies_data]
+    top_companies_data = AttachmentApplication.objects.values('attachment_post__company__name')\
+        .annotate(application_count=Count('id'))\
+        .order_by('-application_count')[:5]
+
+    top_company_names  = [item['attachment_post__company__name'] for item in top_companies_data]
     top_company_counts = [item['application_count'] for item in top_companies_data]
 
     context.update({
@@ -491,10 +491,10 @@ def admin_dashboard(request):
     })
 
     course_data = AttachmentApplication.objects.values(
-        'attachee_attachee_course'
+        'attachee_course'
     ).annotate(count=Count('id')).order_by('-count')[:6]
 
-    course_labels =[item['attachee_attachee_course'] for item in course_data]
+    course_labels =[item['attachee_course'] for item in course_data]
     course_counts = [item['count'] for item in course_data]
 
     context.update({
@@ -534,8 +534,8 @@ def download_approved_applications_pdf(request):
 
 @login_required
 def attachee_dashboard(request):
-    user = request.user
-    bookings = Booking.objects.filter(user=user).order_by('-created_at')
+    attachee = request.user
+    bookings = Booking.objects.filter(attachee=attachee).order_by('-created_at')
     applications = AttachmentApplication.objects.filter(attachee=user).order_by('-ccreated_at')
     
     return render(request, 'dashboards/attachee_dashboard.html',{ 

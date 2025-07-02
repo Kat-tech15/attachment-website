@@ -16,6 +16,9 @@ class CustomUser(AbstractUser):
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
+    def has_priviledge(self, allowed_roles):
+        return self.role in allowed_roles or self.is_superuser or self.is_staff
+
     def __str__(self):
         return f"{self.username}({self.role})"
 
