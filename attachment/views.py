@@ -11,6 +11,8 @@ from xhtml2pdf import pisa
 from django.db.models import Count
 from django.core.mail import EmailMessage
 import tempfile
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.db.models.functions import TruncMonth
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
@@ -278,6 +280,12 @@ def all_rentals(request):
 
     return render(request, 'all_rentals.html',{'rentals': rentals})
 
+@receiver(post_save, sender=RentalListing)
+def create_room(sender, instance, created, **kwargs):
+    if created:
+        for i in range(1, instance.total_rooms + 1):
+            Room.objects.create(rental=instance, room_number=f"Room {i}")
+
 def book_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
     rental = room.rental
@@ -288,8 +296,8 @@ def book_room(request, room_id):
     else:
         room.is_booked=True
         room.save()
-        messages.success(request, "Room booked Successfully.")
-    return redirect('all_rentals', rental_id=rental.id)
+        messages.success(request, "Room booked Successfully {room.room_number}.")
+    return redirect('all_rentals', rental_id=room.rental.id)
 
     # Proceed with the booking process
     booking = Booking.objects.create(
@@ -400,8 +408,14 @@ def submit_company_review(request, company_id):
     return render(request, 'submit_company_review.html', {'form': form, 'company': company})
 
     
-def view_rentals(request):
-    return render(request, 'view_rentals.html',{'rentals': House.objects.all()})
+def view_rentals(request, rental_id):
+    rental= get_object_or_404(RentalListing, id=rental_id)
+    available_rooms = rental.rooms.filter(is_booked=False)
+
+    return render(request, 'view_rentals.html',{
+        'rentals':rental,
+        'available_rooms':available_rooms,
+        })
 
 
 def view_attachments(request):
@@ -410,7 +424,7 @@ def view_attachments(request):
 # companys' Views 
 @login_required 
 def post_attachment(request):
-    if request.user.role not in ['superuser', 'company']:
+    if not request.user.has_priviledge(['company']):
         return HttpResponseForbidden("You have no permission to post attachments.")
 
     

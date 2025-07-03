@@ -1,6 +1,6 @@
 <!-- templates/attachee/view_attachments.html -->
 {% extends "base.html" %}
-{% block title %}Available Attachments{% endblock %}
+{% block title %}Available Rentals{% endblock %}
 
 {% block content %}
 {% if messages %}
@@ -91,12 +91,73 @@
     .btn:hover {
         background-color: #0056b3;
     }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+    .room-summary {
+        margin-bottom: 20px;
+        font-size: 15px;
+    }
+    .room-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .room-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 8px solid;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #e0f7e9;
+    }
+    .room-card.available {
+        border-color: #28a745;
+    }
+    .room-card.booked {
+        border-color: #dc3545;
+    }
+    .room-info {
+        font-size: 16px;
+    }
+    .status-green {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .status-red {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .btn {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    @media screen and (min-width: 600px) {
+        .room-list {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
 </style>
 <div class="rental-list">
     <h2>Available Rentals</h2>
     <table class="rental-table">
     <thead>
-        <tr>
+        <tr>  
             <th>Tenant Name</th>
             <th>Location</th>
             <th>Description</th>
@@ -122,6 +183,36 @@
         </tr>
         {% endfor %}
     </tbody>
+    <div class="container">
+        <h1>{{ rental.tenant }}</h1>
+        <p>{{ rental.description }}</p>
+
+        <div class="room-summary">
+            <p><strong>Total Rooms:</strong>{{ rental.rooms.count }}</p>
+            <p><strong>Available Rooms:</strong>{{ rental.rooms.filter(is_booked=False).count }}</p>
+            <p><strong>Booked Rooms:</strong>{{ rental.rooms.filter(is_booked=True).count }}</p>
+        </div>
+
+        <div class="room-list">
+            {% fro rooms in rental.rooms.all %}
+                <div class="room-card" {% if room.is_booked %}booked{% else %}available{% endif %}>
+                    <div class="room-info">
+                        <strong>{{ room.room_number }}</strong><br>
+                        {% if room.is_booked %}
+                            <span class="status red">Booked</span>
+                        {% else %}
+                            <span class="status green">Available</span>
+                        {% endif %}
+                    </div>
+                    {% if not room.is_booked %}:
+                        <a href="{% url 'book_room' room.id %}" class="btn">Book Now</a>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No rooms found.</p>
+            {% endfor %}
+        </div>
+    </div>
        
 </table>
 <h3>⭐ Reviews ({{ rental.reviews.count }})</h3>
