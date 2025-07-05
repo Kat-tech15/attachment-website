@@ -316,6 +316,14 @@ def book_room(request, room_id):
         'booking': booking
     })
     
+register = template.Library()
+
+@register.filter
+def average(queryset, field):
+    values = [getattr(obj, field, 0) for obj in queryset if getattr(obj, field, None) is not None]
+    if not values:
+        return 0
+    return round(sum(values) / len(values), 1)
 
 @login_required
 def all_attachment_posts(request):
@@ -325,13 +333,21 @@ def all_attachment_posts(request):
     query = request.GET.get('q')
     sort = request.GET.get('sort')
 
+    attachments = AttachmentPost.objects.all()
+
     if query:
-        attachments = attachments.filter(title_icontains=query) | attachments.filter(location_icontains=query)
+        attachments = attachments.filter(title__icontains=query) | attachments.filter(location_icontains=query)
 
     if sort == 'deadline':
         attachments = attachments.order_by('deadline')
 
-    paginator = Paginator(AttachmentPost, 6)
+    today = timezone.now().date()
+    soon_threshold = today + timedelta(days=7)
+    for att in attachments:
+        att.is_expired = att.application_deadline <= today
+        att.is_soon = today < att.application_deadline <= soon_threshold
+
+    paginator = Paginator(attachments, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -413,9 +429,19 @@ def submit_company_review(request, company_id):
     return render(request, 'submit_company_review.html', {'form': form, 'company': company})
 
     
+
+@login_required
 def view_rentals(request):
-    rentals = RentalListing.objects.annotate(avg_rating=Avg('reviews__rating'))  # Only if reviews model exists
-    return render(request, 'view_rentals.html', {'rentals': rentals})
+    rentals = RentalListing.objects.all().prefetch_related('rooms', 'reviews').annotate(
+        avg_rating=Avg('reviews__rating')
+    )
+
+    for rental in rentals:
+        rental.available_rooms = rental.rooms.filter(is_booked=False).count()
+        rental.booked_rooms = rental.rooms.filter(is_booked=True).count()
+        rental.total_rooms = rental.rooms.count()
+
+    return render(request, 'all_rentals.html', {'rentals': rentals})
 
 
 def view_attachments(request):
@@ -442,7 +468,7 @@ def post_attachment(request):
             attachment = form.save(commit=False)
             attachment.company = company
             attachment.save()
-            return redirect('view_attachments')
+            return redirect('company_dashboard')
         
     else:
         form = AttachmentPostForm(user=request.user)

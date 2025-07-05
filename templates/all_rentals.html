@@ -1,16 +1,50 @@
-{% extends "base.html" %}
-{% block title %}Available Rentals{% endblock %}
-
+{% extends 'base.html' %}
 {% block content %}
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} mt-2" role="alert">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
+<div class="rental-list">
+     <h2>Available Rentals</h2>
+    <table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Owner</th>
+            <th>Contact</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Rent</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rental in rentals %}
+        <tr>
+            <td>{{ rental.owner_name}}</td>
+            <td>{{ rental.contact}}</td>
+            <td>{{ rental.location}}</td>
+            <td>{{ rental.description}}</td>
+            <td>{{ rental.rent }}</td>
+            <td> <img src="{{ rental.image.url}}" width="100"></td>  
+            <td><a href="{% url 'book_rental' rental.id%}" class="btn">Book</a></td>   
+        </tr>
+        
+        {% endfor %}
 
+    </tbody>
+</table>
+</div> 
 <style>
+    .btn {
+        display: inline-block;
+        margin: 10px;
+        padding: 1px 3px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+  
+    .btn:hover {
+        background-color: #0056b3;
+    }
     .rental-list {
         max-width: 900px;
         margin: 50px auto;
@@ -20,147 +54,56 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .container {
-        max-width: 800px;
-        margin: auto;
-        background-color: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    .rental-item {
+        border-bottom: 1px solid #ccc;
+        padding: 15px 0;
     }
 
-    .room-summary {
-        margin-bottom: 20px;
-        font-size: 15px;
+    .rental-item h3 {
+        margin: 0 0 8px 0;
     }
 
-    .room-list {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
+    .rental-item p {
+        margin: 4px 0;
     }
 
-    .room-card {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-left: 8px solid;
-        padding: 15px;
-        border-radius: 10px;
-        background-color: #e0f7e9;
-    }
-
-    .room-card.available {
-        border-color: #28a745;
-    }
-
-    .room-card.booked {
-        border-color: #dc3545;
-    }
-
-    .room-info {
-        font-size: 16px;
-    }
-
-    .status-green {
-        color: #28a745;
-        font-weight: bold;
-    }
-
-    .status-red {
-        color: #dc3545;
-        font-weight: bold;
-    }
-
-    .btn {
-        background-color: #007bff;
+    .rental-item a {
+        display: inline-block;
+        margin-top: 10px;
+        background: #007bff;
         color: white;
         padding: 8px 14px;
-        border: none;
-        border-radius: 6px;
+        border-radius: 5px;
         text-decoration: none;
-        font-size: 14px;
-        cursor: pointer;
     }
 
-    .btn:hover {
-        background-color: #0056b3;
+    .rental-item a:hover {
+        background: #0056b3;
     }
-
-    @media screen and (min-width: 600px) {
-        .room-list {
-            grid-template-columns: 1fr 1fr;
-        }
+    .rental_table{
+        background-color: #007bff;
+        width: 40%;
+        height: 100px;
+        border-radius: 3px;
+        align-self: center;
     }
-
-    .rental-image {
+    h2 {
+        text-align: center;
+    }
+    p {
+        text-align: center;
+    }
+    table {
+        border-collapse: collapse;
         width: 100%;
-        max-height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-top: 10px;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    thead {
+        background-color: #f2f2f2;
     }
 </style>
-
-<div class="rental-list">
-    <h2>Available Rentals</h2>
-
-    {% for rental in rentals %}
-    <div class="container">
-        <h3>{{ rental.tenant.user.username }}</h3>
-        <p><strong>Location:</strong> {{ rental.location }}</p>
-        <p><strong>Description:</strong> {{ rental.description }}</p>
-        <p><strong>Rent:</strong> {{ rental.rent }}</p>
-
-        {% if rental.photo %}
-            <img src="{{ rental.photo.url }}" alt="Rental Image" class="rental-image">
-        {% endif %}
-
-        <div class="room-summary">
-            <p><strong>Total Rooms:</strong> {{ rental.total_rooms }}</p>
-            <p><strong>Available Rooms:</strong> {{ rental.available_rooms }}</p>
-            <p><strong>Booked Rooms:</strong> {{ rental.booked_rooms }}</p>
-        </div>
-
-        <div class="room-list">
-            {% for room in rental.rooms.all %}
-                <div class="room-card {% if room.is_booked %}booked{% else %}available{% endif %}">
-                    <div class="room-info">
-                        <strong>{{ room.room_number }}</strong><br>
-                        {% if room.is_booked %}
-                            <span class="status-red">Booked</span>
-                        {% else %}
-                            <span class="status-green">Available</span>
-                        {% endif %}
-                    </div>
-                    {% if not room.is_booked %}
-                        <a href="{% url 'book_room' room.id %}" class="btn">Book Now</a>
-                    {% endif %}
-                </div>
-            {% empty %}
-                <p>No rooms found.</p>
-            {% endfor %}
-        </div>
-
-        <h3>⭐ Reviews ({{ rental.reviews.count }})</h3>
-        <ul>
-            {% for r in rental.reviews.all %}
-                <li>
-                    ⭐ {{ r.rating }} - {{ r.comment }}<br>
-                    <small>By {{ r.user.get_full_name }} on {{ r.created_at|date:"M d, Y" }}</small>
-                </li>
-            {% empty %}
-                <li>No reviews yet.</li>
-            {% endfor %}
-        </ul>
-
-        {% if rental.id %}
-            <a href="{% url 'submit_house_review' rental.id %}" class="btn">Write a review</a>
-        {% else %}
-            <span class="btn disabled">Review not available</span>
-        {% endif %}
-    </div>
-    <hr>
-    {% endfor %}
-</div>
+<hr>
 {% endblock %}

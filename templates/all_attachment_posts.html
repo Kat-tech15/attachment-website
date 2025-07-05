@@ -112,11 +112,11 @@
       <div class="attachment-title">{{ att.title }}</div>
       <div class="attachment-info">Company: {{ att.company }}</div>
       <div class="attachment-info">Location: {{ att.location }}</div>
-      <div class="attachment-info">Deadline: {{ att.deadline }}</div>
+      <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
 
-      {% if att.deadline <= today %}
+      {% if att.is_eapired %}
         <span class="tag tag-soon">Deadline Passed</span>
-      {% elif att.deadline<= soon_threshold %}
+      {% elif att.is_soon %}
         <span class="tag tag-soon">Closing Soon</span>
       {% else %}
         <span class="tag tag-upcoming">Open</span>
@@ -149,7 +149,7 @@
   {% endif %}
 
   <h3>⭐ Company Reviews</h3>
-<p>Average: {{ company.reviews.all|average:'rating' }} / 5</p>
+<p>Average: {{ company.reviews.all|Avg:"N/A" }} / 5</p>
 <ul>
   {% for r in company.reviews.all %}
     <li>
