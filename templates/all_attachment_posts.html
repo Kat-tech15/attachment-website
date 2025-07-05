@@ -115,6 +115,7 @@
       <div class="attachment-title">{{ att.title }}</div>
       <div class="attachment-info">Company: {{ att.company }}</div>
       <div class="attachment-info">Location: {{ att.location }}</div>
+      <div class="attachment-info">Description: {{ att.description }}</div>
       <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
 
       {% if att.is_eapired %}
@@ -151,8 +152,7 @@
     <a href="?q={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">Next</a>
   {% endif %}
 
-  <h3>⭐ Company Reviews</h3>
-<p>Average: {{ average_rating }} / 5</p>
+  
 {% if company and company.id %}
   <h3>⭐ Company Reviews</h3>
   <p>Average: {{ average_rating }} / 5</p>

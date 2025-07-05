@@ -105,6 +105,7 @@ class Contact(models.Model):
 
 
 class House(models.Model):
+    tenant = models.ForeignKey('Tenant', on_delete=models.CASCADE, null=True, blank=True)
     owner_name  = models.CharField(max_length=200)
     contact = models.CharField(max_length=10, null=True)
     location = models.CharField(max_length=200)

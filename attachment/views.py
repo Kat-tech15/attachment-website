@@ -21,11 +21,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse
-from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room, Notification
-from .forms import CustomUserCreationForm
+from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room, Notification, Tenant
+from .forms import CustomUserCreationForm,HouseForm
 from django.contrib import messages
 from django.utils import timezone
 from .forms import AttachmentPostForm, HouseForm, AttachmentApplicationForm, HouseReviewForm, CompanyReviewForm
+
 # Create your views here.
 
 
@@ -329,7 +330,7 @@ def all_attachment_posts(request):
     attachments = AttachmentPost.objects.all()
 
     if query:
-        attachments = attachments.filter(title__icontains=query) | attachments.filter(location_icontains=query)
+        attachments = attachments.filter(email__icontains=query) | attachments.filter(slots_icontains=query)
 
     if sort == 'deadline':
         attachments = attachments.order_by('deadline')
@@ -369,21 +370,31 @@ def post_rental(request):
         form = HouseForm(request.POST, request.FILES)
         if form.is_valid():
             house = form.save(commit=False)
-            house.tenant = request.user
             house.posted_by = request.user
+
+            try:
+                tenant = Tenant.objects.get(user=request.user)
+                
+
+            except Tenant.DoesNotExist:
+                if not request.user.is_superuser:
+                    tenant = Tenant.objects.create(user=request.user, full_name=request.username)
+
+                else:
+                    return HttpResponseForbidden("Please complete your profile first.")
+                
+            house.tenant = tenant   
             house.save()
-        
-        notify.send(
-            sender=request.user,
-            recipient=house.tenant,
-            verb='Your rental has been posted successfully',
-        )
-        return redirect('tenants_dashboard')
+            
+            notify.send(
+                sender=request.user,
+                recipient=house.tenant,
+                verb='Your rental has been posted successfully',
+                )
+            return redirect('tenants_dashboard')
 
     else:
         form = HouseForm()
-
-    
 
     return render(request, 'post_rental.html', {'form': form})
 

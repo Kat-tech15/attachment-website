@@ -42,6 +42,9 @@ class AttachmentPostForm(forms.ModelForm):
     class Meta:
         model = AttachmentPost
         fields = ['location', 'email', 'description', 'slots', 'application_deadline',]
+        widgets = {
+            'application_deadline': forms.DateInput(attrs={'type': 'date', 'class':'form-control'}),
+        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

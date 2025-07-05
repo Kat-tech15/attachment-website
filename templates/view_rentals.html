@@ -3,6 +3,8 @@
 {% block title %}Available Rentals{% endblock %}
 
 {% block content %}
+{% load static %}
+
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }} mt-2" role="alert">
@@ -115,7 +117,7 @@
         <p><strong>Rent:</strong> {{ rental.rent }}</p>
 
         {% if rental.photo %}
-            <img src="{{ rental.photo.url }}" alt="Rental Image" class="rental-image">
+            <img src="{{ rental.image.url }}" alt="Rental Image" class="rental-image">
         {% endif %}
 
         <div class="room-summary">
