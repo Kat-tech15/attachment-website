@@ -188,13 +188,13 @@
         <p>{{ rental.description }}</p>
 
         <div class="room-summary">
-            <p><strong>Total Rooms:</strong>{{ rental.rooms.count }}</p>
-            <p><strong>Available Rooms:</strong>{{ rental.rooms.filter(is_booked=False).count }}</p>
-            <p><strong>Booked Rooms:</strong>{{ rental.rooms.filter(is_booked=True).count }}</p>
+            <p><strong>Total Rooms:</strong>{{ rental.total_rooms }}</p>
+            <p><strong>Available Rooms:</strong>{{ rental.available_rooms }}</p>
+            <p><strong>Booked Rooms:</strong>{{ rental.booked_rooms }}</p>
         </div>
 
         <div class="room-list">
-            {% fro rooms in rental.rooms.all %}
+            {% for room in rental.rooms.all %}
                 <div class="room-card" {% if room.is_booked %}booked{% else %}available{% endif %}>
                     <div class="room-info">
                         <strong>{{ room.room_number }}</strong><br>

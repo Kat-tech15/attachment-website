@@ -8,7 +8,7 @@ from notifications.signals import notify
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from xhtml2pdf import pisa
-from django.db.models import Count
+from django.db.models import Count,Avg
 from django.core.mail import EmailMessage
 import tempfile
 from django.db.models.signals import post_save
@@ -276,7 +276,12 @@ def all_rentals(request):
     if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden()
 
-    rentals = RentalListing.objects.all()
+    rentals = RentalListing.objects.all().prefetch_related('rooms')
+
+    for rental in rentals:
+        rental.available_rooms =rental.rooms.filter(is_booked=False).count()
+        rental.ooked_rooms = rental.rooms.filter(is_booked=True).count()
+        rental.total_rooms = rental.rooms.count()
 
     return render(request, 'all_rentals.html',{'rentals': rentals})
 
@@ -292,14 +297,8 @@ def book_room(request, room_id):
 
     if room.is_booked:
         messages.warning(request, "Sorry, this room is already booked.")
-
-    else:
-        room.is_booked=True
-        room.save()
-        messages.success(request, "Room booked Successfully {room.room_number}.")
-    return redirect('all_rentals', rental_id=room.rental.id)
-
-    # Proceed with the booking process
+        return redirect('all_rentals')
+    
     booking = Booking.objects.create(
         attachee=request.user.attachee,
         rental_post=room.house,
@@ -308,11 +307,13 @@ def book_room(request, room_id):
     )
     room.is_booked = True
     room.save()
+    messages.success(request, f"Room {room.room_number} booked successfully!")
 
     return render(request, 'book_room.html', {
         'room': room,
         'booking': booking
     })
+    
 
 @login_required
 def all_attachment_posts(request):
@@ -352,19 +353,21 @@ def post_rental(request):
         form = HouseForm(request.POST, request.FILES)
         if form.is_valid():
             house = form.save(commit=False)
-            house.tenant = request.user.username
+            house.tenant = request.user
             house.posted_by = request.user
             house.save()
-            return redirect('tenants_dashboard')
-    
+        
+        notify.send(
+            sender=request.user,
+            recipient=house.tenant,
+            verb='Your rental has been posted successfully',
+        )
+        return redirect('tenants_dashboard')
+
     else:
         form = HouseForm()
 
-    notify.send(
-        sender = request.tenant,
-        recipient = post_rental.tenant,
-        verb ='Your rental has been posted successfully',
-    )
+    
 
     return render(request, 'post_rental.html', {'form': form})
 
@@ -411,6 +414,7 @@ def submit_company_review(request, company_id):
 def view_rentals(request, rental_id):
     rental= get_object_or_404(RentalListing, id=rental_id)
     available_rooms = rental.rooms.filter(is_booked=False)
+    rental.objects.annonate(avg_field=Avg(rental_model_field)).filter(avg_field_gte=value)
 
     return render(request, 'view_rentals.html',{
         'rentals':rental,
@@ -427,7 +431,9 @@ def post_attachment(request):
     if not request.user.has_priviledge(['company']):
         return HttpResponseForbidden("You have no permission to post attachments.")
 
-    
+    if user.is_superuser or user.is_staff:
+        pass
+
     try:
         company = request.user.company
     except Company.DoesNotExist:
@@ -547,10 +553,21 @@ def download_approved_applications_pdf(request):
 
 @login_required
 def attachee_dashboard(request):
-    attachee = request.user
-    bookings = Booking.objects.filter(attachee=attachee).order_by('-created_at')
-    applications = AttachmentApplication.objects.filter(attachee=user).order_by('-ccreated_at')
-    
+    if request.user.is_superuser:
+            
+        bookings = Booking.objects.all().order_by('-created_at')
+        applications = AttachmentApplication.objects.all().order_by('-start_date')
+    else:
+        try:
+            attachee = Attachee.objects.get(user=request.user)
+        except Attachee.DoesNotExist:
+            messages.error(request, "Complete your profile first.")
+            return redirect('register') 
+         
+        bookings = Booking.objects.filter(attachee=attachee).order_by('-created_at')
+        applications = AttachmentApplication.objects.filter(attachee=attachee).order_by('-start_date')
+
+        
     return render(request, 'dashboards/attachee_dashboard.html',{ 
                   'bookings': bookings,
                   'applications': applications,
