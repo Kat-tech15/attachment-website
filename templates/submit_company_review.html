@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .review-form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .review-form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .review-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .review-form-container button {
+    background-color: #1e90ff;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .review-form-container button:hover {
+    background-color: #0d6efd;
+  }
+
+  .form-errors {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="review-form-container">
+  <h2>Review {{ company.name }}</h2>
+
+  {% if form.errors %}
+    <div class="form-errors">
+      <p>Please correct the errors below:</p>
+    </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Submit Review</button>
+  </form>
+
+  <div style="text-align:center; margin-top: 20px;">
+    <a href="{% url 'all_attachment_posts' %}">← Back to Attachments</a>
+  </div>
+</div>
+{% endblock %}

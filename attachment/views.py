@@ -316,14 +316,7 @@ def book_room(request, room_id):
         'booking': booking
     })
     
-register = template.Library()
 
-@register.filter
-def average(queryset, field):
-    values = [getattr(obj, field, 0) for obj in queryset if getattr(obj, field, None) is not None]
-    if not values:
-        return 0
-    return round(sum(values) / len(values), 1)
 
 @login_required
 def all_attachment_posts(request):
@@ -353,13 +346,18 @@ def all_attachment_posts(request):
     
     own_posts = AttachmentPost.objects.filter(company__user=request.user)
     other_posts = AttachmentPost.objects.exclude(company__user=request.user)
+
+    company = getattr(request.user, 'company', None)
+    average_rating = company.reviews.aggregate(avg=Avg('rating'))['avg'] if company else None
     return render(request, 'all_attachment_posts.html', {
         'page_obj': page_obj,
         'query': query,
         'sort': sort,
         'today': timezone.now().date() + timedelta(days=7),
         'own_posts': own_posts,
-        'other_posts': other_posts
+        'other_posts': other_posts,
+        'company': company,
+        'average_rating': average_rating or "N/A",
     })
 
 @login_required
@@ -412,7 +410,7 @@ def submit_house_review(request, rental_id):
 
 @login_required
 def submit_company_review(request, company_id):
-    company =get_object_or_404(Company, company_id)
+    company =get_object_or_404(Company, id=company_id)
 
     if request.method == 'POST':
         form = CompanyReviewForm(request.POST)
@@ -421,7 +419,7 @@ def submit_company_review(request, company_id):
             review.user = request.user
             review.company = company
             review.save()
-            return redirect('company_dashboard', company_id=company.id)
+            return redirect('all_attachment_posts')
 
     else:
         form = CompanyReviewForm()
@@ -475,9 +473,16 @@ def post_attachment(request):
 
     return render(request, 'post_attachment.html', {'form': form})
 
-def opportunities(request):
-    return render(request, 'opportunities.html')
+def my_attachment_posts(request):
+    if not request.user.has_priviledge(['company']):
+        return HttpResponseForbidden()
 
+    my_attachment_posts = AttachmentPost.objects.filter(company__user=request.user)
+    
+    return render(request, 'my_attachment_posts.html', {
+        'my_attachment_posts': my_attachment_posts
+    })
+ 
 def view_applicants(request):
     return render(request, 'view_applicants.html')
 

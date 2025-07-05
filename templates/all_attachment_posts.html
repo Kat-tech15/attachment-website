@@ -2,6 +2,9 @@
 {% block content %}
 
 <style>
+  .attachment-container {
+    margin-top: 100px;
+  }
   .attachment-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -92,8 +95,8 @@
     }
   }
 </style>
-
-<h1 style="text-align:center;">Attachment Opportunities</h1>
+<div class="attachment-container">
+  <h1 style="text-align:center;">Attachment Opportunities</h1>
 
 <div class="search-sort">
   <form method="get">
@@ -101,7 +104,7 @@
     <button type="submit">Search</button>
     <select name="sort" onchange="this.form.submit()">
       <option value="">Sort by</option>
-      <option value="deadline" {% if sort == 'deadline' %}selected{% endif %}>Deadline</option>
+      <option value="application_deadline" {% if sort == 'application_deadline' %}selected{% endif %}>Deadline</option>
     </select>
   </form>
 </div>
@@ -149,18 +152,23 @@
   {% endif %}
 
   <h3>⭐ Company Reviews</h3>
-<p>Average: {{ company.reviews.all|Avg:"N/A" }} / 5</p>
-<ul>
-  {% for r in company.reviews.all %}
-    <li>
-      ⭐ {{ r.rating }} – {{ r.comment }}
-      <br><small>{{ r.user.get_full_name }} – {{ r.created_at|date:"M d, Y" }}</small>
-    </li>
-  {% endfor %}
-</ul>
+<p>Average: {{ average_rating }} / 5</p>
+{% if company and company.id %}
+  <h3>⭐ Company Reviews</h3>
+  <p>Average: {{ average_rating }} / 5</p>
+  <ul>
+    {% for r in company.reviews.all %}
+      <li>
+        ⭐ {{ r.rating }} – {{ r.comment }}
+        <br><small>{{ r.user.get_full_name }} – {{ r.created_at|date:"M d, Y" }}</small>
+      </li>
+    {% endfor %}
+  </ul>
 
-<a href="{% url 'submit_company_review' company.id %}">Review this company</a>
-
+  <a href="{% url 'submit_company_review' company.id %}">Review this company</a>
+{% endif %}
 </div>
+</div>
+
 
 {% endblock %}

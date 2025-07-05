@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .attachment-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .attachment-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .attachment-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .attachment-meta {
+    font-size: 0.95rem;
+    color: #555;
+  }
+</style>
+
+<h2 style="text-align:center;">📄 My Posted Attachments</h2>
+
+<div class="attachment-list">
+  {% for post in my_posts %}
+    <div class="attachment-card">
+      <div class="attachment-title">{{ post.title }}</div>
+      <div class="attachment-meta">Location: {{ post.location }}</div>
+      <div class="attachment-meta">Deadline: {{ post.application_deadline }}</div>
+      <div class="attachment-meta">Created on: {{ post.created_at|date:"M d, Y" }}</div>
+      {% if post.link %}
+        <div class="attachment-meta"><a href="{{ post.link }}" target="_blank">View / Apply</a></div>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p style="text-align:center;">You have not posted any attachments yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}
