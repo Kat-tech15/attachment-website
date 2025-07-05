@@ -13,7 +13,6 @@
             <a href="{% url 'my_applications' %}" class="btn">My Applications</a>
             <a href="{% url 'view_attachments'%}" class="btn">View Attachments</a>
             <a href="{% url 'view_rentals'%}" class="btn">View All Rentals</a>
-            <a href="{% url 'print_application_letter' app.id %}" class="btn btn-outline-primary">🖨️ Print Letter</a>
 
            
      </div>
@@ -53,6 +52,9 @@
         <td>{{ a.company.name }}</td>
         <td>{{ a.status }}</td>
         <td>{{ a.created_at|date:"M d, Y" }}</td>
+         <td>
+            <a href="{% url 'print_application_letter' a.id %}" class="btn btn-outline-primary">🖨️ Print</a>
+         </td>
       </tr>
     {% empty %}
       <tr><td colspan="3">No applications submitted.</td></tr>
@@ -61,9 +63,7 @@
 </table>
 
 </div>
-      
-     
-     <style>
+<style>
     .dashboard-container { 
         padding: 20px;
         text-align: center;
@@ -85,6 +85,48 @@
 
     .btn:hover {
         background-color: #0056b3;
+    }
+
+    .btn-outline-primary {
+        background-color: white;
+        color: #007bff;
+        border: 1px solid #007bff;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    table th {
+        background-color: #f4f4f4;
     }
 </style>
 

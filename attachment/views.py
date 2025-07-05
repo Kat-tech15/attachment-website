@@ -276,7 +276,9 @@ def all_rentals(request):
     if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden()
 
-    rentals = RentalListing.objects.all().prefetch_related('rooms')
+    rentals = RentalListing.objects.all().prefetch_related('rooms', 'reviews').annotate(
+        avg_rating = Avg('reviews__rating')
+    )
 
     for rental in rentals:
         rental.available_rooms =rental.rooms.filter(is_booked=False).count()
@@ -411,15 +413,9 @@ def submit_company_review(request, company_id):
     return render(request, 'submit_company_review.html', {'form': form, 'company': company})
 
     
-def view_rentals(request, rental_id):
-    rental= get_object_or_404(RentalListing, id=rental_id)
-    available_rooms = rental.rooms.filter(is_booked=False)
-    rental.objects.annonate(avg_field=Avg(rental_model_field)).filter(avg_field_gte=value)
-
-    return render(request, 'view_rentals.html',{
-        'rentals':rental,
-        'available_rooms':available_rooms,
-        })
+def view_rentals(request):
+    rentals = RentalListing.objects.annotate(avg_rating=Avg('reviews__rating'))  # Only if reviews model exists
+    return render(request, 'view_rentals.html', {'rentals': rentals})
 
 
 def view_attachments(request):
@@ -573,6 +569,7 @@ def attachee_dashboard(request):
                   'applications': applications,
                   'today': timezone.now().date()
                   })
+
 @login_required 
 def cancel_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, User=request.user)

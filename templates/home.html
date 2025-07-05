@@ -295,8 +295,8 @@
         <div class="card-body">
           <h3>{{ house.title }}</h3>
           <p><strong>Location:</strong> {{ house.location }}</p>
-          <p><strong>Price:</strong> {{ house.price }}</p>
-          <p>{{ house.description|truncatewords:15 }}</p>
+          <p><strong>Rent:</strong> {{ house.rent }}</p>
+          <p>{{ house.description|truncatewords:20 }}</p>
         </div>
       </div>
     {% endfor %}
