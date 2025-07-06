@@ -116,10 +116,9 @@ class House(models.Model):
         ('hostel', 'Hostel'),
     )
     description = models.CharField(max_length=255, choices=DESCRIPTION_CHOICES, default='single_room')
-    
+
     rent  = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='house_photos/')
-    posted_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
 
 

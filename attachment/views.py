@@ -373,7 +373,7 @@ def post_rental(request):
             house.posted_by = request.user
             tenant, created = Tenant.objects.get_or_create(
                 user=request.user,
-                defaults={'full_name': request.user.get_full_name() or request.user.username}
+                defaults={'name': request.user.get_full_name() or request.user.username}
             )
             house.tenant = tenant
             house.save()
