@@ -109,7 +109,14 @@ class House(models.Model):
     owner_name  = models.CharField(max_length=200)
     contact = models.CharField(max_length=10, null=True)
     location = models.CharField(max_length=200)
-    description = models.CharField(max_length=255)
+    DESCRIPTION_CHOICES =(
+        ('single_room', 'Single Room'),
+        ('double_room', 'Double Room'),
+        ('bed_sitter', 'Bed Sitter'),
+        ('hostel', 'Hostel'),
+    )
+    description = models.CharField(max_length=255, choices=DESCRIPTION_CHOICES, default='single_room')
+    
     rent  = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='house_photos/')
     posted_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

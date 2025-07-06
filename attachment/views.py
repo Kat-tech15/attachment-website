@@ -371,21 +371,14 @@ def post_rental(request):
         if form.is_valid():
             house = form.save(commit=False)
             house.posted_by = request.user
-
-            try:
-                tenant = Tenant.objects.get(user=request.user)
-                
-
-            except Tenant.DoesNotExist:
-                if not request.user.is_superuser:
-                    tenant = Tenant.objects.create(user=request.user, full_name=request.username)
-
-                else:
-                    return HttpResponseForbidden("Please complete your profile first.")
-                
-            house.tenant = tenant   
+            tenant, created = Tenant.objects.get_or_create(
+                user=request.user,
+                defaults={'full_name': request.user.get_full_name() or request.user.username}
+            )
+            house.tenant = tenant
             house.save()
-            
+
+    
             notify.send(
                 sender=request.user,
                 recipient=house.tenant,
