@@ -378,7 +378,7 @@ def post_rental(request):
             house.tenant = tenant
             house.save()
 
-    
+
             notify.send(
                 sender=request.user,
                 recipient=house.tenant,
