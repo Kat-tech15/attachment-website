@@ -584,19 +584,19 @@ def download_approved_applications_pdf(request):
 
 @login_required
 def attachee_dashboard(request):
-    if request.user.is_superuser:
-            
+    user = request.user
+
+    if hasattr(user, 'attachee'):
+        bookings = Booking.objects.filter(attachee=user.attachee).order_by('-created_at')
+        applications = AttachmentApplication.objects.filter(attachee=user.attachee).order_by('-start_date')
+       
+    elif user.is_superuser:
         bookings = Booking.objects.all().order_by('-created_at')
         applications = AttachmentApplication.objects.all().order_by('-start_date')
+
     else:
-        try:
-            attachee = Attachee.objects.get(user=request.user)
-        except Attachee.DoesNotExist:
-            messages.error(request, "Complete your profile first.")
-            return redirect('register') 
-         
-        bookings = Booking.objects.filter(attachee=attachee).order_by('-created_at')
-        applications = AttachmentApplication.objects.filter(attachee=attachee).order_by('-start_date')
+        bookings = Booking.objects.none()
+        applications = AttachmentApplication.objects.none()
 
         
     return render(request, 'dashboards/attachee_dashboard.html',{ 
