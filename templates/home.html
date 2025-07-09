@@ -4,230 +4,205 @@
 
 {% block content %}
 <style>
-    .search-form {
-        display: flex;
-        justify-content: center;
-        margin: 20px 0;
-        margin-top: 80px;   
-    }
-    .search-form input {
-        width: 300px;
-        padding: 10px;
-        border-radius: 5px 0 0 5px;
-        border: 1px solid #ccc;
-    }
-    .search-form button{
-        padding: 10px 20px;
-        border: none;
-        background-color: #2b6cb0;
-        color: white;
-        border-radius: 0 5px 5px 0;
-    }
-    .home-container {
-        text-align: center;
-       margin-top: 20px;
+  .search-form {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    margin-top: 80px;   
+  }
+  .search-form input {
+    width: 300px;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+    border: 1px solid #ccc;
+  }
+  .search-form button{
+    padding: 10px 20px;
+    border: none;
+    background-color: #2b6cb0;
+    color: white;
+    border-radius: 0 5px 5px 0;
+  }
+  .home-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .home-container h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  .home-container p {
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+  .home-container a {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+  }
+  .home-container a:hover {
+    background-color: #0056b3;
+  }
+  .about {
+    max-width: 100%;
+    margin: 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    border-right: 5px solid #007bff;
+    border-bottom: 5px solid #007bff;
+  }
+  .about h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .about p {
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .services {
+    max-width: 100%;
+    margin: 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border-left: 5px solid #007bff;
+    border-bottom: 5px solid #007bff ;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
 
-    }
+  .services h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
 
-    .home-container h1 {
-        font-size: 36px;
-        margin-bottom: 20px;
-    }
+  .services ul {
+    list-style: none;
+    padding: 0;
+  }
+  .contact {
+    max-width: 100%;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border-top: 5px solid #007bff;
+    border-left: 5px solid #007bff;
+  }
+  .contact h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+    
+  .contact p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .contact .info {
+      margin-top: 20px;
+  }
+  .section {
+    padding: 40px 20px;
+    border-bottom: #007bff;
+  }
 
-    .home-container p {
-        font-size: 18px;
-        margin-bottom: 30px;
-    }
+  .section-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
 
-    .home-container a {
-        display: inline-block;
-        padding: 12px 25px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-        font-weight: bold;
-    }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
 
-    .home-container a:hover {
-        background-color: #0056b3;
-    }
-    .about {
-        max-width: 100%;
-        margin: 40px auto;
-        padding: 20px;
-        background: #ffffff;
-        border-radius: 8px;
-        border-right: 5px solid #007bff;
-        border-bottom: 5px solid #007bff;
-    }
+  .card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 5px solid #d32a62;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
 
-    .about h2 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+  .card:hover {
+    transform: scale(1.02);
+  }
 
-    .about p {
-        line-height: 1.6;
-        font-size: 16px;
-    }
-    .services {
-        max-width: 100%;
-        margin: 40px auto;
-        padding: 20px;
-        background: #ffffff;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 5px;
-        border-left: 5px solid #007bff;
-        border-bottom: 5px solid #007bff ;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
+  .card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
 
-    .services h2 {
-        text-align: center;
-        margin-bottom: 30px;
-    }
+  .card-body {
+    padding: 15px;
+  }
 
-    .services ul {
-        list-style: none;
-        padding: 0;
-    }
-    .contact {
-        max-width: 100%;
-        margin: 40px auto;
-        padding: 20px;
-        background: white;
-        border-radius: 8px;
-        border-top: 5px solid #007bff;
-        border-left: 5px solid #007bff;
-    }
+  .card-body h3 {
+    margin: 0 0 5px;
+  }
 
-    .contact h2 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+  .card-body p {
+    margin: 4px 0;
+  }
 
-    .contact p {
-        font-size: 16px;
-        line-height: 1.5;
-    }
+  .cta-link {
+    text-align: center;
+    margin-top: 20px;
+  }
 
-    .contact .info {
-        margin-top: 20px;
-    }
-    .section {
-  padding: 40px 20px;
-}
+  .cta-link a {
+    padding: 10px 20px;
+    background-color: #1e90ff;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+  }
 
-.section-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-
-.card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 5px solid #b16fe7;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: scale(1.02);
-}
-
-.card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.card-body {
-  padding: 15px;
-}
-
-.card-body h3 {
-  margin: 0 0 5px;
-}
-
-.card-body p {
-  margin: 4px 0;
-}
-
-.cta-link {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.cta-link a {
-  padding: 10px 20px;
-  background-color: #1e90ff;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-}
-
-.cta-link a:hover {
-  background-color: #006fd6;
-}
-
-.portal-banner {
-  background-color: #f5f5f5;
-  padding: 30px 20px;
-  text-align: center;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-}
-
-.portal-banner h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.portal-banner p {
-  max-width: 600px;
-  margin: auto;
-  font-size: 16px;
-  color: #444;
-}
-
-.portal-banner a {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-}
-
-.portal-banner a:hover {
-  background-color: #218838;
-}
-@media (max-width: 600px) {
-    .card-grid {
-        grid-template-columns: 1fr;
-    }
-    .section-title {
-        font-size: 22px;
-    }
-    .card-body p {
-        font-size: 0.9rem;
-    }
-}
+  .cta-link a:hover {
+    background-color: #006fd6;
+  }
+  
+  .testimonials {
+    background: white;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border-bottom: 5px solid #007bff;
+    border-right: 5px solid #007bff;
+  }
+  .testimonials h2 {
+    text-align: center;
+    font-size: large;
+    margin-top: 10px;
+  }
+  .testimonials p {
+    text-align: center;
+  }
+  @media (max-width: 600px) {
+      .card-grid {
+          grid-template-columns: 1fr;
+      }
+      .section-title {
+          font-size: 22px;
+      }
+      .card-body p {
+          font-size: 0.9rem;
+      }
+  }
 </style>
 <div>
     
@@ -237,12 +212,14 @@
         <input type="text" name="q" placeholder="Search applications...">
         <button type="submit">Search</button>
     </form>
-        <h2>Welcome to the Attachment Portal</h2>
+        <h2>Welcome to the  Attachment & Housing  Portal</h2>
+  
         <p>Your gateway to attachment opportunities and talent connections.</p>
+        <p>Discover top housing options and the latest attachment opportunities from trusted companies.</p>
         <p>Here we link students to a variety of companies where they can take their industrial attachmnets as well as internships. <br><br>
             We also make sure that the accomodation of the attachees is well catered for by having the tenants within their places of attachment post their rentals in the platform easening their process of searching for rentals.
         </p>
-
+        <a href="{% url 'all_attachment_posts' %}">Explore Attachments</a>
         {% if not user.is_authenticated %}
             <a href="{% url 'login' %}">Get Started</a>
         {% else %}
@@ -259,6 +236,7 @@
             By providing a seamless way to post and apply, we ensure that both parties can find the best fit with ease.
             It also aimed at bridging students with tenants since in most cases, students usually secure an attachment in a strage place hence this platform will provide them with a chance to be able to secure a place to leave by having the tenants post there rentals in the platform.
         </p>
+        
     </div>
 </section>
 <hr>
@@ -326,14 +304,9 @@
     <a href="{% url 'all_attachment_posts' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
   </div>
 </div>
-<div class="portal-banner">
-  <h2>Welcome to the Housing & Attachment Portal</h2>
-  <p>Discover top housing options and the latest attachment opportunities from trusted companies.</p>
-  <a href="{% url 'all_attachment_posts' %}">Explore Attachments</a>
-</div>
-<div class="section" style="background-color: #f0f8ff;">
+<div class="testimonials" >
   <h2 class="section-title">💬 What Our Users Say</h2>
-  <p style="text-align:center; color: #555;">“The platform helped me find an affordable house near campus and land my attachment!” — Brian, Student</p>
+  <p >“The platform helped me find an affordable house near campus and land my attachment!” — Brian, Student</p>
 </div>
 
 <section id="contact">

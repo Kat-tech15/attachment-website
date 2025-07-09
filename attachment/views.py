@@ -14,10 +14,9 @@ import tempfile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models.functions import TruncMonth
-from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 from django.shortcuts import render,redirect,get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse
