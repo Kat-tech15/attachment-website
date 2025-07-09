@@ -17,8 +17,17 @@
         <canvas id="topCompaniesChart"></canvas>
         <h3>Applications By Course</h3>
         <canvas id="courseChart"></canvas>
-        
     </div>
+        <div class="stats">
+        <div class="card">Total Bookings: {{ booking_count }}</div>
+        <div class="card">Total Applications: {{ application_count }}</div>
+    </div>
+        <div class="stats">
+        <div class="card">Total Tenants: {{ tenant_count }}</div>
+        <div class="card">Total Attachees: {{ attachee_count }}</div>
+        <div class="card">Total Companies: {{ company_count }}</div>
+    </div>
+    
     <h3>Pending Attachment Applications</h3>
 <table class="table">
   <thead>
@@ -33,9 +42,9 @@
   <tbody>
     {% for app in pending_apps %}
       <tr>
-        <td>{{ app.attachee.username }}</td>
-        <td>{{ app.company.name }}</td>
-        <td>{{ app.attachee.attachee.field_of_study }}</td>
+        <td>{{ app.attachee.user.username }}</td>
+        <td>{{ app.attachment_post.company.name }}</td>
+        <td>{{ app.attachee.course }}</td>
         <td>{{ app.status }}</td>
         <td>
           <a href="{% url 'approve-application' app.id %}" class="btn btn-success btn-sm">Approve</a>
@@ -116,11 +125,13 @@
 
   const courseCtx = document.getElementById('courseChart').getContext('2d');
   const courseChart = new Chart(courseCtx, {
+    type: 'bar',
     data: {
-      lables: {{ course_labels|safe }},
+      labels: {{ course_labels|safe }},
       datasets: [{
-        label: {{ course_counts|safe }},
-        backgroundcolor: [
+        label: 'Applications per Course',
+        data: {{ course_count|safe }},
+        backgroundColor: [
           'rgba(255, 99, 132, 0.6)',
           'rgba(54, 162, 235, 0.6)',
           'rgba(255, 206, 86, 0.6)',
@@ -128,8 +139,8 @@
           'rgba(153, 102, 255, 0.6)',
           'rgba(255, 159, 64, 0.6)',
         ],
-        bordercolor: '#fff',
-        borderwidth: 1
+        borderColor: '#fff',
+        borderWidth: 1
       }]
     },
     options: {
@@ -170,7 +181,10 @@
   font-size: 18px;
   text-align: center;
 }
-
+.stats .card {
+  flex: 1;
+  margin: 5px;
+}
 .chart-container {
   width: 100%;
   height: 400px;

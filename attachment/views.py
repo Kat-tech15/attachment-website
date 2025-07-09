@@ -373,17 +373,17 @@ def post_rental(request):
             house.posted_by = request.user
             tenant, created = Tenant.objects.get_or_create(
                 user=request.user,
-                defaults={'full_name': request.user.get_full_name() or request.user.username}
+                defaults={'name': request.user.get_full_name() or request.user.username}
             )
             house.tenant = tenant
             house.save()
 
     
-            notify.send(
-                sender=request.user,
-                recipient=house.tenant,
-                verb='Your rental has been posted successfully',
-                )
+            Notification.objects.create(
+                recipient=request.user,
+                message="Your rental has been posted successfully.",
+                link="/dashboard/"  
+            )
             return redirect('tenants_dashboard')
 
     else:
@@ -511,53 +511,50 @@ def admin_dashboard(request):
     users_by_role = CustomUser.objects.values('role').annotate(count=Count('id'))
     booking_count =Booking.objects.count()
     application_count= AttachmentApplication.objects.count()
+    tenant_count = Tenant.objects.count()
+    attachee_count = Attachee.objects.count()
+    company_count = Company.objects.count()
 
-    context = {
-        'users_by_role': users_by_role,
-        'booking_count': booking_count,
-        'application_count': application_count,
-    }
+    # Monthly Bookings 
     monthly_bookings =Booking.objects.annotate(month=TruncMonth('created_at')) \
-       .values('month')\
-       .annotate(count=Count('id'))\
-        .order_by('month')
+       .values('month').annotate(count=Count('id')).order_by('month')
     
-    labels = [b['month'].strftime("%b") for b in monthly_bookings]
-    data = [b['count'] for b in monthly_bookings]
+    booking_month_labels = [b['month'].strftime("%b") for b in monthly_bookings]
+    booking_month_data = [b['count'] for b in monthly_bookings]
 
-    context = {
-        'booking_month_labels': labels,
-        'booking_month_data': data,
-    }
+    # Top 5 Compannies by applicant
     top_companies_data = AttachmentApplication.objects.values('attachment_post__company__name')\
-        .annotate(application_count=Count('id'))\
-        .order_by('-application_count')[:5]
+        .annotate(application_count=Count('id')).order_by('-application_count')[:5]
 
     top_company_names  = [item['attachment_post__company__name'] for item in top_companies_data]
     top_company_counts = [item['application_count'] for item in top_companies_data]
 
-    context.update({
-        'top_company_names': top_company_names,
-        'top_company_counts': top_company_counts,
-    })
-
+    # Top course by applicant count
     course_data = AttachmentApplication.objects.values('attachee__course')\
         .annotate(count=Count('id')).order_by('-count')[:6]
 
     course_labels =[item['attachee__course'] for item in course_data]
     course_counts = [item['count'] for item in course_data]
 
-    context.update({
+    #Pending applications
+    pending_apps = AttachmentApplication.objects.filter(status='pending').select_related('attachee', 'company')
+    
+    # Final context 
+    context = {
+        'users_by_role': users_by_role,
+        'booking_count': booking_count,
+        'application_count': application_count,
+        'tenant_count': tenant_count,
+        'attachee_count': attachee_count,
+        'company_count': company_count,
+        'booking_month_labels': booking_month_labels,
+        'booking_month_data': booking_month_data,
+        'top_company_names': top_company_names,
+        'top_company_counts': top_company_counts,
         'course_labels': course_labels,
         'course_count': course_counts,
-    })
-
-    pending_apps = AttachmentApplication.objects.filter(status='pending').select_related('attachee', 'company')
-
-    context.update({
         'pending_apps': pending_apps,
-    })
-
+    }
     return render(request, 'dashboards/admin_dashboard.html')
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -602,7 +599,7 @@ def attachee_dashboard(request):
     return render(request, 'dashboards/attachee_dashboard.html',{ 
                   'bookings': bookings,
                   'applications': applications,
-                  'today': timezone.now().date()
+                  'user': request.user,
                   })
 
 @login_required 
