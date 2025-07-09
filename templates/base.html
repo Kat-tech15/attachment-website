@@ -11,157 +11,194 @@
     {% load static %}
     <style>
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: hsl(175, 94%, 47%);
-            scroll-behavior: smooth;
-        }
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: hsl(175, 94%, 47%);
+    scroll-behavior: smooth;
+    overflow-x: auto;
+}
 
-        header {
-            background-color: #bb9fba;
-            padding: 15px 20px;
-            color: white;
-            position: fixed;
-            width: 100%;
-            display: flex;
-            border-top: 5px solid #0ae71c;
-            border-right: 5px solid #0ae71c;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 999px;
-        }.nav-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
+header {
+    background-color: #bb9fba;
+    padding: 15px 20px;
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-top: 5px solid #0ae71c;
+    border-right: 5px solid #0ae71c;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
 
-        .nav-list > li {
-            position: relative;
-            margin-left: 20px;
-        }
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
-        .nav-list a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-            display: inline-block;
-        }
+.nav-list > li {
+    position: relative;
+}
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #c274bf;
-            min-width: 180px;
-            border-radius: 5px;
-            top: 100%;
-            left: 0;
-            z-index: 1000;
-            list-style: none;
-        }
+.nav-list a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: inline-block;
+}
 
-        .dropdown-content li a {
-            display: block;
-            padding: 10px 15px;
-            color: white;
-          
-            
-        }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #c274bf;
+    min-width: 180px;
+    border-radius: 5px;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    list-style: none;
+}
 
-        .dropdown-content li a:hover {
-            background-color: #da51d5;
-            border-radius: 3px;
-            
-        }
+.dropdown-content li a {
+    display: block;
+    padding: 10px 15px;
+    color: white;
+}
 
-        /* Show the dropdown when hovering */
-        .dropdown:hover .dropdown-content {
-            display: inline-block;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 20px;
-        }
+.dropdown-content li a:hover {
+    background-color: #da51d5;
+    border-radius: 3px;
+}
 
-        nav a {
-            color: white;
-            margin-left: 20px;
-            text-decoration: none;
-            font-weight: 500;
-        }
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
 
-        nav a:hover {
-            text-transform: capitalize;
-        }
+header h1 {
+    margin: 0;
+    font-size: 20px;
+    white-space: nowrap;
+}
 
-        .container {
-            padding: 30px 20px;
-        }
+nav a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
 
-        footer {
-            text-align: center;
-            padding: 15px;
-            background-color: #343a40;
-            color: white;
-            margin-top: 50px;
-            border-bottom: 5px solid #0ae71c;
-            border-left: 5px solid #0ae71c;
-        }
-        .notification-dropdown {
-  position: relative;
-  display: inline-block;
+nav a:hover {
+    text-transform: capitalize;
+}
+
+/* Add top padding so content doesn't hide under fixed header */
+.container {
+    padding: 120px 20px 30px 20px;
+}
+
+/* Responsive footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #343a40;
+    color: white;
+    margin-top: 50px;
+    border-bottom: 5px solid #0ae71c;
+    border-left: 5px solid #0ae71c;
+}
+
+/* Notification styles */
+.notification-dropdown {
+    position: relative;
+    display: inline-block;
 }
 
 .notification-icon {
-  cursor: pointer;
-  font-size: 24px;
-  position: relative;
-  color: #333;
+    cursor: pointer;
+    font-size: 24px;
+    position: relative;
+    color: #333;
 }
 
 .notification-badge {
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 3px 7px;
-  font-size: 12px;
-  position: absolute;
-  top: -8px;
-  right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 7px;
+    font-size: 12px;
+    position: absolute;
+    top: -8px;
+    right: -10px;
 }
 
 .notification-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  background-color: #fff;
-  width: 300px;
-  max-height: 400px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  z-index: 1000;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .notification-item {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  text-decoration: none;
-  display: block;
-  color: #333;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-decoration: none;
+    display: block;
+    color: #333;
 }
 
 .notification-item:hover {
-  background-color: #f7f7f7;
+    background-color: #f7f7f7;
 }
 
 .notification-footer {
-  text-align: center;
-  padding: 10px;
-  font-size: 14px;
-  background-color: #fafafa;
-  border-top: 1px solid #eee;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
 }
+
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-list > li {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .nav-list a {
+        display: block;
+        width: 100%;
+    }
+}
+
 
     </style>
 </head>
