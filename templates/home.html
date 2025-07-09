@@ -192,7 +192,56 @@
   .testimonials p {
     text-align: center;
   }
-  @media (max-width: 600px) {
+  .testimonials-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.testimonial-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.testimonial-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+}
+
+.testimonial-quote {
+  font-style: italic;
+  position: relative;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.testimonial-quote::before {
+  content: "“";
+  font-size: 40px;
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  color: #ccc;
+}
+
+.role {
+  font-weight: normal;
+  color: #777;
+}
+
+@media (max-width: 600px) {
       .card-grid {
           grid-template-columns: 1fr;
       }
@@ -308,6 +357,16 @@
   <h2 class="section-title">💬 What Our Users Say</h2>
   <p >“The platform helped me find an affordable house near campus and land my attachment!” — Brian, Student</p>
 </div>
+<div class="testimonials-container">
+  {% for testimonial in testimonials %}
+    <div class="testimonial-card">
+      <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="testimonial-img">
+      <p class="testimonial-quote">“{{ testimonial.message }}”</p>
+      <h4>— {{ testimonial.name }} <span class="role">({{ testimonial.role }})</span></h4>
+    </div>
+  {% endfor %}
+</div>
+
 
 <section id="contact">
     <div class="contact">

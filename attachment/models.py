@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 
@@ -26,7 +27,7 @@ class Attachee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length= 255)
     email = models.EmailField()
-    phone_number = models.CharField(max_length=10)
+    phone_number = PhoneNumberField(region='KE')
     institution = models.CharField(max_length= 255)
     course = models.CharField(max_length=255)
    
@@ -37,7 +38,7 @@ class Company(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length= 255)
     email  = models.EmailField()
-    phone_number = models.CharField(max_length=10)
+    phone_number = PhoneNumberField(region='KE')
     location = models.CharField(max_length= 255)
 
     def __str__(self):
@@ -65,8 +66,6 @@ class AttachmentApplication(models.Model):
         ('rejected', 'Rejected'),
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-
-
     full_name = models.CharField(max_length=200)
     email = models.EmailField()
     cv = models.ImageField()
@@ -86,7 +85,7 @@ class AttachmentApplication(models.Model):
 class Tenant(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=10)
+    phone_number = PhoneNumberField(region='KE')
     location = models.CharField(max_length=255)
     
 
@@ -107,7 +106,7 @@ class Contact(models.Model):
 class House(models.Model):
     tenant = models.ForeignKey('Tenant', on_delete=models.CASCADE, null=True, blank=True)
     owner_name  = models.CharField(max_length=200)
-    contact = models.CharField(max_length=10, null=True)
+    phone_number = PhoneNumberField(region='KE')
     location = models.CharField(max_length=200)
     DESCRIPTION_CHOICES =(
         ('single_room', 'Single Room'),
@@ -116,7 +115,6 @@ class House(models.Model):
         ('hostel', 'Hostel'),
     )
     description = models.CharField(max_length=255, choices=DESCRIPTION_CHOICES, default='single_room')
-
     rent  = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='house_photos/')
     date_posted = models.DateTimeField(auto_now_add=True)
@@ -138,7 +136,7 @@ class Booking(models.Model):
     attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True)
     rental_post = models.ForeignKey(House, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200)
-    contact = models.CharField(max_length=10, null=True)
+    phone_number = PhoneNumberField(region='KE')
     created_at = models.DateTimeField(auto_now_add=True)
     move_in_date = models.DateField(auto_now_add=True)
     move_out_date = models.DateField(null=True, blank=True)
@@ -167,6 +165,15 @@ class CompanyReview(models.Model):
     rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Testimonials(models.Model):
+    name = models.CharField(max_length=100)
+    role = models.CharField(max_length=50, blank=True)
+    message = models.TextField()
+    image = models.ImageField(upload_to='testimonials_photos/', default='default-avatar.jpg')
+
+    def __str__(self):
+        return f"{self.name} - {self.role}"
 
 
 User = get_user_model()

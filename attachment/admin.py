@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import  Attachee, Company, Contact, Tenant, CustomUser, AttachmentApplication,AttachmentPost, RentalListing, House
+from .models import  Attachee, Company, Contact, Tenant, CustomUser, AttachmentApplication,AttachmentPost, RentalListing, House,Testimonials
 # Register your models here.
 
 
@@ -12,6 +12,7 @@ admin.site.register(AttachmentApplication)
 admin.site.register(AttachmentPost)
 admin.site.register(RentalListing)
 admin.site.register(House)
+admin.site.register(Testimonials)
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + ( 
