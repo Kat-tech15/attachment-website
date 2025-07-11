@@ -10,7 +10,7 @@
 
     {% load static %}
     <style>
-        body {
+body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: hsl(175, 94%, 47%);
@@ -28,7 +28,6 @@ header {
     left: 0;
     display: flex;
     flex-wrap: wrap;
-    overflow-x: auto;
     white-space: nowrap;
     border-top: 5px solid #0ae71c;
     border-right: 5px solid #0ae71c;
@@ -65,7 +64,7 @@ header {
     border-radius: 5px;
     top: 100%;
     left: 0;
-    z-index: 1000;
+    z-index: 2000;
     list-style: none;
 }
 
@@ -102,10 +101,6 @@ nav a:hover {
     text-transform: capitalize;
 }
 
-/* Add top padding so content doesn't hide under fixed header */
-.container {
-    padding: 120px 20px 30px 20px;
-}
 
 /* Responsive footer */
 footer {
@@ -238,7 +233,6 @@ footer {
 
     </header>
 
-    <div class="container">
         {% block content %}
        
         <div class="notifications-dropdown" id="notificationsDropdown">
@@ -267,7 +261,6 @@ footer {
             </div>
         </div>       
         {% endblock %}
-    </div>
 
     <footer>
         &copy; {{ now|date:"Y" }} Attachment Portal. All rights reserved.

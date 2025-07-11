@@ -23,19 +23,19 @@
     color: white;
     border-radius: 0 5px 5px 0;
   }
-  .home-container {
+  .home {
     text-align: center;
     margin-top: 20px;
   }
-  .home-container h1 {
+  .home h1 {
     font-size: 36px;
     margin-bottom: 20px;
   }
-  .home-container p {
+  .home p {
     font-size: 18px;
     margin-bottom: 30px;
   }
-  .home-container a {
+  .home a {
     display: inline-block;
     padding: 12px 25px;
     background-color: #007bff;
@@ -44,9 +44,13 @@
     border-radius: 6px;
     font-weight: bold;
   }
-  .home-container a:hover {
+  .home a:hover {
     background-color: #0056b3;
   }
+  .container {
+    padding: 120px 20px 30px 20px;
+}
+
   .about {
     max-width: 100%;
     margin: 40px auto;
@@ -69,17 +73,17 @@
     margin: 40px auto;
     padding: 20px;
     background: #ffffff;
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 15px;
     border-radius: 5px;
     border-left: 5px solid #007bff;
     border-bottom: 5px solid #007bff ;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    
   }
 
   .services h2 {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .services ul {
@@ -199,6 +203,7 @@
   justify-content: center;
   padding: 20px;
   background-color: #f9f9f9;
+  border-right: #007bff;
 }
 
 .testimonial-card {
@@ -253,10 +258,8 @@
       }
   }
 </style>
-<div>
-    
-<section id="home">
-    <div class="home-container">
+<div class="container">
+<section class="home">
       <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
         <input type="text" name="q" placeholder="Search applications...">
         <button type="submit">Search</button>
@@ -274,23 +277,19 @@
         {% else %}
              <a href="{% url 'dashboard' %}">Go to Dashboard</a>
         {% endif %}
-    </div>
+    
 </section>
 <hr>
-<section id="about">
-    <div class="about">
+<section class="about">
         <h2>About Us</h2>
         <p>
             We are a bridge between the  students seeking for industrial attachment and internships,  and companies having slots for attachees as well as interns. 
             By providing a seamless way to post and apply, we ensure that both parties can find the best fit with ease.
             It also aimed at bridging students with tenants since in most cases, students usually secure an attachment in a strage place hence this platform will provide them with a chance to be able to secure a place to leave by having the tenants post there rentals in the platform.
         </p>
-        
-    </div>
 </section>
 <hr>
-<section id="services">
-    <div class="services">
+<section class="services">
         <h2>Our Services</h2>
         <ul>
             <p>Our sevices include the following: <br><br>
@@ -307,11 +306,10 @@
                 <br><br><hr>
             </p>
         </ul>
-    </div>
 </section>
     <hr>
 
-<div class="section">
+<section class="section">
   <h2 class="section-title">🏠 Featured Houses</h2>
   <div class="card-grid">
     {% for house in featured_houses %}
@@ -327,12 +325,12 @@
         </div>
       </div>
     {% endfor %}
-  </div>
+    </section>
   <div class="cta-link">
     <a href="{% url 'all_rentals' %}">Browse All Houses</a>
   </div>
 </div>
-<div class="section">
+<section class="section">
   <h2 class="section-title">📎 Recent Attachments</h2>
   <div class="card-grid">
     {% for att in recent_attachments %}
@@ -348,16 +346,16 @@
         </div>
       </div>
     {% endfor %}
-  </div>
+    </section>
   <div class="cta-link">
     <a href="{% url 'all_attachment_posts' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
   </div>
 </div>
-<div class="testimonials" >
+<section class="testimonials" >
   <h2 class="section-title">💬 What Our Users Say</h2>
   <p >“The platform helped me find an affordable house near campus and land my attachment!” — Brian, Student</p>
-</div>
-<div class="testimonials-container">
+</section>
+<section class="testimonials-container">
   {% for testimonial in testimonials %}
     <div class="testimonial-card">
       <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="testimonial-img">
@@ -365,11 +363,9 @@
       <h4>— {{ testimonial.name }} <span class="role">({{ testimonial.role }})</span></h4>
     </div>
   {% endfor %}
-</div>
-
-
-<section id="contact">
-    <div class="contact">
+  </section>
+<hr>
+<section class="contact">
         <h2>Contact Us</h2>
         <p>
          For any inquiries, support or feedback, please reach out to us:
@@ -379,7 +375,7 @@
             <p><strong>Phone:</strong> +254 1112871337</p>
             <p><strong>Location:</strong> Nairobi, Kenya</p>
         </div>
-    </div>
+    
 </section>
     <hr>
 </div>
