@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse
-from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room, Notification, Tenant
+from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room, Notification, Tenant,Testimonials
 from .forms import CustomUserCreationForm,HouseForm
 from django.contrib import messages
 from django.utils import timezone
@@ -38,6 +38,7 @@ is_staff =True
 def home(request):
     featured_houses = House.objects.all().order_by('?')[:3]
     recent_attachments = AttachmentPost.objects.order_by('-id')[:2]
+    testimonials = Testimonials.objects.all()
     query = request.GET.get('q')
     if query:
         applications = Attachee.objects.filter(name__icontains=query)
@@ -47,7 +48,8 @@ def home(request):
     return render(request, 'home.html',{
         'applications': applications,
         'featured_houses': featured_houses,
-        'recent_attachments': recent_attachments
+        'recent_attachments': recent_attachments,
+        'testimonials': testimonials
         })
 
 def about(request):
