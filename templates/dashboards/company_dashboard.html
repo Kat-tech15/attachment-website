@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="dashboard-container">
-    <h2>Your Opportunities</h2>
+    <h3>Company Dashboard</h3>
     
      <div class="dashboard-actions">
             <a href="{% url 'post_attachment' %}" class="btn">Post Attachment</a>
@@ -22,12 +22,15 @@
     .dashboard-container {
         padding: 20px;
         text-align: center;
+        margin-top: 60px;
     }
 
     .dashboard-actions {
         margin-top: 30px;
     }
-
+    h3 {
+        text-align: center;
+    }
     .btn {
         display: inline-block;
         margin: 10px;

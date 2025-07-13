@@ -36,9 +36,9 @@ is_staff =True
 
 
 def home(request):
-    featured_houses = House.objects.all().order_by('?')[:3]
+    featured_houses = House.objects.all().order_by('?')[:4]
     recent_attachments = AttachmentPost.objects.order_by('-id')[:2]
-    testimonials = Testimonials.objects.all()
+    testimonials = Testimonials.objects.all()[:5]
     query = request.GET.get('q')
     if query:
         applications = Attachee.objects.filter(name__icontains=query)
@@ -278,18 +278,15 @@ def all_rentals(request):
     if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden()
 
-    rentals = RentalListing.objects.all().prefetch_related('rooms', 'reviews').annotate(
-        avg_rating = Avg('reviews__rating')
-    )
+    houses = House.objects.all().prefetch_related('tenant')
+    for house in houses:
+        house.available_rooms =house.rooms.filter(is_booked=False).count()
+        house.booked_rooms = house.rooms.filter(is_booked=True).count()
+        house.total_rooms = house.rooms.count()
 
-    for rental in rentals:
-        rental.available_rooms =rental.rooms.filter(is_booked=False).count()
-        rental.ooked_rooms = rental.rooms.filter(is_booked=True).count()
-        rental.total_rooms = rental.rooms.count()
+    return render(request, 'all_rentals.html',{'house': houses})
 
-    return render(request, 'all_rentals.html',{'rentals': rentals})
-
-@receiver(post_save, sender=RentalListing)
+@receiver(post_save, sender=House)
 def create_room(sender, instance, created, **kwargs):
     if created:
         for i in range(1, instance.total_rooms + 1):

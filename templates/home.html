@@ -7,8 +7,7 @@
   .search-form {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
-    margin-top: 80px;   
+    margin: 20px 0;   
   }
   .search-form input {
     width: 300px;
@@ -27,8 +26,8 @@
     text-align: center;
     margin-top: 20px;
   }
-  .home h1 {
-    font-size: 36px;
+  .home h5 {
+    color: green;
     margin-bottom: 20px;
   }
   .home p {
@@ -50,154 +49,115 @@
   .container {
     padding: 120px 20px 30px 20px;
 }
-
-  .about {
-    max-width: 100%;
-    margin: 40px auto;
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 8px;
-    border-right: 5px solid #007bff;
-    border-bottom: 5px solid #007bff;
-  }
-  .about h4 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .about p {
-    line-height: 1.6;
-    font-size: 16px;
-  }
-  .services {
-    max-width: 100%;
-    margin: 40px auto;
-    padding: 20px;
-    background: #ffffff;
-    padding: 20px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border-left: 5px solid #007bff;
-    border-bottom: 5px solid #007bff ;
-    
-  }
-
-  .services h4 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  .services ul {
-    list-style: none;
-    padding: 0;
-  }
-  .contact {
-    max-width: 100%;
-    margin: 40px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    border-top: 5px solid #007bff;
-    border-left: 5px solid #007bff;
-  }
-  .contact h4 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-    
-  .contact p {
-    font-size: 16px;
-    line-height: 1.5;
-  }
-  .contact .info {
-      margin-top: 20px;
-  }
-  .section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 30px;
-  justify-content: center;
-  padding: 20px;
+.about,
+.services,
+.section,
+.contact {
+  width: 100%;
+  padding: 40px 20px;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.about {
+  border-right: 5px solid #007bff;
+  border-bottom: 5px solid #007bff;
+}
+.content-wrapper {
+  max-width: 1200px;
+  margin: auto;
+}
+.services {
+  border-left: 5px solid #007bff;
+  border-bottom: 5px solid #007bff;
+}
+
+.section {
   border-bottom: 5px solid #007bff;
   border-right: 5px solid #007bff;
-  }
-  .section h4 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: auto;
-  }
-
-  .card {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 5px solid #d32a62;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-  }
-
-  .card:hover {
-    transform: scale(1.02);
-  }
-
-  .card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
-
-  .card-body {
-    padding: 15px;
-  }
-
-  .card-body h3 {
-    margin: 0 0 5px;
-  }
-
-  .card-body p {
-    margin: 4px 0;
-  }
-
-  .cta-link {
-    text-align: center;
+}
+.contact {
+  border-bottom: 5px solid #007bff;
+  border-left: 5px solid #007bff;
+}
+h4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.about p {
+  line-height: 1.6;
+  font-size: 16px;
+}
+.services ul {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+} 
+.contact p {
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+}
+.contact .info {
     margin-top: 20px;
-  }
-
-  .cta-link a {
-    padding: 10px 20px;
-    background-color: #1e90ff;
-    color: white;
-    border-radius: 6px;
-    text-decoration: none;
-  }
-
-  .cta-link a:hover {
-    background-color: #006fd6;
-  }
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+.card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.02);
+}
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.card-body {
+  padding: 15px;
+}
+.card-body h3 {
+  margin: 0 0 5px;
+}
+.card-body p {
+  margin: 4px 0;
+}
+.cta-link {
+  text-align: center;
+  margin-top: 20px;
+  align-self: center;
+}
+.cta-link a {
+  padding: 10px 20px;
+  background-color: #1e90ff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.cta-link a:hover {
+  background-color: #006fd6;
+}
   .testimonials {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  margin-top: 30px;
   justify-content: center;
   padding: 20px;
   border-radius: 8px;
-  background-color: #f9f9f9;
   border-bottom: 5px solid #007bff;
   border-right: 5px solid #007bff;
-}
-.testimonials h4 {
-  text-align: center;
-  margin-bottom: 20px;
 }
 .testimonial-card {
   background-color: white;
@@ -258,7 +218,7 @@
         <input type="text" name="q" placeholder="Search applications...">
         <button type="submit">Search</button>
     </form>
-        <h2>Welcome to the  Attachment & Housing  Portal</h2>
+        <h5>Welcome to the  Attachment & Housing  Portal</h5>
   
         <p>Your gateway to attachment opportunities and talent connections.</p>
         <p>Discover top housing options and the latest attachment opportunities from trusted companies.</p>
@@ -273,36 +233,37 @@
         {% endif %}
     
 </section>
-<hr>
+</div>
 <section class="about" id="about">
-        <h4>About Us</h4>
+  <div class="content-wrapper">
+     <h4>About Us</h4>
         <p>
-            We are a bridge between the  students seeking for industrial attachment and internships,  and companies having slots for attachees as well as interns. 
-            By providing a seamless way to post and apply, we ensure that both parties can find the best fit with ease.
-            It also aimed at bridging students with tenants since in most cases, students usually secure an attachment in a strage place hence this platform will provide them with a chance to be able to secure a place to leave by having the tenants post there rentals in the platform.
+          We are a bridge between the  students seeking for industrial attachment and internships,  and companies having slots for attachees as well as interns. 
+          By providing a seamless way to post and apply, we ensure that both parties can find the best fit with ease.
+          It also aimed at bridging students with tenants since in most cases, students usually secure an attachment in a strage place hence this platform will provide them with a chance to be able to secure a place to leave by having the tenants post there rentals in the platform.
         </p>
+  </div>   
 </section>
-<hr>
 <section class="services" id="services">
-        <h4>Our Services</h4>
-        <ul>
-            <p>Our sevices include the following: <br><br>
+  <div class="content-wrapper">
+  <h4>Our Services</h4>
+    <ul>
+      <p>Our sevices include the following: <br><br>
                 
-                Handling account creation for the attachees, companies and the tenants,<br><br>
-                <hr>
-                Posting attachment opportunities for the attachees to apply.
-                <br><br>
-                <hr>
-                Having the tenant post there rentals to easen the peocess of the attachees looking for places to stay while in there attachment.
-                <br><br> 
-                <hr>
-                We aslo carry out tracking of the processes carried out by each user registered in the platform to ensure <br> that intrgrity is upheld and ensuring that the intented purpse of the platform is attained.
-                <br><br><hr>
-            </p>
-        </ul>
+        Handling account creation for the attachees, companies and the tenants,<br><br>
+          <hr>
+        Posting attachment opportunities for the attachees to apply.
+        <br><br>
+        <hr>
+        Having the tenant post there rentals to easen the peocess of the attachees looking for places to stay while in there attachment.
+        <br><br> 
+        <hr>
+        We aslo carry out tracking of the processes carried out by each user registered in the platform to ensure <br> that intrgrity is upheld and ensuring that the intented purpse of the platform is attained.
+        <br><br><hr>
+      </p>
+    </ul>
+  </div>
 </section>
-    <hr>
-
 <section class="section">
   <h4>🏠 Featured Houses</h4>
   <div class="card-grid">
@@ -319,11 +280,10 @@
         </div>
       </div>
     {% endfor %}
-    </section>
-  <div class="cta-link">
-    <a href="{% url 'all_rentals' %}">Browse All Houses</a>
-  </div>
-</div>
+    <div class="cta-link">
+      <a href="{% url 'all_rentals' %}">Browse All Houses</a>
+    </div>
+</section>
 <section class="section">
   <h4 >📎 Recent Attachments</h4>
   <div class="card-grid">
@@ -340,13 +300,11 @@
         </div>
       </div>
     {% endfor %}
-    </section>
-  <div class="cta-link">
-    <a href="{% url 'all_attachment_posts' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
-  </div>
-</div>
+    <div class="cta-link">
+      <a href="{% url 'all_attachment_posts' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
+    </div>
+</section>
 <section class="testimonials">
-  
   {% for testimonial in testimonials %}
     <div class="testimonial-card">
       <p class="testimonial-quote">“{{ testimonial.message }}”</p>
@@ -354,20 +312,18 @@
       <h4>{{ testimonial.name }} <span class="role"> - {{testimonial.role }}</span></h4>
     </div>
   {% endfor %}
-  </section>
-<hr>  
-<section class="contact" id="contact">
-        <h4>Contact Us</h4>
-        <p>
-         For any inquiries, support or feedback, please reach out to us:
-        </p>
-        <div class="info">
-            <p><strong>Email:</strong> support@attachmentportal.com</p>
-            <p><strong>Phone:</strong> +254 1112871337</p>
-            <p><strong>Location:</strong> Nairobi, Kenya</p>
-        </div>
-    
 </section>
-    <hr>
-</div>
+<section class="contact" id="contact">
+  <div class="content-wrapper">
+  <h4>Contact Us</h4>
+    <p>
+       For any inquiries, support or feedback, please reach out to us:
+    </p>
+    <div class="info">
+      <p><strong>Email:</strong> support@attachmentportal.com</p>
+      <p><strong>Phone:</strong> +254 1112871337</p>
+      <p><strong>Location:</strong> Nairobi, Kenya</p>
+    </div>
+  </div>
+</section>
 {% endblock %}

@@ -11,107 +11,85 @@
     {% endfor %}
 {% endif %}
 <style>
-    .attachment-list {
-        max-width: 900px;
-        margin: 50px auto;
-        padding: 20px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+.attachment-container {
+    margin-top: 80px;
+}
+h2 {
+    text-align: center;
+}
+  .attachment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px; 
+    
+}
 
-    .attachment-item {
-        border-bottom: 1px solid #ccc;
-        padding: 15px 0;
-    }
+  .attachment-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: solid 5px #12c2ee;
+    padding: 16px;
+    transition: transform 0.3s ease;
+  }
 
-    .attachment-item h3 {
-        margin: 0 0 8px 0;
-    }
+  .attachment-card:hover {
+    transform: translateY(-5px);
+  }
 
-    .attachment-item p {
-        margin: 4px 0;
-    }
+  .attachment-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+  }
 
-    .attachment-item a {
-        display: inline-block;
-        margin-top: 10px;
-        background: #007bff;
-        color: white;
-        padding: 8px 14px;
-        border-radius: 5px;
-        text-decoration: none;
-    }
+  .attachment-info {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 4px;
+  }
 
-    .attachment-item a:hover {
-        background: #0056b3;
-    }
-    .attachment_table{
-        background-color: #007bff;
-        width: 40%;
-        height: 100px;
-        border-radius: 3px;
-        align-self: center;
-    }h2{
-        text-align: center;
-    }
-    p {
-        text-align: center;
-    }
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    th, td {
-        padding: 10px;
-        text-align: left;
-    }
-    thead {
-        background-color: #f2f2f2;
-    }
-    .btn {
-        display: inline-block;
-        margin: 10px;
-        padding: 3px 3px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-    }
-  
-    .btn:hover {
-        background-color: #0056b3;
-    }
+  .tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    color: white;
+  }
+
+  .tag-soon { background-color: red; }
+  .tag-upcoming { background-color: green; }
+
+  .attachment-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #1e90ff;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+   .attachment-link:hover {
+    text-decoration: underline;
+  }
 </style>
-<div class="attachment-list">
-    <h2>Available Attachments</h2>
-    <table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>Company Name</th>
-            <th>Location</th>
-            <th>Email</th>
-            <th>Description</th>
-            <th>Slots</th>
-            <th>Deadline</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for attachment in attachments %}
-        <tr>
-            <td>{{ attachment.company.name}}</td>
-            <td>{{ attachment.location}}</td>
-            <td>{{ attachment.email}}</td>
-            <td>{{ attachment.description}}</td>
-            <td>{{ attachment.slots}}</td>
-            <td>{{ attachment.application_deadline}}</td>
-            <td><a href="{% url 'apply_attachment' attachment.id%}" class="btn">Apply</a></td>
-        </tr>
-
-    </tbody>
+<div class="attachment-container">
+    <h2>Availabe Attachments and Internships</h2>
+    <div class="attachment-grid">
+        {% for att in attachments %}
+        <div class="attachment-card">
+            <div class="attachment-title">{{ att.title }}</div>
+            <div class="attachment-info">Company: {{ att.company }}</div>
+            <div class="attachment-info">Location: {{ att.location }}</div>
+            <div class="attachment-info">Description: {{ att.description }}</div>
+            <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
+            <div class="attachment-link">Apply link: {{ att.application_link }}</div>
+        </div>
         {% endfor %}
-</table>
+    </div>
 </div>
 <hr>
 {% endblock %}

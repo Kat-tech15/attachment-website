@@ -41,7 +41,7 @@ class HouseForm(forms.ModelForm):
 class AttachmentPostForm(forms.ModelForm):
     class Meta:
         model = AttachmentPost
-        fields = ['location', 'email', 'description', 'slots', 'application_deadline',]
+        fields = ['location', 'email', 'description', 'slots', 'application_deadline', 'application_link',]
         widgets = {
             'application_deadline': forms.DateInput(attrs={'type': 'date', 'class':'form-control'}),
         }

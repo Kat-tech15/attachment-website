@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="dashboard-container">
-
+   <h3>Admin Dashboard</h3>
   <!-- Stats Section -->
  <div class="stats">
     <div class="card card-blue">Total Bookings: {{ booking_count }}</div>
@@ -18,65 +18,29 @@
   <!-- Charts Section -->
   <div class="charts">
     <div class="chart-block">
-      <h3>Users by Role</h3>
+      <h4>Users by Role</h4>
       <canvas id="usersChart"></canvas>
     </div>
 
     <div class="chart-block">
-      <h3>Monthly Booking Trends</h3>
+      <h4>Monthly Booking Trends</h4>
       <canvas id="bookingTrendChart"></canvas>
     </div>
 
     <div class="chart-block">
-      <h3>Top Companies by Applications</h3>
+      <h4>Top Companies by Applications</h4>
       <canvas id="topCompaniesChart"></canvas>
     </div>
 
     <div class="chart-block">
-      <h3>Applications by Course</h3>
+      <h4>Applications by Course</h4>
       <canvas id="courseChart"></canvas>
     </div>
   </div>
-
-  <!-- Table Section -->
-  <div class="pending-apps">
-    <h3>Pending Attachment Applications</h3>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Attachee</th>
-          <th>Company</th>
-          <th>Field</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for app in pending_apps %}
-        <tr>
-          <td>{{ app.attachee.user.username }}</td>
-          <td>{{ app.attachment_post.company.name }}</td>
-          <td>{{ app.attachee.course }}</td>
-          <td>{{ app.status }}</td>
-          <td>
-            <a href="{% url 'approve-application' app.id %}" class="btn btn-success btn-sm">Approve</a>
-            <a href="{% url 'reject-application' app.id %}" class="btn btn-danger btn-sm">Reject</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5">No pending applications.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <div style="text-align: right; margin-bottom: 20px;">
+    <div style="text-align: center; margin-bottom: 20px;">
       <a href="{% url 'download_approved_applications_pdf' %}" class="btn btn-primary">📥 Download Approved Applications (PDF)</a>
     </div>
-  </div>
 </div>
-
-
-
 
 <script>
   const ctx = document.getElementById('usersChart').getContext('2d');
@@ -182,35 +146,27 @@
   flex-direction: column;
   gap: 30px;
 }
-
-/* Stats cards */
-/* Card container */
+h3 {
+  text-align: center;
+  font-family: sans-serif;
+}
 .stats {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: space-between;
 }
-
-/* Base card styling */
 .card {
-  flex: 1 1 30%;
-  min-width: 160px;
-  padding: 20px;
+  height: 100px;
+  width: 30%;
+  padding: 5px 6px;
   color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-size: 18px;
+  font-size: 28px;
   text-align: center;
  
   cursor: default;
 }
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-/* Custom background colors */
 .card-blue {
   background: #3498db;
 }
@@ -239,7 +195,7 @@
   gap: 30px;
 }
 .chart-block {
-  background: #f9f9f9;
+  background:rgb(128, 233, 175);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
@@ -248,35 +204,16 @@ canvas {
   margin-top: 15px;
   max-width: 100%;
 }
-
-/* Table */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+h4 {
+  text-align: center;
+  font-family: sans-serif;
 }
-
-.table th, .table td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
 .btn {
   padding: 6px 12px;
   text-decoration: none;
   border-radius: 4px;
   color: white;
   font-size: 14px;
-}
-
-.btn-success { background-color: green; }
-.btn-danger { background-color: red; }
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  padding: 8px 12px;
-  text-decoration: none;
-  border-radius: 4px;
 }
 </style>
 

@@ -124,7 +124,7 @@ class House(models.Model):
         return self.owner_name
 
 class Room(models.Model):
-    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='rooms')
     room_number = models.CharField(max_length=10)
     is_booked = models.BooleanField(default=False)
     
