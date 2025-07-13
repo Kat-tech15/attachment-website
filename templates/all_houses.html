@@ -10,7 +10,7 @@
             <div class="house-info">{{ house.contact}}</div>
             <div class="house-info">{{ house.location}}</div>
             <div class="house-info">{{ house.rent }}</div>
-            <div class="house-link"><a href="{% url 'book_rental' rental.id%}" class="btn">Book</a></div>
+            <div class="house-link"><a href="{% url 'book_house' house.id%}" class="btn">Book</a></div>
         </div>
         {% endfor %}
 </div> 

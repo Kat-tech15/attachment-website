@@ -36,7 +36,7 @@ class CustomUserCreationForm(UserCreationForm):
 class HouseForm(forms.ModelForm):
     class Meta:
         model = House
-        fields = ['owner_name', 'phone_number', 'location', 'description', 'rent','image']
+        fields = ['owner_name', 'phone_number', 'location', 'description', 'rent', 'total_rooms','image']
 
 class AttachmentPostForm(forms.ModelForm):
     class Meta:

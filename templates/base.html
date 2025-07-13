@@ -198,6 +198,13 @@ footer {
 <body>
     <header>
         <h1>Attachment Portal</h1>
+        {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
        <nav>
     {% if user.is_authenticated %}
     <ul class="nav-list">

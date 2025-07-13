@@ -117,8 +117,8 @@ def register_view(request):
                     location=''
                 )
 
-            login(request, user)
-            return redirect('home')
+            messages.success(request, "Account created successfully. Please log in.")
+            return redirect('login')
     else:
         form = CustomUserCreationForm()
     return render(request,'registration/register.html', {'form': form})
@@ -234,11 +234,11 @@ def reject_application(request, app_id):
 
 
 @login_required
-def book_rental(request, rental_id):
+def book_house(request, house_id):
     if  not request.user.has_priviledge(['attachee']):
         return HttpResponseForbidden("Only Admins and Attachees have access to this page.")
  
-    rental_post = get_object_or_404(House, id=rental_id)
+    house_post = get_object_or_404(House, id=house_id)
 
     # check if attachee exists 
     try:
@@ -248,7 +248,7 @@ def book_rental(request, rental_id):
 
     booking, created = Booking.objects.get_or_create(
         attachee = attachee,
-        rental_post = rental_post,
+        house_post = house_post,
         defaults= {
             'full_name': attachee.full_name,
             'contact': attachee.phone_number,
@@ -258,8 +258,8 @@ def book_rental(request, rental_id):
 
     
 
-    return render(request, 'book_rental.html', {
-        'rental': rental_post,
+    return render(request, 'book_house.html', {
+        'house': house_post,
         'message': message
     })
         
@@ -274,7 +274,7 @@ def my_bookings(request):
 # Tenant's Views 
 
 @login_required
-def all_rentals(request):
+def all_houses(request):
     if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden()
 
@@ -284,25 +284,25 @@ def all_rentals(request):
         house.booked_rooms = house.rooms.filter(is_booked=True).count()
         house.total_rooms = house.rooms.count()
 
-    return render(request, 'all_rentals.html',{'house': houses})
+    return render(request, 'all_houses.html',{'houses': houses})
 
 @receiver(post_save, sender=House)
 def create_room(sender, instance, created, **kwargs):
     if created:
         for i in range(1, instance.total_rooms + 1):
-            Room.objects.create(rental=instance, room_number=f"Room {i}")
+            Room.objects.create(house=instance, room_number=f"Room {i}")
 
 def book_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
-    rental = room.rental
+    house = room.house
 
     if room.is_booked:
         messages.warning(request, "Sorry, this room is already booked.")
-        return redirect('all_rentals')
+        return redirect('all_houses')
     
     booking = Booking.objects.create(
         attachee=request.user.attachee,
-        rental_post=room.house,
+        house_post=room.house,
         full_name=request.user.attachee.full_name,
         contact=request.user.attachee.phone_number
     )
@@ -360,7 +360,7 @@ def all_attachment_posts(request):
     })
 
 @login_required
-def post_rental(request):
+def post_house(request):
     if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden()
 
@@ -387,28 +387,28 @@ def post_rental(request):
     else:
         form = HouseForm()
 
-    return render(request, 'post_rental.html', {'form': form})
+    return render(request, 'post_house.html', {'form': form})
 
 def make_inquiry(request):
     return render(request, 'make_inquiry.html')
 
 @login_required
-def submit_house_review(request, rental_id):
-    rental = get_object_or_404(RentalListing, id=rental_id)
+def submit_house_review(request, house_id):
+    house = get_object_or_404(House, id=house_id)
 
     if request.method == 'POST':
         form = HouseReviewForm(request.POST)
         if form.is_valid():
             review =form.save(commit=False)
             review.user = request.user
-            review.rental = rental
+            review.house = house
             review.save()
-            return redirect('all_rentals', rental_id= rental.id)
+            return redirect('all_houses', house_id=house.id)
 
 
     else:
         form =HouseReviewForm()
-    return render(request, 'submit_house_review.htnl', {'form': form, 'rental': rental})
+    return render(request, 'submit_house_review.htnl', {'form': form, 'house': house})
 
 @login_required
 def submit_company_review(request, company_id):
@@ -431,17 +431,15 @@ def submit_company_review(request, company_id):
     
 
 @login_required
-def view_rentals(request):
-    rentals = RentalListing.objects.all().prefetch_related('rooms', 'reviews').annotate(
-        avg_rating=Avg('reviews__rating')
-    )
+def view_houses(request):
+    houses = House.objects.all().prefetch_related('rooms')
 
-    for rental in rentals:
-        rental.available_rooms = rental.rooms.filter(is_booked=False).count()
-        rental.booked_rooms = rental.rooms.filter(is_booked=True).count()
-        rental.total_rooms = rental.rooms.count()
+    for house in houses:
+        house.available_rooms = house.rooms.filter(is_booked=False).count()
+        house.booked_rooms = house.rooms.filter(is_booked=True).count()
+        house.total_rooms = house.rooms.count()
 
-    return render(request, 'all_rentals.html', {'rentals': rentals})
+    return render(request, 'all_houses.html', {'houses': houses})
 
 
 def view_attachments(request):
@@ -492,7 +490,7 @@ def view_applicants(request):
 @login_required
 def dashboard_router(request):
     role = request.user.role
-    if user.is_superuser or user.is_staff:
+    if request.user.is_superuser or request.user.is_staff:
         return redirect('admin_dashboard')
     elif role == 'attachee':
         return redirect('attachee_dashboard')
@@ -502,7 +500,7 @@ def dashboard_router(request):
         return redirect('tenants_dashboard')
     else:
         return redirect(request, 'erro.html', {'message': 'unknown role'})
-    
+   
 @staff_member_required
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def admin_dashboard(request):
@@ -553,7 +551,7 @@ def admin_dashboard(request):
         'course_count': course_counts,
         'pending_apps': pending_apps,
     }
-    return render(request, 'dashboards/admin_dashboard.html')
+    return render(request, 'dashboards/admin_dashboard.html',context)
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 @login_required
