@@ -483,19 +483,15 @@ def view_attachments(request):
     return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
 
 # companys' Views 
-@login_required 
+@login_required
 def post_attachment(request):
     if not request.user.has_priviledge(['company']):
-        return HttpResponseForbidden("You have no permission to post attachments.")
+        return HttpResponseForbidden("Only companies can post attachments.")
 
-    if user.is_superuser or user.is_staff:
-        pass
-
-    try:
-        company = request.user.company
-    except Company.DoesNotExist:
-        return HttpResponseForbidden("You must complete your company profile first.")
-
+    company, _ = Company.objects.get_or_create(
+        user=request.user,
+        defaults={'name': request.user.get_full_name() or request.user.username}
+    )
 
     if request.method == 'POST':
         form = AttachmentPostForm(request.POST, user=request.user)
@@ -504,12 +500,10 @@ def post_attachment(request):
             attachment.company = company
             attachment.save()
             return redirect('company_dashboard')
-        
     else:
         form = AttachmentPostForm(user=request.user)
 
-    return render(request, 'post_attachment.html', {'form': form}) 
-
+    return render(request, 'post_attachment.html', {'form': form})
 @login_required
 def my_attachment_posts(request):
     if not request.user.has_priviledge(['company']):
