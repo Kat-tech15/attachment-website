@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import  Attachee, Company, Contact, Tenant, CustomUser, AttachmentApplication,AttachmentPost, RentalListing, House,Testimonials
+from .models import  Attachee, Company, Contact, Tenant, CustomUser, AttachmentApplication,AttachmentPost, House,Testimonials
 # Register your models here.
 
 
@@ -10,7 +10,6 @@ admin.site.register(Contact)
 admin.site.register(Attachee)
 admin.site.register(AttachmentApplication)
 admin.site.register(AttachmentPost)
-admin.site.register(RentalListing)
 admin.site.register(House)
 admin.site.register(Testimonials)
 
