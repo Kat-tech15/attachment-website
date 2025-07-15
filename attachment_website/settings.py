@@ -95,7 +95,7 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'attachment_db',
+        'NAME': 'attachment',
         'USER': 'root',
         'PASSWORD': '200315',
         'HOST': 'localhost',
