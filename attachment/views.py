@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse
-from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, RentalListing, Room, Notification, Tenant,Testimonials
+from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials
 from .forms import CustomUserCreationForm,HouseForm
 from django.contrib import messages
 from django.utils import timezone
@@ -235,7 +235,7 @@ def reject_application(request, app_id):
 
 @login_required
 def book_house(request, house_id):
-    if  not request.user.has_priviledge(['attachee']):
+    if  not request.user.has_priviledge(['attachee','tenant']):
         return HttpResponseForbidden("Only Admins and Attachees have access to this page.")
  
     house_post = get_object_or_404(House, id=house_id)
@@ -389,8 +389,41 @@ def post_house(request):
 
     return render(request, 'post_house.html', {'form': form})
 
-def make_inquiry(request):
-    return render(request, 'make_inquiry.html')
+@login_required
+def my_houses(request):
+    if not request.user.has_priviledge(['tenant']):
+        return HttpResponseForbidden("Only tenants can view their houses.")
+
+    houses = House.objects.filter(tenant__user=request.user)  
+
+    return render(request, 'my_houses.html', {'houses': houses})
+
+@login_required
+def edit_house(request, house_id):
+
+    house = get_object_or_404(House, id=house_id, tenant=request.user.tenant)
+
+    if request.method == 'POST':
+        form = HouseForm(request.POST, instance=house)
+        if form.is_valid():
+            form.save()
+            return redirect('my_houses')
+    else:
+        form = HouseForm(instance=house)
+
+    return render(request, 'edit_house.html', {'form': form, 'house': house})
+
+@login_required
+def delete_house(request, house_id):
+
+    house =get_object_or_404(House , id=house_id, tenant=request.user.tenant)
+
+    if request.method == 'POST':
+        house.delete()
+        messages.success(request, "House deleted successfully.")
+        return redirect('my_houses')    
+    
+    return render(request, 'delete_house.html', {'house': house})
 
 @login_required
 def submit_house_review(request, house_id):
@@ -432,6 +465,7 @@ def submit_company_review(request, company_id):
 
 @login_required
 def view_houses(request):
+
     houses = House.objects.all().prefetch_related('rooms')
 
     for house in houses:
@@ -441,8 +475,11 @@ def view_houses(request):
 
     return render(request, 'all_houses.html', {'houses': houses})
 
-
+@login_required
 def view_attachments(request):
+    if not request.user.has_priviledge(['attachee', 'company']):
+        return HttpResponseForbidden("Only Attachees and Companies can view attachments.")
+        
     return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
 
 # companys' Views 
@@ -471,8 +508,9 @@ def post_attachment(request):
     else:
         form = AttachmentPostForm(user=request.user)
 
-    return render(request, 'post_attachment.html', {'form': form})
+    return render(request, 'post_attachment.html', {'form': form}) 
 
+@login_required
 def my_attachment_posts(request):
     if not request.user.has_priviledge(['company']):
         return HttpResponseForbidden()
@@ -482,9 +520,41 @@ def my_attachment_posts(request):
     return render(request, 'my_attachment_posts.html', {
         'my_attachment_posts': my_attachment_posts
     })
- 
+
+@login_required
+def edit_attachment(request, attachment_id):
+    attachment = get_object_or_404(AttachmentPost, id=attachment_id, company=request.user.company)
+
+    if request.method == 'POST':
+        form = AttachmentPostForm(request.POST, instance=attachment, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Attachment updated successfully.")
+            return redirect('my_attachment_posts')
+
+    else:
+        form = AttachmentPostForm(instance=attachment, user=request.user)
+    
+    return render(request, 'edit_attachment.html', {
+        'form': form,
+        'attachment': attachment
+    })
+
+@login_required
+def delete_attachment(request, attachment_id):
+    attachment = get_object_or_404(AttachmentPost, id=attachment_id, company__user=request.user)
+
+    if request.method == 'POST':
+        attachment.delete()
+        messages.success(request, "Attachment deleted successfully.")
+        return redirect('company_dashboard')
+
+    return render(request, 'delete_attachment.html', {'attachment': attachment})
+
 def view_applicants(request):
     return render(request, 'view_applicants.html')
+
+
 
 # Login views
 @login_required
