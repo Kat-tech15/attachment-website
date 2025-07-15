@@ -1,5 +1,5 @@
 from django import forms
-from .models import AttachmentApplication, House, AttachmentPost, CustomUser,RentalListing, HouseReview, CompanyReview
+from .models import AttachmentApplication, House, AttachmentPost, CustomUser, HouseReview, CompanyReview
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
@@ -53,11 +53,6 @@ class AttachmentPostForm(forms.ModelForm):
         if self.user and hasattr(self.user, 'company'):
            self.fields['email'].initial = self.user.company.email
            self.fields['location'].initial = self.user.company.location
-
-class RentalListingForm(forms.ModelForm):
-    class Meta:
-        model = RentalListing
-        fields = '__all__'
 
 class HouseReviewForm(forms.ModelForm):
     class Meta:
