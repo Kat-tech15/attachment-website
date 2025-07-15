@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .delete-confirm-box {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 25px;
+    background: #fff;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+</style>
+
+<div class="delete-confirm-box">
+  <h3>⚠️ Confirm Deletion</h3>
+  <p>Are you sure you want to delete <strong>{{ attachment.title }}</strong>?</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'company_dashboard' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -3,6 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+
 <style>
   .search-form {
     display: flex;
@@ -79,7 +80,7 @@
 }
 .contact {
   border-bottom: 5px solid #007bff;
-  border-left: 5px solid #007bff;
+  border-right: 5px solid #007bff;
 }
 h4 {
   text-align: center;
@@ -157,7 +158,7 @@ h4 {
   padding: 20px;
   border-radius: 8px;
   border-bottom: 5px solid #007bff;
-  border-right: 5px solid #007bff;
+  border-left: 5px solid #007bff;
 }
 .testimonial-card {
   background-color: white;
@@ -230,6 +231,7 @@ h4 {
             <a href="{% url 'login' %}">Get Started</a>
         {% else %}
              <a href="{% url 'dashboard' %}">Go to Dashboard</a>
+             <a href="{% url 'all_houses' %}">Explore Houses</a>
         {% endif %}
     
 </section>
@@ -301,7 +303,7 @@ h4 {
       </div>
     {% endfor %}
     <div class="cta-link">
-      <a href="{% url 'all_attachment_posts' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
+      <a href="{% url 'all_houses' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
     </div>
 </section>
 <section class="testimonials">

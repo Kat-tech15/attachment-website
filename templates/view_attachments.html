@@ -69,7 +69,6 @@ h2 {
     margin-top: 10px;
     color: #1e90ff;
     text-decoration: none;
-    font-weight: bold;
     cursor: pointer;
   }
    .attachment-link:hover {
@@ -86,10 +85,17 @@ h2 {
             <div class="attachment-info">Location: {{ att.location }}</div>
             <div class="attachment-info">Description: {{ att.description }}</div>
             <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
-            <div class="attachment-link">Apply link: {{ att.application_link }}</div>
-        </div>
-        {% endfor %}
-    </div>
+            {% if att.application_link %}
+                <div class="attachment-link">
+                    <a href="{{ att.application_link }}" target="_blank" rel="noopener noreferrer">
+                        Click here to apply
+                    </a>
+                </div>
+            {% else %}
+                <div class="attachment-link">No application link provided</div>
+            {% endif %}        </div>
+                    {% endfor %}
+                </div>
 </div>
 <hr>
 {% endblock %}

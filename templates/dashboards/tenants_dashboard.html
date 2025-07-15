@@ -7,12 +7,12 @@
 
 {% block content %}
 <div class="dashboard-container">
-<h2>Welcome to Tenants Dashboard {{ user.username }} .</h2>
+<h2>Tenants Dashboard</h2>
     <!-- Loop through tenant's posted houses -->
      <div class="dashboard-actions">
-        <a href="{% url 'post_house'%}" class="btn">Post a House</a>
-        <a href="{% url 'make_inquiry'%}" class="btn">Make an Inquiry</a> 
-        <a href="{% url 'all_houses'%}" class="btn">View All Rentals</a>
+        <a href="{% url 'post_house'%}" class="btn">Post House</a>
+        <a href="{% url 'my_houses'%}" class="btn">My Houses</a> 
+        <a href="{% url 'all_houses'%}" class="btn">View All Houses</a>
      </div>
 </div>
 
@@ -20,6 +20,7 @@
     .dashboard-container {
         padding: 20px;
         text-align: center;
+        margin-top: 160px;
     }
 
     .dashboard-actions {

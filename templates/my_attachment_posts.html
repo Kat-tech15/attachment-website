@@ -6,6 +6,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    margin-top: 100px;
   }
 
   .attachment-card {
@@ -27,6 +28,31 @@
     font-size: 0.95rem;
     color: #555;
   }
+  .btn {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+  
 </style>
 
 <h2 style="text-align:center;">📄 My Posted Attachments</h2>
@@ -37,10 +63,14 @@
       <div class="attachment-title">{{ post.title }}</div>
       <div class="attachment-meta">Location: {{ post.location }}</div>
       <div class="attachment-meta">Deadline: {{ post.application_deadline }}</div>
-      <div class="attachment-meta">Created on: {{ post.created_at|date:"M d, Y" }}</div>
+      <div class="attachment-meta">Posted on: {{ post.created_at|date:"F j, Y" }}</div>
       {% if post.link %}
         <div class="attachment-meta"><a href="{{ post.link }}" target="_blank">View / Apply</a></div>
       {% endif %}
+      <div style="margin-top: 10px;">
+        <a href="{% url 'edit_attachment' post.id %}" class="btn btn-sm btn-primary">✏️ Edit</a>
+        <a href="{% url 'delete_attachment' post.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this attachment?');">🗑️ Delete</a>
+      </div>
     </div>
   {% empty %}
     <p style="text-align:center;">You have not posted any attachments yet.</p>

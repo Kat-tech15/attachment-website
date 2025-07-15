@@ -15,9 +15,12 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #07e9d6;
     scroll-behavior: smooth;
-    overflow-x: auto;
+    scroll-padding: 80px;
 }
-
+html {
+  scroll-padding-top: 120px;
+  scroll-behavior: smooth;
+}
 header {
     background-color: #bb9fba;
     padding: 10px 5px;
@@ -105,6 +108,7 @@ nav a:hover {
 footer {
     text-align: center;
     padding: 10px;
+    width: 100;
     background-color: #343a40;
     color: white;
     border-bottom: 5px solid #0ae71c;
@@ -232,14 +236,12 @@ footer {
         <li><a href="{% url 'login' %}"><i class="fa fa-sign-in-alt"></i> Login</a></li>
         <li><a href="{% url 'register' %}"><i class="fa fa-user-plus"></i> Register</a></li>
     </ul>
-
     {% endif %}
 </nav>
-
     </header>
 
+    <div class="container">
         {% block content %}
-       
         <div class="notifications-dropdown" id="notificationsDropdown">
             <div class="notifications-icon" onclick="toggleDropdown()">
                     🔔
