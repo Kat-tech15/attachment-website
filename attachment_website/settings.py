@@ -88,7 +88,7 @@ LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/dashboard/'  
 
-
+SITE_ID = 2
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
