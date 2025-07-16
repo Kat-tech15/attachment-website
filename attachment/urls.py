@@ -41,4 +41,7 @@ urlpatterns = [
     path('post_attachment/', views.post_attachment, name='post_attachment'),
     path('my_bookings/', views.my_bookings, name='my_bookings'),
     path('my_bookings/cancel/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
-]
+    path('submit_feedback/', views.submit_feedback, name='submit_feedback'),
+    path('feedback_list/', views.feedback_list, name='feedback_list'),
+    path('feedback/<int:feedback_id>/delete/', views.delete_feedback, name='delete_feedback'),
+    ]

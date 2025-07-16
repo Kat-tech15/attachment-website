@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+<div class="feedback-wrapper">
+  <div class="feedback-card">
+    <h2>💬 We value your feedback</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn-submit">Submit Feedback</button>
+    </form>
+  </div>
+</div>
+
+<style>
+.feedback-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  padding: 40px 20px;
+  background-color: #f2f6fc;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.feedback-card {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.feedback-card h2 {
+  margin-bottom: 25px;
+  font-size: 24px;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.feedback-card form p {
+  margin-bottom: 18px;
+}
+
+.feedback-card input,
+.feedback-card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border 0.2s ease-in-out;
+}
+
+.feedback-card input:focus,
+.feedback-card textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+  background-color: #0056b3;
+}
+</style>
+{% endblock %}

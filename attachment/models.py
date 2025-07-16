@@ -179,3 +179,15 @@ class Notification(models.Model):
     
     def __str__(self):
         return f"To {self.recipient}: {self.message}"
+
+class Feedback(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100, blank=True)
+    email = models.EmailField(blank=True)
+    message = models.TextField()
+    is_registered_user = models.BooleanField(default=False)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        user_identity = self.user.username if self.user else (self.name or "Anonymus")
+        return f"Feeback by {user_identity} on {self.submitted_at.strftime('%Y-%m-%d')}"

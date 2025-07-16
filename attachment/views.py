@@ -12,6 +12,7 @@ from django.db.models import Count,Avg
 from django.core.mail import EmailMessage
 import tempfile
 from django.db.models.signals import post_save
+from django.views.decorators.http import require_POST
 from django.dispatch import receiver
 from django.db.models.functions import TruncMonth
 from django.core.paginator import Paginator
@@ -20,8 +21,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse
-from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials
-from .forms import CustomUserCreationForm,HouseForm
+from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials, Feedback
+from .forms import CustomUserCreationForm,HouseForm,FeedbackForm
 from django.contrib import messages
 from django.utils import timezone
 from .forms import AttachmentPostForm, HouseForm, AttachmentApplicationForm, HouseReviewForm, CompanyReviewForm
@@ -599,6 +600,9 @@ def admin_dashboard(request):
     #Pending applications
     pending_apps = AttachmentApplication.objects.filter(status='pending').select_related('attachee', 'company')
     
+    # Feedback data
+    feedback_count = Feedback.objects.count()
+    recent_feedbacks = Feedback.objects.order_by('-submitted_at')[:5]
     # Final context 
     context = {
         'users_by_role': users_by_role,
@@ -614,6 +618,8 @@ def admin_dashboard(request):
         'course_labels': course_labels,
         'course_count': course_counts,
         'pending_apps': pending_apps,
+        'feedback_count': feedback_count,
+        'recent_feedbacks': recent_feedbacks,
     }
     return render(request, 'dashboards/admin_dashboard.html',context)
 
@@ -780,3 +786,34 @@ def company_dashboard(request):
 def tenants_dashboard(request):
     return render(request, 'dashboards/tenants_dashboard.html')
 
+def submit_feedback(request):
+    if request.method == 'POST':
+        form =FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            if request.user.is_authenticated:
+                feedback.user = request.user
+                feedback.is_registered_user = True
+                feedback.name = request.user.get_full_name() or request.user.username
+                feedback.email = request.user.email
+            feedback.save()
+            return redirect('home')
+            messages.success(request, "Thank you for your feedback!")
+
+    else:
+        form = FeedbackForm()
+
+    return render(request, 'submit_feedback.html', {'form': form})
+
+@staff_member_required
+def feedback_list(request):
+    feedbacks = Feedback.objects.order_by('-submitted_at')
+    return render(request, 'feedback_list.html', {'feedbacks': feedbacks})
+
+@staff_member_required
+@require_POST
+def delete_feedback(request, feedback_id):
+    feedback = get_object_or_404(Feedback, id=feedback_id)
+    feedback.delete()
+    messages.success(request, "Feedback deleted successfully.")
+    return redirect('feedback_list')

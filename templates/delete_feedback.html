@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Delete Feedback{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Confirm Feedback Deletion</h2>
+    <p>Are you sure you want to delete the following feedback?</p>
+
+    <div class="border p-3 mb-3">
+        <p><strong>Name:</strong> {{ feedback.name|default:"Anonymous" }}</p>
+        <p><strong>Email:</strong> {{ feedback.email }}</p>
+        <p><strong>Message:</strong> {{ feedback.message }}</p>
+        <p><strong>Submitted At:</strong> {{ feedback.submitted_at|date:"M d, Y H:i" }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'admin_feedback_list' %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+{% endblock %}

@@ -36,6 +36,22 @@
       <h4>Applications by Course</h4>
       <canvas id="courseChart"></canvas>
     </div>
+    <div class="chart-block">
+  <h4>Recent Feedbacks ({{ feedback_count }})</h4>
+  <ul class="feedback-list">
+    {% for feedback in recent_feedbacks %}
+      <li>
+        <strong>{{ feedback.name|default:"Anonymous" }}</strong>: 
+        {{ feedback.message|truncatechars:60 }}
+        <small class="text-muted">({{ feedback.submitted_at|date:"M d, Y" }})</small>
+      </li>
+    {% empty %}
+      <li>No feedback submitted yet.</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'feedback_list' %}">View all feedback</a>
+</div>
+
   </div>
     <div style="text-align: center; margin-bottom: 20px;">
       <a href="{% url 'download_approved_applications_pdf' %}" class="btn btn-primary">📥 Download Approved Applications (PDF)</a>
@@ -185,6 +201,20 @@ h3 {
 
 .card-pink {
   background: #e84393;
+}
+.feedback-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feedback-list li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+.feedback-list li strong {
+  color: #2c3e50;
 }
 
 
