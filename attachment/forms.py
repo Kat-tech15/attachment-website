@@ -1,5 +1,5 @@
 from django import forms
-from .models import AttachmentApplication, House, AttachmentPost, CustomUser, HouseReview, CompanyReview
+from .models import AttachmentApplication, House, AttachmentPost, CustomUser, HouseReview, CompanyReview, Feedback
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
@@ -65,3 +65,15 @@ class CompanyReviewForm(forms.ModelForm):
         model = CompanyReview
         fields = ['rating', 'comment']
     
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['name', 'email', 'message']
+        widgets = {
+            'message': forms.Textarea(attrs={
+                'placeholder':'Write your feedback here...',
+                'rows': 2
+            }),
+            'name': forms.TextInput(attrs={'placeholder': 'Your name(optional)'}),
+            'email': forms.TextInput(attrs={'placeholder': 'Your email(optional)'}),
+        }
