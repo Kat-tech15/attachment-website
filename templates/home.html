@@ -47,8 +47,11 @@
   .home a:hover {
     background-color: #0056b3;
   }
-  .container {
-    padding: 120px 20px 30px 20px;
+section {
+  width: 100%;
+  padding: 60px 0; 
+  background: #f9f9f9;
+  margin-bottom: 0 auto;
 }
 .about,
 .services,
@@ -64,10 +67,6 @@
 .about {
   border-right: 5px solid #007bff;
   border-bottom: 5px solid #007bff;
-}
-.content-wrapper {
-  max-width: 1200px;
-  margin: auto;
 }
 .services {
   border-left: 5px solid #007bff;
@@ -299,8 +298,8 @@ h4 {
   }
 }
 </style>
-<div class="container">
 <section class="home" id="home">
+  <div class="content-wrapper">
       <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
         <input type="text" name="q" placeholder="Search applications...">
         <button type="submit">Search</button>
@@ -323,17 +322,14 @@ h4 {
 </section>
 </div>
 <section class="about" id="about">
-  <div class="content-wrapper">
      <h4>About Us</h4>
         <p>
           We are a bridge between the  students seeking for industrial attachment and internships,  and companies having slots for attachees as well as interns. 
           By providing a seamless way to post and apply, we ensure that both parties can find the best fit with ease.
           It also aimed at bridging students with tenants since in most cases, students usually secure an attachment in a strage place hence this platform will provide them with a chance to be able to secure a place to leave by having the tenants post there rentals in the platform.
         </p>
-  </div>   
 </section>
 <section class="services" id="services">
-  <div class="content-wrapper">
   <h4>Our Services</h4>
     <ul>
       <p>Our sevices include the following: <br><br>
@@ -350,7 +346,6 @@ h4 {
         <br><br><hr>
       </p>
     </ul>
-  </div>
 </section>
 <section class="section">
   <h4>🏠 Featured Houses</h4>
@@ -402,7 +397,6 @@ h4 {
   {% endfor %}
 </section>
 <section class="contact" id="contact">
-  <div class="content-wrapper">
   <h4>Contact Us</h4>
     <p>
        For any inquiries, support or feedback, please reach out to us:
@@ -432,6 +426,5 @@ h4 {
         <p><strong>Location:</strong> Nairobi, Kenya</p>
       </div>
     </div>
-  </div>
 </section>
 {% endblock %}

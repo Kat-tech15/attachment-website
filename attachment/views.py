@@ -486,6 +486,20 @@ def view_houses(request):
         house.total_rooms = house.rooms.count()
 
     return render(request, 'all_houses.html', {'houses': houses})
+    
+@login_required 
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, User=request.user)
+
+    if booking.move_in_date > timezone.now.date():
+        booking.status = 'cancelled'
+        booking.save()
+        messages.success(request, "Booking cancelled succssfully.")
+    
+    else:
+        messages.error(request, "Move-in date has passed. Cannot cancel.")
+
+    return redirect('my_bookings')
 
 @login_required
 def view_attachments(request):
@@ -679,19 +693,7 @@ def attachee_dashboard(request):
                   'user': request.user,
                   })
 
-@login_required 
-def cancel_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, User=request.user)
 
-    if booking.move_in_date > timezone.now.date():
-        booking.status = 'cancelled'
-        booking.save()
-        messages.success(request, "Booking cancelled succssfully.")
-    
-    else:
-        messages.error(request, "Move-in date has passed. Cannot cancel.")
-
-    return redirect('my_bookings')
 
 @login_required
 def calendar(request):
