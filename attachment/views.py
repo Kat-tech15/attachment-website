@@ -259,16 +259,25 @@ def my_bookings(request):
 
 # Tenant's Views 
 def tenant_house_bookings(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.is_superuser and not request.user.has_priviledge(['tenant']):
         HttpResponseForbidden("Only tenants can access this page.")
+    
+    if request.user.is_superuser:
+        bookings = Booking.objects.all().select_related('room', 'room__house', 'User')
+    else:
+        try:
+            tenant = request.user.tenant
+        except Tenant.DoesNotExist:
 
-        tenant_rooms = Room.objects.filter(house__owner=request.user)
-        bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'User')
+            return HttpResponseForbidden("You need to be a Tenant to view bookings.")
+
+            tenant_rooms = Room.objects.filter(house__owner=request.user)
+            bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'User')
         
-        return render(request, 'tenant_house_bookings.html', {
-            'bookings': bookings,
-            'today': timezone.now().date()
-        })
+    return render(request, 'tenant_house_bookings.html', {
+        'bookings': bookings,
+        'today': timezone.now().date()
+    })
 
 @login_required
 def all_houses(request):

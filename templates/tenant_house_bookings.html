@@ -2,7 +2,7 @@
 {% block content %}
   <h2>📚 My Bookings</h2>
 
-  {% if bookings %}
+  {% if booking %}
     <ul class="booking-list">
       {% for booking in bookings %}
         <li class="booking-item">
@@ -37,6 +37,7 @@
 {% endblock %}
 <style>
 .booking-list {
+    margin-top: 120px;
   list-style: none;
   padding: 0;
   max-width: 700px;
