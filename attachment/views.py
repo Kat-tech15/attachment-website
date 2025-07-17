@@ -45,8 +45,19 @@ def home(request):
         applications = Attachee.objects.filter(name__icontains=query)
     else:
         applications = Attachee.objects.all()
+    form = FeedbackForm()
+
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Thank you for your feedback!")
+            return redirect('home')
+        else:
+            form = FeedbackForm()
 
     return render(request, 'home.html',{
+        'form': form,
         'applications': applications,
         'featured_houses': featured_houses,
         'recent_attachments': recent_attachments,
@@ -797,7 +808,7 @@ def submit_feedback(request):
                 feedback.name = request.user.get_full_name() or request.user.username
                 feedback.email = request.user.email
             feedback.save()
-            return redirect('home')
+            return redirect('contact')
             messages.success(request, "Thank you for your feedback!")
 
     else:

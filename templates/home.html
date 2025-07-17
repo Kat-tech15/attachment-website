@@ -200,8 +200,83 @@ h4 {
   font-size: medium;
   color: #777;
 }
+.feedback-contact-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 30px;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-@media (max-width: 600px) {
+    .feedback-card {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .feedback-card h2 {
+      margin-bottom: 25px;
+      font-size: 24px;
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .feedback-card form p {
+      margin-bottom: 18px;
+    }
+
+    .feedback-card input,
+    .feedback-card textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: border 0.2s ease-in-out;
+    }
+
+    .feedback-card input:focus,
+    .feedback-card textarea:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: #0056b3;
+    }
+
+    .contact-info-box {
+      flex: 1 1 300px;
+      background: #f7f9fb;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-info-box p {
+      font-size: 16px;
+      margin: 15px 0;
+    }
+
+
+@media (max-width: 768px) {
       .card-grid {
           grid-template-columns: 1fr;
       }
@@ -210,8 +285,19 @@ h4 {
       }
       .card-body p {
           font-size: 0.9rem;
+      
       }
+       .feedback-contact-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .feedback-card,
+      .contact-info-box {
+        width: 100%;
+        max-width: 500px;
   }
+}
 </style>
 <div class="container">
 <section class="home" id="home">
@@ -295,7 +381,7 @@ h4 {
           <h3>{{ att.title }}</h3>
           <p><strong>Company:</strong> {{ att.company }}</p>
           <p><strong>Location:</strong> {{ att.location }}</p>
-          <p><strong>Deadline:</strong> {{ att.deadline|date:"F d, Y" }}</p>
+          <p><strong>Deadline:</strong> {{ att.application_deadline|date:"F d, Y" }}</p>
           {% if att.link %}
             <p><a href="{{ att.link }}" target="_blank">View More / Apply</a></p>
           {% endif %}
@@ -321,10 +407,30 @@ h4 {
     <p>
        For any inquiries, support or feedback, please reach out to us:
     </p>
-    <div class="info">
-      <p><strong>Email:</strong> support@attachmentportal.com</p>
-      <p><strong>Phone:</strong> +254 1112871337</p>
-      <p><strong>Location:</strong> Nairobi, Kenya</p>
+   
+    <div class="feedback-contact-wrapper">
+        
+      <div class="feedback-card">
+        {% if messages %}
+  
+    {% for message in messages %}
+      <div style="background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 6px; margin-bottom: 20px;">
+        {{ message }}
+      </div>
+    {% endfor %}
+{% endif %}
+        <h2>💬 We value your feedback</h2>
+        <form method="post" action="">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn-submit">Submit Feedback</button>
+        </form>
+      </div>
+        <div class="info">
+        <p><strong>Email:</strong> support@attachmentportal.com</p>
+        <p><strong>Phone:</strong> +254 1112871337</p>
+        <p><strong>Location:</strong> Nairobi, Kenya</p>
+      </div>
     </div>
   </div>
 </section>
