@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Book House{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>🏠 Book House</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

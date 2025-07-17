@@ -1,21 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+
 <div class="house-container">
-     <h3>Available Houses</h3>
+    <h3>Available Houses</h3>
+    <div class="house-grid">
         {% for house in houses %}
         <div class="house-card">
-            <div class="house-info"><img src="{{ house.image.url}}" width="100"></div>
-            <div class="house-title">{{ house.owner_name}}</div>
-            <div class="house-info">{{ house.contact}}</div>
-            <div class="house-info">{{ house.location}}</div>
-            <div class="house-info">{{ house.rent }}</div>
-            <div class="house-link"><a href="{% url 'book_house' house.id%}" class="btn">Book</a></div>
+            <div class="house-info"><img src="{{ house.image.url }}" width="100%"></div>
+            <div class="house-title">{{ house.owner_name }}'s House</div>
+            <div class="house-info">📍 {{ house.location }}</div>
+            <div class="house-info">☎️ {{ house.phone_number }}</div>
+            <div class="house-info">💰 Ksh {{ house.rent }}</div>
+            <div class="house-link">
+                <a href="{% url 'house_detail' house.id %}" class="btn">View Rooms</a>
+            </div>
         </div>
         {% endfor %}
-</div> 
+    </div>
+</div>
+
 <style>
-    
 .house-container {
     max-width: 900px;
     margin: 50px auto;
@@ -25,6 +30,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
 .house-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -36,12 +42,13 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     border-bottom: 5px solid #007bff;
     border-right: 5px solid #007bff;
     padding: 16px;
     transition: transform 0.3s ease;
 }
+
 .house-card:hover {
     transform: translateY(-5px);
 }
@@ -58,47 +65,28 @@
     color: #555;
     margin-bottom: 4px;
 }
+
 .btn {
     display: inline-block;
-    margin: 10px;
-    padding: 1px 3px;
+    margin: 10px 0;
+    padding: 6px 10px;
     background-color: #007bff;
     color: white;
     text-decoration: none;
     border-radius: 6px;
 }
-  
+
 .btn:hover {
     background-color: #0056b3;
 }
+
 h3 {
     text-align: center;
 }
 
-.tag {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    margin-top: 8px;
-    color: white;
-}
-
-.tag-soon { background-color: red; }
-.tag-upcoming { background-color: green; }
-
 .house-link {
-    display: inline-block;
-    margin-top: 10px;
-    color: #1e90ff;
-    text-decoration: none;
-    font-weight: bold;
+    text-align: center;
 }
-
-.house-link:hover {
-    text-decoration: underline;
-}
-
 </style>
 <hr>
 {% endblock %}

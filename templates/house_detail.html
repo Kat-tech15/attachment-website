@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container">
+    <h2>{{ house.owner_name }}'s House</h2>
+    <p><strong>Location:</strong> {{ house.location }}</p>
+    <p><strong>Contact:</strong> {{ house.phone_number }}</p>
+    <hr>
+
+   {% if messages %}
+  <div class="custom-message-wrapper">
+    {% for message in messages %}
+      <p class="custom-message">{{ message }}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<h3>Available Rooms</h3>
+{% if available_rooms %}
+    <div class="room-grid">
+        {% for room in available_rooms %}
+        <div class="room-card">
+            {% if room.image %}
+                <img src="{{ room.image.url }}" alt="Room Image" class="room-img">
+            {% endif %}
+            <h4>Room {{ room.room_number }}</h4>
+            <p><strong>Type:</strong> {{ room.room_type }}</p>
+            <p><strong>Price:</strong> Ksh {{ room.price }}</p>
+            <p><strong>Status:</strong> 
+                <span class="available">Available</span>
+            </p>
+            <a href="{% url 'book_room' room.id %}" class="btn">Book Now</a>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No rooms available for this house at the moment.</p>
+{% endif %}
+<hr>
+<h3 class="mt-5">Booked Rooms</h3>
+{% if booked_rooms %}
+    <div class="room-grid">
+        {% for room in booked_rooms %}
+        <div class="room-card">
+            {% if room.image %}
+                <img src="{{ room.image.url }}" alt="Room Image" class="room-img">
+            {% endif %}
+            <h4>Room {{ room.room_number }}</h4>
+            <p><strong>Type:</strong> {{ room.room_type }}</p>
+            <p><strong>Price:</strong> Ksh {{ room.price|default:house.rent }}</p>
+            <p><strong>Status:</strong> 
+                <span class="unavailable">Booked</span>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>
+
+<style>
+.container {
+    max-width: 900px;
+    margin: 60px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+h2, p,h3{
+    text-align: center;
+}
+.custom-message-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.custom-message {
+    font-size: 18px;
+    color: #2c7a2c; 
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.room-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    background: #f9f9f9;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.room-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #1580f1;
+}
+
+.available {
+    color: green;
+    font-weight: bold;
+}
+
+.unavailable {
+    color: red;
+    font-weight: bold;
+}
+</style>
+
+{% endblock %}
