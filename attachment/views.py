@@ -245,45 +245,30 @@ def reject_application(request, app_id):
     return redirect('admin_dashboard')
 
 
-@login_required
-def book_house(request, house_id):
-    if  not request.user.has_priviledge(['attachee','tenant']):
-        return HttpResponseForbidden("Only Admins and Attachees have access to this page.")
- 
-    house_post = get_object_or_404(House, id=house_id)
-
-    # check if attachee exists 
-    try:
-        attachee = request.user.attachee
-    except Attachee.DoesNotExist:
-        return HttpResponseForbidden("You must complete your attachee profile first.")
-
-    booking, created = Booking.objects.get_or_create(
-        attachee = attachee,
-        house_post = house_post,
-        defaults= {
-            'full_name': attachee.full_name,
-            'contact': attachee.phone_number,
-        }
-    )
-    message = "House booked successfully!" if created else "You have already booked this house."
-
-    
-
-    return render(request, 'book_house.html', {
-        'house': house_post,
-        'message': message
-    })
-        
-
 def my_bookings(request):
     if not request.user.has_priviledge(['attachee', 'tenant']):
         return HttpResponseForbidden("Only Attachees and Tenants can view bookings.")
 
-    bookings = Booking.objects.filter(attachee=request.user).select_related('house')
-    return render(request, 'my_bookings.html', {'bookings': bookings})
+    bookings = Booking.objects.filter(attachee=request.user).select_related('room', 'room_house')
+    today = timezone.now().date()
+    
+    return render(request, 'my_bookings.html', {
+        'bookings': bookings,
+        'today': today,
+    })
 
 # Tenant's Views 
+def tenant_house_bookings(request):
+    if not request.user.has_priviledge(['tenant']):
+        HttpResponseForbidden("Only tenants can access this page.")
+
+        tenant_rooms = Room.objects.filter(house__owner=request.user)
+        bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'User')
+        
+        return render(request, 'tenant_house_bookings.html', {
+            'bookings': bookings,
+            'today': timezone.now().date()
+        })
 
 @login_required
 def all_houses(request):
@@ -302,31 +287,66 @@ def all_houses(request):
 def create_room(sender, instance, created, **kwargs):
     if created:
         for i in range(1, instance.total_rooms + 1):
-            Room.objects.create(house=instance, room_number=f"Room {i}")
+            Room.objects.create(
+                house=instance,
+                room_number=f"{i}",
+                price= instance.rent,
+                room_type=instance.description)
 
+@login_required
 def book_room(request, room_id):
+    if not request.user.has_priviledge(['tenant','attachee']):
+        return HttpResponseForbidden("Only tenants and attachees can book rooms.")
+    
+    
+
     room = get_object_or_404(Room, id=room_id)
     house = room.house
 
     if room.is_booked:
         messages.warning(request, "Sorry, this room is already booked.")
         return redirect('all_houses')
+
     
+    attachee = None
+    full_name = "Admin"
+    phone_number = "N/A"
+
+    
+    if request.user.has_priviledge(['tenant']) and not (request.user.is_superuser or request.user.is_staff):
+        try:
+            attachee = request.user.attachee
+            full_name = attachee.full_name
+            contact = attachee.phone_number
+        except Attachee.DoesNotExist:
+            messages.error(request, "You need to be an Attachee to book a room.")
+            return redirect('all_houses')
+
     booking = Booking.objects.create(
-        attachee=request.user.attachee,
+        attachee=attachee,
         house_post=room.house,
-        full_name=request.user.attachee.full_name,
-        contact=request.user.attachee.phone_number
+        full_name=full_name,
+        phone_number=phone_number,
+        move_in_date=timezone.now().date(),
     )
     room.is_booked = True
     room.save()
-    messages.success(request, f"Room {room.room_number} booked successfully!")
 
-    return render(request, 'book_room.html', {
-        'room': room,
-        'booking': booking
-    })
-    
+    messages.success(request, f"{room.room_number} booked successfully!")
+
+    return redirect('house_detail', house_id=house.id)
+
+def house_detail(request, house_id):
+    house = get_object_or_404(House, id=house_id)
+
+    rooms = Room.objects.filter(house=house)
+    available_rooms = rooms.filter(is_booked=False)
+    booked_rooms = rooms.filter(is_booked=True)
+    return render(request, 'house_detail.html', {
+        'house': house,
+        'available_rooms': available_rooms,
+        'booked_rooms': booked_rooms,
+    })  
 
 
 @login_required
@@ -486,20 +506,42 @@ def view_houses(request):
         house.total_rooms = house.rooms.count()
 
     return render(request, 'all_houses.html', {'houses': houses})
-    
+
 @login_required 
 def cancel_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, User=request.user)
+    if not request.user.has_priviledge(['attachee', 'tenant']):
+        return HttpResponseForbidden("Only Attachees and Tenants can cancel bookings.")
 
-    if booking.move_in_date > timezone.now.date():
-        booking.status = 'cancelled'
-        booking.save()
-        messages.success(request, "Booking cancelled succssfully.")
-    
-    else:
-        messages.error(request, "Move-in date has passed. Cannot cancel.")
+    booking = get_object_or_404(Booking, id=booking_id)
 
-    return redirect('my_bookings')
+    is_attachee_booking_owner =(
+        hasattr(request.user, 'attachee') and booking.attachee == request.user.attachee
+    )
+    is_house_wner = (
+        hasattr(booking.house_post, 'owner') and booking.house_post.owner == request.user
+    )
+
+    if not (is_attachee_booking_owner or is_house_wner):
+        return HttpResponseForbidden("You do not have permission to cancel this booking.")
+
+        if booking.move_in_date > timezone.now().date():
+            booking.status = 'cancelled'
+            booking.save()
+
+            if hasattr(booking, 'house_post') and booking.house_post:
+                if hasattr(booking, 'room'):
+                    booking.room.is_booked = False
+                    booking.room.save()
+
+            messages.success(request, "Booking cancelled successfully")
+        else:
+            message.error(request, "Move-in date has passed. Cannot cancel.")
+
+            #Redirect based on the roles
+        if request.user.has_priviledge(['attachee']):
+            return redirect('my_bookings')
+        else:
+            return redirect('tenant_house_bookings')
 
 @login_required
 def view_attachments(request):

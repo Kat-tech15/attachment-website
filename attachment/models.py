@@ -115,8 +115,18 @@ class House(models.Model):
         return self.owner_name
 
 class Room(models.Model):
+    ROOM_TYPE_CHOICES = (
+        ('single_room', 'Single Room'),
+        ('double_room', 'Double Room'),
+        ('bed_sitter', 'Bed Sitter'),
+        ('hostel', 'Hostel'),
+    )
+
     house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='rooms')
     room_number = models.CharField(max_length=10)
+    room_type = models.CharField(max_length=50, choices=ROOM_TYPE_CHOICES, default='single_room')
+    price = models.DecimalField(max_digits=10, decimal_places=2,default=0.00)
+    image = models.ImageField(upload_to='room_images/', blank=True, null=True)
     is_booked = models.BooleanField(default=False)
     
 
@@ -125,7 +135,7 @@ class Room(models.Model):
 
 class Booking(models.Model):
     attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True)
-    rental_post = models.ForeignKey(House, on_delete=models.CASCADE, null=True)
+    house_post = models.ForeignKey(House, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200)
     phone_number = PhoneNumberField(region='KE')
     created_at = models.DateTimeField(auto_now_add=True)
