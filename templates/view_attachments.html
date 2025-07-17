@@ -91,11 +91,12 @@ h2 {
                         Click here to apply
                     </a>
                 </div>
-            {% else %}
-                <div class="attachment-link">No application link provided</div>
-            {% endif %}        </div>
-                    {% endfor %}
-                </div>
+            
+            {% endif %}  
+          {% empty %}
+                <div class="attachment-info">No application link provided</div>
+        {% endfor %}
+      </div>
 </div>
 <hr>
 {% endblock %}
