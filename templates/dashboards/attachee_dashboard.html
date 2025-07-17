@@ -21,11 +21,11 @@
         <td>{{ b.move_in_date|date:"M d, Y" }}</td>
         <td>{{ b.status }}</td>
         <td>
-          {% if b.status == 'pending' and b.move_in_date > today %}
-            <a href="{% url 'cancel-booking' b.id %}" class="btn btn-danger">Cancel</a>
-          {% else %}
-            ---
-          {% endif %}
+            {% if b.status == 'pending'%}
+              <a href="{% url 'cancel_booking' b.id %}" class="btn btn-danger">Cancel</a>
+            {% else %}
+              <span class="text-muted">N/A</span>
+            {% endif %}
         </td>
       </tr>
     {% empty %}

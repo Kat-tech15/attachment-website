@@ -3,16 +3,19 @@
   <h2>📚 My Bookings</h2>
 
   {% if bookings %}
-    <ul>
+    <ul class="booking-list">
       {% for booking in bookings %}
-        <li>
+        <li class="booking-item">
           <strong>{{ booking.room.house.title }}</strong><br>
-          Room: {{ booking.room.name }}<br>
-          Location: {{ booking.room.house.location }}<br>
-          Price: KES {{ booking.room.price }}<br>
-          Status: <strong>{{ booking.status|capfirst }}</strong><br>
-          Move-in Date: {{ booking.move_in_date }}<br>
-          Date Booked: {{ booking.created_at|date:"F j, Y, g:i a" }}<br>
+           Room: {{ booking.room.name }}<br>
+           Location: {{ booking.room.house.location }}<br>
+           Price: KES {{ booking.room.price }}<br>
+            Status:
+            <span class="badge {% if booking.status == 'cancelled' %}badge-cancelled{% else %}badge-active{% endif %}">
+            {{ booking.status|capfirst }}
+            </span><br>
+           Move-in Date: {{ booking.move_in_date }}<br>
+           Date Booked: {{ booking.move_in_date|date:"M d, Y" }}<br>
 
           {% if booking.status != 'cancelled' and booking.move_in_date > today %}
             <form method="post" action="{% url 'cancel_booking' booking.id %}">
@@ -33,6 +36,21 @@
   {% endif %}
 {% endblock %}
 <style>
+.booking-list {
+  list-style: none;
+  padding: 0;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.booking-item {
+  background: #f8f9fa;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border-left: 5px solid #007bff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}    
 .cancel-btn {
   background-color: #dc3545;
   color: white;
@@ -45,5 +63,22 @@
 
 .cancel-btn:hover {
   background-color: #c82333;
+}
+.badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.badge-active {
+  background-color: #d4edda;
+  color: #155724;
 }
 </style>

@@ -1,21 +1,94 @@
-{% extends "base.html" %}
-{% block content %}
-  <h2>📚 My Bookings</h2>
+<div class="booking-list">
+  {% if messages %}
+    {% for message in messages %}
+      <p class="message-success">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
 
   {% if bookings %}
-    <ul>
-      {% for booking in bookings %}
-        <li>
-          <strong>{{ booking.house.title }}</strong><br>
-          Location: {{ booking.house.location }}<br>
-          Price: {{ booking.house.price }}<br>
-          Date Booked: {{ booking.created_at|date:"F j, Y, g:i a" }}
-        </li>
-        <hr>
-      {% endfor %}
-    </ul>
+    {% for booking in bookings %}
+      <div class="booking-item">
+        <strong>{{ booking.house_post.title }}</strong><br>
+        <p>Location: {{ booking.house_post.location }}</p>
+        <p>Price: {{ booking.house_post.price }}</p>
+        <p>Date Booked: {{ booking.created_at|date:"F j, Y, g:i a" }}</p>
+        <p>Status: {{ booking.status|capfirst }}</p>
+
+        {% if booking.status != "cancelled" %}
+          <form method="post" action="{% url 'cancel_booking' booking.id %}">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Are you sure you want to cancel this booking?');" class="cancel-button">
+              Cancel Booking
+            </button>
+          </form>
+        {% else %}
+          <p class="text-muted">Cancelled</p>
+        {% endif %}
+      </div>
+    {% endfor %}
   {% else %}
     <p>No bookings found.</p>
   {% endif %}
+</div>
 
-{% endblock %}
+<style>
+  .booking-list {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .booking-item {
+    background: #fff;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+  }
+
+  .booking-item strong {
+    font-size: 18px;
+    color: #333;
+  }
+
+  .booking-item p {
+    margin: 5px 0;
+  }
+
+  .cancel-button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    background-color: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .cancel-button:hover {
+    background-color: #e0a800;
+  }
+
+  .message-success {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .booking-item {
+      padding: 12px;
+    }
+    .cancel-button {
+      font-size: 14px;
+    }
+  }
+</style>
