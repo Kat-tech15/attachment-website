@@ -263,7 +263,7 @@ def tenant_house_bookings(request):
         HttpResponseForbidden("Only tenants can access this page.")
     
     if request.user.is_superuser:
-        bookings = Booking.objects.all().select_related('room', 'room__house', 'User')
+        bookings = Booking.objects.all().select_related('attachee', 'house_post')
     else:
         try:
             tenant = request.user.tenant
@@ -272,7 +272,7 @@ def tenant_house_bookings(request):
             return HttpResponseForbidden("You need to be a Tenant to view bookings.")
 
             tenant_rooms = Room.objects.filter(house__owner=request.user)
-            bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'User')
+            bookings = Booking.objects.filter(attachee=request.user).select_related('attachee', 'house_post')
         
     return render(request, 'tenant_house_bookings.html', {
         'bookings': bookings,

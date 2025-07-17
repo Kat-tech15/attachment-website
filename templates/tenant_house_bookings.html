@@ -2,17 +2,17 @@
 {% block content %}
   <h2>📚 My Bookings</h2>
 
-  {% if booking %}
+  {% if bookings %}
     <ul class="booking-list">
       {% for booking in bookings %}
         <li class="booking-item">
-          <strong>{{ booking.room.house.title }}</strong><br>
-           Room: {{ booking.room.name }}<br>
-           Location: {{ booking.room.house.location }}<br>
-           Price: KES {{ booking.room.price }}<br>
+          <strong>{{ booking.house_post.title }}</strong><br>
+           Room: {{ booking.room.room_name }}<br>
+           Location: {{ booking.house_post.location }}<br>
+           Price: KES {{ booking.house_post.rent }}<br>
             Status:
             <span class="badge {% if booking.status == 'cancelled' %}badge-cancelled{% else %}badge-active{% endif %}">
-            {{ booking.status|capfirst }}
+            {{ booking.house_post.status|capfirst }}
             </span><br>
            Move-in Date: {{ booking.move_in_date }}<br>
            Date Booked: {{ booking.move_in_date|date:"M d, Y" }}<br>
