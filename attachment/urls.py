@@ -48,5 +48,6 @@ urlpatterns = [
     path('booking/<int:booking_id>/cancel/', views.cancel_booking, name='cancel_booking'),
     path('booking/<int:booking_id>/delete/', views.delete_booking, name='delete_booking'),
     path('bookings/delete-past/', views.delete_past_bookings, name='delete_past_bookings'),
+    path('bookings/<int:booking_id>/edit/', views.edit_booking, name='edit_booking'),
     path('tenant/bookings', views.tenant_house_bookings, name='tenant_house_bookings'),
     ]

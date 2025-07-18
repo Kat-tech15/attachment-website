@@ -29,6 +29,10 @@
           <td>{{ booking.house_post.status}}</td>
           <td>
             {% if booking.status != 'cancelled' and booking.move_in_date > today %}
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+              <form method="get" action="{% url 'edit_booking' booking.id %}">
+                <button type="submit" class="btn-edit">Edit Booking</button>
+              </form>
             <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
               {% csrf_token %}
               <button type="submit" class="btn-cancel">Cancel Booking</button>
@@ -89,6 +93,19 @@
 
 .booking-table tr:hover {
   background-color: #f9f9f9;
+}
+.btn-edit {
+  padding: 5px 10px;
+  background-color: #3498db;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-edit:hover {
+  background-color: #2980b9;
 }
 
 .btn-cancel {

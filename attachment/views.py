@@ -25,7 +25,7 @@ from .models import CustomUser, Attachee, Company, House, AttachmentApplication,
 from .forms import CustomUserCreationForm,HouseForm,FeedbackForm
 from django.contrib import messages
 from django.utils import timezone
-from .forms import AttachmentPostForm, HouseForm, AttachmentApplicationForm, HouseReviewForm, CompanyReviewForm
+from .forms import AttachmentPostForm, HouseForm,BookingForm, AttachmentApplicationForm, HouseReviewForm, CompanyReviewForm
 
 # Create your views here.
 
@@ -568,6 +568,19 @@ def delete_booking(request, booking_id):
     messages.success(request, "Booking deleted successfully.")
     return redirect('my_bookings')
 
+@login_required
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST, instance=booking)
+        if form.is_valid():
+            form.save()
+            return redirect('my_bookings')  # Or wherever the bookings list is
+    else:
+        form = BookingForm(instance=booking)
+
+    return render(request, 'edit_booking.html', {'form': form})
 @staff_member_required
 def delete_past_bookings(request):
     today = timezone.now().date()

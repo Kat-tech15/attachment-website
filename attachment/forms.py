@@ -1,5 +1,5 @@
 from django import forms
-from .models import AttachmentApplication, House, AttachmentPost, CustomUser, HouseReview, CompanyReview, Feedback
+from .models import AttachmentApplication, House, AttachmentPost, CustomUser, Booking, FHouseReview, CompanyReview, Feedback
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
@@ -76,4 +76,13 @@ class FeedbackForm(forms.ModelForm):
             }),
             'name': forms.TextInput(attrs={'placeholder': 'Your name(optional)'}),
             'email': forms.TextInput(attrs={'placeholder': 'Your email(optional)'}),
+        }
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['move_in_date', 'move_out_date']
+        widgets = {
+            'move_in_date': forms.DateInput(attrs={'type': 'date'}),
+            'move_out_date': forms.DateInput(attrs={'type': 'date'}),
         }
