@@ -1,69 +1,99 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
+
+<div class="booking-container">
   <h2>📚 My Bookings</h2>
-
-  {% if booking %}
-    <ul class="booking-list">
-      {% for booking in bookings %}
-        <li class="booking-item">
-          <strong>{{ booking.room.house.title }}</strong><br>
-           Room: {{ booking.room.name }}<br>
-           Location: {{ booking.room.house.location }}<br>
-           Price: KES {{ booking.room.price }}<br>
-            Status:
-            <span class="badge {% if booking.status == 'cancelled' %}badge-cancelled{% else %}badge-active{% endif %}">
-            {{ booking.status|capfirst }}
+  {% if bookings %}
+  <table class="booking-table">
+      <thead>
+        <tr>
+          <th>Index</th>
+          <th>Room No</th>
+          <th>Location</th>
+          <th>Price</th>
+          <th>Move in Date</th>
+          <th>Date Booked</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+        {% endif %}
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ booking.room.room_number }}</td>
+          <td>{{ booking.house_post.location }}</td>
+          <td>{{ booking.house_post.rent }}</td>
+          <td>{{ booking.move_in_date|date:"M d, Y " }}</td>
+          <td>{{ booking.move_out_date|date:"M d, Y " }}</td>
+          <td>{{ booking.house_post.status}}</td>
+          <span class="badge {% if booking.status == 'cancelled' %}badge-cancelled{% else %}badge-active{% endif %}">
+            {{ booking.house_post.status|capfirst }}
             </span><br>
-           Move-in Date: {{ booking.move_in_date }}<br>
-           Date Booked: {{ booking.move_in_date|date:"M d, Y" }}<br>
-
-          {% if booking.status != 'cancelled' and booking.move_in_date > today %}
-            <form method="post" action="{% url 'cancel_booking' booking.id %}">
+          <td>
+            <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
               {% csrf_token %}
-              <button class="cancel-btn">Cancel Booking</button>
+              <button type="submit" class="btn-cancel">Cancel Booking</button>
             </form>
-          {% elif booking.status == 'cancelled' %}
-            <span style="color: red;">Booking Cancelled</span>
-          {% else %}
-            <span style="color: gray;">Cannot cancel (past move-in date)</span>
-          {% endif %}
-        </li>
-        <hr>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No bookings found.</p>
-  {% endif %}
-{% endblock %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+  </div>
 <style>
-.booking-list {
-    margin-top: 120px;
-  list-style: none;
-  padding: 0;
-  max-width: 700px;
-  margin: 0 auto;
+.booking-container {
+  max-width: 1000px;
+  margin: 100px auto;
+  padding: 30px;
+  margin-top: 150px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.booking-item {
-  background: #f8f9fa;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border-left: 5px solid #007bff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}    
-.cancel-btn {
-  background-color: #dc3545;
-  color: white;
-  padding: 6px 10px;
+.booking-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.booking-table th,
+.booking-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.booking-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.booking-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.btn-cancel {
+  padding: 5px 10px;
+  background-color: #e74c3c;
   border: none;
+  color: white;
   border-radius: 4px;
-  margin-top: 8px;
   cursor: pointer;
+  font-size: 12px;
 }
 
-.cancel-btn:hover {
-  background-color: #c82333;
+.btn-cancel:hover {
+  background-color: #c0392b;
 }
 .badge {
   padding: 3px 8px;
@@ -83,3 +113,4 @@
   color: #155724;
 }
 </style>
+{% endblock %}

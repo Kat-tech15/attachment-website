@@ -344,7 +344,7 @@ def book_room(request, room_id):
     room.is_booked = True
     room.save()
 
-    messages.success(request, f"{room.room_number} booked successfully!")
+    messages.success(request, f"Room{room.room_number} booked successfully!")
 
     return redirect('house_detail', house_id=house.id)
 

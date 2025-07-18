@@ -10,13 +10,23 @@
 
      
      <h2>🏠 My House Bookings</h2>
-<table>
+
+{% if bookings %}
+<table class="booking-table">
   <thead>
-    <tr><th>House</th><th>Move-in</th><th>Status</th><th>Action</th></tr>
+    <tr>
+      <th>Id</th>
+      <th>House</th>
+      <th>Move-in</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+    {% endif %}
   </thead>
   <tbody>
     {% for b in bookings %}
       <tr>
+        <td>{{ for_loop.counter }}</td>
         <td>{{ b.rental.title }}</td>
         <td>{{ b.move_in_date|date:"M d, Y" }}</td>
         <td>{{ b.status }}</td>
@@ -37,9 +47,15 @@
 <hr>
 
 <h2>📄 My Attachment Applications</h2>
-<table>
+{% if applications %}
+<table class="application-table">
   <thead>
-    <tr><th>Company</th><th>Status</th><th>Date</th></tr>
+    <tr>
+      <th>Company</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+    {% endif %}
   </thead>
   <tbody>
     {% for a in applications %}
@@ -64,29 +80,66 @@
      </div>
 </div>
 <style>
-    .dashboard-container { 
-        padding: 20px;
-        text-align: center;
-        margin-top: 180px;
-    }
+.dashboard-container {
+  max-width: 1000px;
+  margin: 100px auto;
+  padding: 30px;
+  margin-top: 150px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+.dashboard-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
 
-    .dashboard-actions {
-        margin-top: 30px;
-    }
+.booking-table, 
+.application-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-    .btn {
-        display: inline-block;
-        margin: 10px;
-        padding: 12px 20px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-    }
+.booking-table th,
+.application-table th,
+.application-table td,
+.booking-table td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
 
-    .btn:hover {
-        background-color: #0056b3;
-    }
+.booking-table th,
+.application-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.application-table tr:hover,
+.booking-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.dashboard-actions {
+  margin-top: 30px;
+}
+
+.btn {
+  display: inline-block;
+  margin: 10px;
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+}
+.btn:hover {
+  background-color: #0056b3;
+}
 
     .btn-outline-primary {
         background-color: white;
@@ -114,22 +167,6 @@
     .btn-danger:hover {
         background-color: #c82333;
     }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    table th, table td {
-        border: 1px solid #ddd;
-        padding: 10px;
-    }
-
-    table th {
-        background-color: #f4f4f4;
-    }
 </style>
-
-    
+ 
 {% endblock %}
