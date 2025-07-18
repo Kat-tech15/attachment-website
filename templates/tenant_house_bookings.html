@@ -3,7 +3,6 @@
 
 <div class="booking-container">
   <h2>📚 My Bookings</h2>
-  {% if bookings %}
   <table class="booking-table">
       <thead>
         <tr>
@@ -16,9 +15,9 @@
           <th>Status</th>
           <th>Action</th>
         </tr>
-        {% endif %}
       </thead>
       <tbody>
+         {% if bookings %}
         {% for booking in bookings %}
         <tr>
           <td>{{ forloop.counter }}</td>
@@ -28,17 +27,27 @@
           <td>{{ booking.move_in_date|date:"M d, Y " }}</td>
           <td>{{ booking.move_out_date|date:"M d, Y " }}</td>
           <td>{{ booking.house_post.status}}</td>
-          <span class="badge {% if booking.status == 'cancelled' %}badge-cancelled{% else %}badge-active{% endif %}">
-            {{ booking.house_post.status|capfirst }}
-            </span><br>
           <td>
+            {% if booking.status != 'cancelled' and booking.move_in_date > today %}
             <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
               {% csrf_token %}
               <button type="submit" class="btn-cancel">Cancel Booking</button>
             </form>
+            {% else %}
+             <span style="color: gray; font-style: italic;">No Actions</span>
+            {% endif %}
+            {% if booking.status == 'cancelled' %}
+            <form method="post" action="{% url 'delete_booking' booking.id %}" style="margin-top: 10px;">
+              {% csrf_token %}
+              <button type="submit" onclick="return confirm('Delete this booking permanently?')" class="btn-cancel">
+                Delete Booking
+              </button>
+            </form>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
+        {% endif %}
       </tbody>
   </div>
 <style>

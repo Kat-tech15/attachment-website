@@ -46,5 +46,7 @@ urlpatterns = [
     path('feedback_list/', views.feedback_list, name='feedback_list'),
     path('feedback/<int:feedback_id>/delete/', views.delete_feedback, name='delete_feedback'),
     path('booking/<int:booking_id>/cancel/', views.cancel_booking, name='cancel_booking'),
+    path('booking/<int:booking_id>/delete/', views.delete_booking, name='delete_booking'),
+    path('bookings/delete-past/', views.delete_past_bookings, name='delete_past_bookings'),
     path('tenant/bookings', views.tenant_house_bookings, name='tenant_house_bookings'),
     ]

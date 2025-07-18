@@ -252,7 +252,11 @@ def my_bookings(request):
     if request.user.is_superuser:
         bookings = Booking.objects.all().select_related('room','house_post', 'attachee')
     elif hasattr(request.user, 'attachee'):
-        bookings = Booking.objects.filter(attachee=request.user.attachee).select_related('room', 'house_post', 'attachee')
+        bookings = Booking.objects.filter(
+            attachee=request.user.attachee
+        ).exclude(
+            status='cancelled'
+        ).select_related('room', 'house_post', 'attachee')
     else:
         return HttpResponseForbidden("You mustr be ab attachee  to view your bookings.")
     today = timezone.now().date()
@@ -554,6 +558,29 @@ def cancel_booking(request, booking_id):
             return redirect('my_bookings')
         else:
             return redirect('tenant_house_bookings')
+        
+@login_required
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, attachee=request.user.attachee)
+    if booking.status != 'cancelled':
+        return HttpResponseForbidden("Only cancelled bookings can be deleted.")
+    booking.delete()
+    messages.success(request, "Booking deleted successfully.")
+    return redirect('my_bookings')
+
+@staff_member_required
+def delete_past_bookings(request):
+    today = timezone.now().date()
+
+    past_bookings = Booking.objects.filter(move_in_date__lt=today)
+    count= past_bookings.count()
+    if count > 0:
+        past_bookings.delete()
+        messages.success(request, f"{count} past bookings deleted successfully.")
+    else:
+        messages.info(request, "No past bookings to delete.")
+
+    return redirect('my_bookings')
 
 @login_required
 def view_attachments(request):
