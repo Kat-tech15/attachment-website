@@ -136,6 +136,7 @@ class Room(models.Model):
 class Booking(models.Model):
     attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True)
     house_post = models.ForeignKey(House, on_delete=models.CASCADE, null=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
     full_name = models.CharField(max_length=200)
     phone_number = PhoneNumberField(region='KE')
     created_at = models.DateTimeField(auto_now_add=True)

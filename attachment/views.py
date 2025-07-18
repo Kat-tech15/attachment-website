@@ -246,10 +246,15 @@ def reject_application(request, app_id):
 
 
 def my_bookings(request):
-    if not request.user.has_priviledge(['attachee', 'tenant']):
+    if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
         return HttpResponseForbidden("Only Attachees and Tenants can view bookings.")
 
-    bookings = Booking.objects.filter(attachee=request.user).select_related('room', 'room_house')
+    if request.user.is_superuser:
+        bookings = Booking.objects.all().select_related('room','house_post', 'attachee')
+    elif hasattr(request.user, 'attachee'):
+        bookings = Booking.objects.filter(attachee=request.user.attachee).select_related('room', 'house_post', 'attachee')
+    else:
+        return HttpResponseForbidden("You mustr be ab attachee  to view your bookings.")
     today = timezone.now().date()
     
     return render(request, 'my_bookings.html', {
@@ -263,17 +268,14 @@ def tenant_house_bookings(request):
         HttpResponseForbidden("Only tenants can access this page.")
     
     if request.user.is_superuser:
-        bookings = Booking.objects.all().select_related('room', 'room__house', 'User')
+        bookings = Booking.objects.all().select_related('room', 'attachee')
     else:
         try:
-            tenant = request.user.tenant
-        except Tenant.DoesNotExist:
+            tenant_rooms = Room.objects.filter(house__tenant=request.user)
+            bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'attachee')
+        except Room.DoesNotExist:
+            bookings = []
 
-            return HttpResponseForbidden("You need to be a Tenant to view bookings.")
-
-            tenant_rooms = Room.objects.filter(house__owner=request.user)
-            bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'User')
-        
     return render(request, 'tenant_house_bookings.html', {
         'bookings': bookings,
         'today': timezone.now().date()
@@ -334,6 +336,7 @@ def book_room(request, room_id):
     booking = Booking.objects.create(
         attachee=attachee,
         house_post=room.house,
+        room=room,
         full_name=full_name,
         phone_number=phone_number,
         move_in_date=timezone.now().date(),
@@ -518,7 +521,7 @@ def view_houses(request):
 
 @login_required 
 def cancel_booking(request, booking_id):
-    if not request.user.has_priviledge(['attachee', 'tenant']):
+    if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
         return HttpResponseForbidden("Only Attachees and Tenants can cancel bookings.")
 
     booking = get_object_or_404(Booking, id=booking_id)
@@ -530,23 +533,23 @@ def cancel_booking(request, booking_id):
         hasattr(booking.house_post, 'owner') and booking.house_post.owner == request.user
     )
 
-    if not (is_attachee_booking_owner or is_house_wner):
+    if not (is_attachee_booking_owner or is_house_wner or request.user.is_superuser):
         return HttpResponseForbidden("You do not have permission to cancel this booking.")
 
-        if booking.move_in_date > timezone.now().date():
-            booking.status = 'cancelled'
-            booking.save()
+    if booking.move_in_date > timezone.now().date():
+        booking.status = 'cancelled'
+        booking.save()
 
-            if hasattr(booking, 'house_post') and booking.house_post:
-                if hasattr(booking, 'room'):
-                    booking.room.is_booked = False
-                    booking.room.save()
+        if hasattr(booking, 'house_post') and booking.house_post:
+            if hasattr(booking, 'room'):
+                booking.room.is_booked = False
+                booking.room.save()
 
             messages.success(request, "Booking cancelled successfully")
-        else:
-            message.error(request, "Move-in date has passed. Cannot cancel.")
+    else:
+        messages.error(request, "Move-in date has passed. Cannot cancel.")
 
-            #Redirect based on the roles
+        #Redirect based on the roles
         if request.user.has_priviledge(['attachee']):
             return redirect('my_bookings')
         else:

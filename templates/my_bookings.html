@@ -8,72 +8,115 @@
   {% if bookings %}
     {% for booking in bookings %}
       <div class="booking-item">
-        <strong>{{ booking.house_post.title }}</strong><br>
-        <p>Location: {{ booking.house_post.location }}</p>
-        <p>Price: {{ booking.house_post.price }}</p>
-        <p>Date Booked: {{ booking.created_at|date:"F j, Y, g:i a" }}</p>
-        <p>Status: {{ booking.status|capfirst }}</p>
+        <div class="booking-header">
+          <strong>{{ booking.house_post.owner_name }}</strong>
+          <span class="badge {{ booking.status }}">{{ booking.status|capfirst }}</span>
+        </div>
+        <div class="booking-details">
+          <p><strong>Location:</strong> {{ booking.house_post.location }}</p>
+          <p><strong>Price:</strong> Ksh {{ booking.house_post.rent }}</p>
+          <p><strong>Date Booked:</strong> {{ booking.created_at|date:"F j, Y, g:i a" }}</p>
+        </div>
 
         {% if booking.status != "cancelled" %}
-          <form method="post" action="{% url 'cancel_booking' booking.id %}">
+          <form method="post" action="{% url 'cancel_booking' booking.id %}" class="cancel-form">
             {% csrf_token %}
             <button type="submit" onclick="return confirm('Are you sure you want to cancel this booking?');" class="cancel-button">
-              Cancel Booking
+              Cancel
             </button>
           </form>
         {% else %}
-          <p class="text-muted">Cancelled</p>
+          <p class="text-muted cancelled-text">This booking has been cancelled.</p>
         {% endif %}
       </div>
     {% endfor %}
   {% else %}
-    <p>No bookings found.</p>
+    <p class="no-bookings">No bookings found.</p>
   {% endif %}
 </div>
 
 <style>
   .booking-list {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 15px;
-    background: #f9f9f9;
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f5f7fa;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   }
 
   .booking-item {
-    background: #fff;
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #007bff;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    border-left: 5px solid #007bff;
   }
 
-  .booking-item strong {
-    font-size: 18px;
-    color: #333;
+  .booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  .booking-item p {
+  .booking-header strong {
+    font-size: 20px;
+    color: #343a40;
+  }
+
+  .badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .badge.pending {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .badge.approaved {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .badge.cancelled {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .booking-details p {
     margin: 5px 0;
+    color: #555;
+  }
+
+  .cancel-form {
+    margin-top: 15px;
+    text-align: right;
   }
 
   .cancel-button {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-    background-color: #ffc107;
-    color: #212529;
+    background-color: #dc3545;
+    color: white;
     border: none;
-    padding: 10px;
+    padding: 8px 15px;
     border-radius: 5px;
-    font-weight: bold;
+    font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
 
   .cancel-button:hover {
-    background-color: #e0a800;
+    background-color: #bd2130;
+  }
+
+  .cancelled-text {
+    margin-top: 10px;
+    color: #6c757d;
+    font-style: italic;
   }
 
   .message-success {
@@ -83,12 +126,25 @@
     margin-bottom: 20px;
   }
 
+  .no-bookings {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+  }
+
   @media (max-width: 600px) {
-    .booking-item {
-      padding: 12px;
+    .booking-header {
+      flex-direction: column;
+      align-items: flex-start;
     }
+
+    .cancel-form {
+      text-align: left;
+    }
+
     .cancel-button {
-      font-size: 14px;
+      width: 100%;
+      margin-top: 10px;
     }
   }
 </style>
