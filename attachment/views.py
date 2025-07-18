@@ -544,20 +544,19 @@ def cancel_booking(request, booking_id):
         booking.status = 'cancelled'
         booking.save()
 
-        if hasattr(booking, 'house_post') and booking.house_post:
-            if hasattr(booking, 'room'):
-                booking.room.is_booked = False
-                booking.room.save()
-
-            messages.success(request, "Booking cancelled successfully")
+        if hasattr(booking, 'room') and booking.room:
+            booking.room.is_booked = False
+            booking.room.save()
+                
+        messages.success(request, "Booking cancelled successfully")
     else:
         messages.error(request, "Move-in date has passed. Cannot cancel.")
 
         #Redirect based on the roles
-        if request.user.has_priviledge(['attachee']):
-            return redirect('my_bookings')
-        else:
-            return redirect('tenant_house_bookings')
+    if request.user.has_priviledge(['attachee']):
+        return redirect('my_bookings')
+    else:
+        return redirect('tenant_house_bookings')
         
 @login_required
 def delete_booking(request, booking_id):
@@ -570,17 +569,38 @@ def delete_booking(request, booking_id):
 
 @login_required
 def edit_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    if not request.user.has_priviledge(['attachee','tenant']):
+        return HttpResponseForbidden("You do not have permission to edit this booking.")
+    
+    booking = get_object_or_404(Booking, id=booking_id)
+
 
     if request.method == 'POST':
         form = BookingForm(request.POST, instance=booking)
         if form.is_valid():
             form.save()
-            return redirect('my_bookings')  # Or wherever the bookings list is
+            if hasattr(request.user, 'attachee'):
+                return redirect('my_bookings')
+            elif hasattr(request.user, 'tenant'):
+                return redirect('tenant_house_bookings')
+            else:
+                return redirect('my_bookings')  
+
+
     else:
         form = BookingForm(instance=booking)
+    
+    if hasattr(request.user, 'tenant'):
+        redirect_url = 'tenant_house_bookings'
+    
+    else:
+        redirect_url = 'my_bookings'
 
-    return render(request, 'edit_booking.html', {'form': form})
+    return render(request, 'edit_booking.html', {
+        'form': form,
+        'booking': booking,
+        'redirect_url': redirect_url})
+
 @staff_member_required
 def delete_past_bookings(request):
     today = timezone.now().date()

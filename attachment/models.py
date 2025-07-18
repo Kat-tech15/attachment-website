@@ -140,7 +140,7 @@ class Booking(models.Model):
     full_name = models.CharField(max_length=200)
     phone_number = PhoneNumberField(region='KE')
     created_at = models.DateTimeField(auto_now_add=True)
-    move_in_date = models.DateField(auto_now_add=True)
+    move_in_date = models.DateField(null=True,blank=True)
     move_out_date = models.DateField(null=True, blank=True)
     STATUS_CHOICES = [
         ('cancelled','Cancelled'),

@@ -1,8 +1,8 @@
 from django import forms
-from .models import AttachmentApplication, House, AttachmentPost, CustomUser, Booking, FHouseReview, CompanyReview, Feedback
+from .models import AttachmentApplication, House, AttachmentPost, CustomUser, Booking, HouseReview, CompanyReview, Feedback
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-
+from datetime import date
 
 user = get_user_model()
 
@@ -86,3 +86,7 @@ class BookingForm(forms.ModelForm):
             'move_in_date': forms.DateInput(attrs={'type': 'date'}),
             'move_out_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['move_in_date'].initial = date.today()

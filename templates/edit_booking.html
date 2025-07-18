@@ -6,7 +6,54 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn-edit">Update Booking</button>
-    <a href="{% url 'my_bookings' %}" class="btn-cancel" style="margin-left: 10px;">Cancel</a>
+    <a href="{% url redirect_url %}" class="btn-cancel" style="margin-left: 10px;">Cancel</a>
   </form>
 </div>
+<style>
+.booking-container {
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.booking-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.btn-edit {
+  padding: 6px 14px;
+  background-color: #3498db;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-edit:hover {
+  background-color: #2980b9;
+}
+
+.btn-cancel {
+  padding: 6px 14px;
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.btn-cancel:hover {
+  background-color: #c0392b;
+}
+</style>
+
 {% endblock %}
