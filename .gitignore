@@ -1,8 +1,5 @@
 attachment
+*pyc
+attachment/__pycache__
+__pycache__
 .env
-__pycache__/
-attachment/__pycache__/
-*.py[cod]
-*.pyc
-#find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-#find . -path "*/migrations/*.pyc"  -delete

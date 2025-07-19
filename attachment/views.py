@@ -560,12 +560,26 @@ def cancel_booking(request, booking_id):
         
 @login_required
 def delete_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, attachee=request.user.attachee)
+    booking = get_object_or_404(Booking, id=booking_id)
+    user =request.user
+    
+    is_attachee_owner = hasattr(user, 'attachee') and booking.attachee == user.attachee
+    is_tenant_owner = hasattr(user, 'tenant') and  booking.room and booking.room.house.tenant == user
+    is_admin = user.is_superuser or user.is_staff
+
+    if not (is_attachee_owner or is_tenant_owner or is_admin):
+        return HttpResponseForbidden("you don;t have permission to delete this booking.")
+    
     if booking.status != 'cancelled':
         return HttpResponseForbidden("Only cancelled bookings can be deleted.")
+    
     booking.delete()
     messages.success(request, "Booking deleted successfully.")
-    return redirect('my_bookings')
+
+    if is_tenant_owner:
+        return redirect('tenant_house_bookings')
+    else:
+        return redirect('my_bookings')
 
 @login_required
 def edit_booking(request, booking_id):
