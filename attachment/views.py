@@ -258,7 +258,7 @@ def my_bookings(request):
             status='cancelled'
         ).select_related('room', 'house_post', 'attachee')
     else:
-        return HttpResponseForbidden("You mustr be ab attachee  to view your bookings.")
+        return HttpResponseForbidden("You must be an attachee  to view your bookings.")
     today = timezone.now().date()
     
     return render(request, 'my_bookings.html', {
