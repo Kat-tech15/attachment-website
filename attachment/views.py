@@ -958,3 +958,26 @@ def delete_feedback(request, feedback_id):
     feedback.delete()
     messages.success(request, "Feedback deleted successfully.")
     return redirect('feedback_list')
+
+@login_required
+def view_booked_rooms(request):
+    if not request.user.has_priviledge(['tenant']):
+        return HttpResponseForbidden("You have no access to this page.")
+    
+    rooms = Room.objects.filter(is_booked=True)
+
+    return render(request, 'view_booked_rooms.html',{'rooms': rooms})
+
+@login_required
+def approve_booking(request, room_id):
+    if not request.user.has_priviledge(['tenant']):
+        return HttpResponseForbidden("Only tenants can approve a booking.")
+
+    room = get_object_or_404(Room, id=room_id, tenant=request.user.tenant)
+
+    if request.method =='POST':
+        room.approve()
+        messages.success(request, "Room approved successfully.")
+        return redirect()
+    
+    return render(request, 'view_booked_rooms.html',{'room': room})

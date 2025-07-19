@@ -50,8 +50,9 @@
 section {
   width: 100%;
   padding: 60px 0; 
-  background: #f9f9f9;
+  background: cornsilk;
   margin-bottom: 0 auto;
+  border-bottom: 1px solid #007bff;
 }
 .about,
 .services,
@@ -59,27 +60,8 @@ section {
 .contact {
   width: 100%;
   padding: 40px 20px;
-  border-radius: 8px;
   box-sizing: border-box;
   margin: 0;
-}
-
-.about {
-  border-right: 5px solid #007bff;
-  border-bottom: 5px solid #007bff;
-}
-.services {
-  border-left: 5px solid #007bff;
-  border-bottom: 5px solid #007bff;
-}
-
-.section {
-  border-bottom: 5px solid #007bff;
-  border-right: 5px solid #007bff;
-}
-.contact {
-  border-bottom: 5px solid #007bff;
-  border-right: 5px solid #007bff;
 }
 h4 {
   text-align: center;
@@ -155,9 +137,6 @@ h4 {
   gap: 20px;
   justify-content: center;
   padding: 20px;
-  border-radius: 8px;
-  border-bottom: 5px solid #007bff;
-  border-left: 5px solid #007bff;
 }
 .testimonial-card {
   background-color: white;
@@ -299,7 +278,6 @@ h4 {
 }
 </style>
 <section class="home" id="home">
-  <div class="content-wrapper">
       <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
         <input type="text" name="q" placeholder="Search applications...">
         <button type="submit">Search</button>
@@ -318,7 +296,6 @@ h4 {
              <a href="{% url 'dashboard' %}">Go to Dashboard</a>
              <a href="{% url 'all_houses' %}">Explore Houses</a>
         {% endif %}
-    
 </section>
 </div>
 <section class="about" id="about">

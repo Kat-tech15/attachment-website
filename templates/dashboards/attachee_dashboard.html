@@ -26,8 +26,8 @@
   <tbody>
     {% for b in bookings %}
       <tr>
-        <td>{{ for_loop.counter }}</td>
-        <td>{{ b.rental.title }}</td>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ b.full_name }}</td>
         <td>{{ b.move_in_date|date:"M d, Y" }}</td>
         <td>{{ b.status }}</td>
         <td>

@@ -1,13 +1,14 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends "base.html" %}
 
+{% block title %}My Bookings{% endblock %}
+{% block content %}
 <div class="booking-container">
   <h2>📚 My Bookings</h2>
   <table class="booking-table">
       <thead>
         <tr>
           <th>Index</th>
-          <th>Room No</th>
+          <th>Room Id</th>
           <th>Location</th>
           <th>Price</th>
           <th>Move in Date</th>
@@ -26,13 +27,14 @@
           <td>{{ booking.house_post.rent }}</td>
           <td>{{ booking.move_in_date|date:"M d, Y " }}</td>
           <td>{{ booking.move_out_date|date:"M d, Y " }}</td>
-          <td>{{ booking.house_post.status}}</td>
+          <td>{{ booking.room.status}}</td>
           <td>
             {% if booking.status != 'cancelled' and booking.move_in_date > today %}
-            <a href="{% url 'edit_booking' booking.id %}" class="edit-button">Edit Booking</a>
+            <a href="{% url 'edit_booking' booking.id %}" class="bt-action edit-btn">Edit</a><br>
+            <br>
             <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
               {% csrf_token %}
-              <button type="submit" class="btn-cancel">Cancel Booking</button>
+              <button type="submit" class="btn-action btn-cancel">Cancel</button>
             </form>
             {% else %}
              <span style="color: gray; font-style: italic;">No Actions</span>
@@ -41,7 +43,7 @@
             <form method="post" action="{% url 'delete_booking' booking.id %}" style="margin-top: 10px;">
               {% csrf_token %}
               <button type="submit" onclick="return confirm('Delete this booking permanently?')" class="btn-cancel">
-                Delete Booking
+                Delete
               </button>
             </form>
             {% endif %}
@@ -91,17 +93,27 @@
 .booking-table tr:hover {
   background-color: #f9f9f9;
 }
-.btn-edit {
+.btn-action {
+  padding: 5px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 13px;
+  margin-right: 5px;
+  display: inline-block;
+}
+.edit-btn {
   padding: 5px 10px;
   background-color: #3498db;
   border: none;
   color: white;
+  text-decoration: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
 }
 
-.btn-edit:hover {
+.edit-btn:hover {
   background-color: #2980b9;
 }
 
