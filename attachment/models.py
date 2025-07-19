@@ -115,7 +115,7 @@ class House(models.Model):
         return self.owner_name
 
 class Room(models.Model):
-    ROOM_TYPE_CHOICES = (
+    ROOM_TYPE_CHOICES = ( 
         ('single_room', 'Single Room'),
         ('double_room', 'Double Room'),
         ('bed_sitter', 'Bed Sitter'),

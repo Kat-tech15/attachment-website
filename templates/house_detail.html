@@ -8,14 +8,6 @@
     <p><strong>Contact:</strong> {{ house.phone_number }}</p>
     <hr>
 
-   {% if messages %}
-  <div class="custom-message-wrapper">
-    {% for message in messages %}
-      <p class="custom-message">{{ message }}</p>
-    {% endfor %}
-  </div>
-{% endif %}
-
 <h3>Available Rooms</h3>
 {% if available_rooms %}
     <div class="room-grid">

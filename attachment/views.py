@@ -244,22 +244,24 @@ def reject_application(request, app_id):
 
     return redirect('admin_dashboard')
 
-
+@login_required
 def my_bookings(request):
     if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
         return HttpResponseForbidden("Only Attachees and Tenants can view bookings.")
+    user = request.user
+    today = timezone.now().date()
 
-    if request.user.is_superuser:
+    if user.is_superuser:
         bookings = Booking.objects.all().select_related('room','house_post', 'attachee')
-    elif hasattr(request.user, 'attachee'):
+    elif hasattr(user, 'attachee'):
         bookings = Booking.objects.filter(
-            attachee=request.user.attachee
+            attachee=user.attachee
         ).exclude(
             status='cancelled'
         ).select_related('room', 'house_post', 'attachee')
     else:
         return HttpResponseForbidden("You must be an attachee  to view your bookings.")
-    today = timezone.now().date()
+    
     
     return render(request, 'my_bookings.html', {
         'bookings': bookings,

@@ -9,19 +9,20 @@
             <tr>
                 <th>Id</th>
                 <th>Room Id</th>
-                <th>Date Booked</th>
+                <th>Attachee</th>
+                <th>Moe-In</th>
                 <th>Status</th>
                 <th>Deposit</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for b in bookings %}
+          {% for booking in bookings%}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ b.room.room_number }}</td>
-                <td>{{ b.created_at|date:"M d, Y" }}</td>
-                <td>{{ b.move_in_date|default:"N/A" }}</td>
+                <td>{{ booking.room.room_number }}</td>
+                <td>{{ booking.full_name }}</td>
+                <td>{{ booking.move_in_date|default:"-" }}</td>
                 <td>
                   {% if booking.status == 'approved' %}
                     <span class="text-success">Approved</span>
@@ -29,23 +30,22 @@
                       <span class="text-warning">Pending</span>
                     {% else %}
                       <span class="text-danger">{{ b.status|capfirst }}</span>
+                    {% endif %}
                   </td>
-                <td>{{ b.room.price }}</td>
+                <td>{{ booking.room.price }}</td>
                 <td>
-                    {% if b.status != 'approved' %}
-                    <form action="{% url 'approve_booking' b.id %}" method="post">
+                    {% if booking.status != 'pending' %}
+                    <form action="{% url 'approve_booking' booking.id %}" method="post">
                         {% csrf_token %}
                         <button type="submit" class="approve-btn">Approve</button>
                     </form>
                     {% else %}
-                    <span class="badge badge-secondary">No Action</span>
+                    <span class="badge badge-secondary">No action</span>
                     {% endif %}
                 </td>
             </tr>
             {% empty %}
-            <tr>
-                <td colspan="6" class="text-center">No booked rooms found.</td>
-            </tr>
+            <tr><td colspan="6" class="text-center">No booked rooms found.</td></tr>
             {% endfor %}
         </tbody>
       </table>
@@ -89,17 +89,21 @@
 .room-table tr:hover {
   background-color: #f9f9f9;
 }
-.approve-btn{
-    background-color: #05852b;
-    border-radius: 5px;
-    color: white;
-    padding: 5px;
-}.approve-btn:hover{
-    background-color: #0a9c0a;
+.approve-btn {
+  background-color: #05852b;
+  border-radius: 5px;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
 }
-.text-success { color: green; font-weight: bold; }
-.text-warning { color: orange; font-weight: bold; }
-.text-danger { color: red; font-weight: bold; }
+.approve-btn:hover {
+  background-color: #0a9c0a;
+}
+.text-success { color: green; }
+.text-warning { color: orange; }
+.text-danger { color: red; }
+.badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
 
   </style>
 {% endblock %}
