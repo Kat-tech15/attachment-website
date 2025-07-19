@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block tittle%} Booked Rooms {% endblock %}
+{% block title%} Booked Rooms {% endblock %}
 
 {% block content%}
   <div class="room-list">
@@ -19,18 +19,35 @@
             {% for b in bookings %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ b.room.room_id }}</td>
-                <td>{{ b.move_in_date|date:"M d, Y" }}</td>
-                <td>{{ b.house_post.room_status }}</td>
-                <td>{{ b.house_post.rent }}</td>
+                <td>{{ b.room.room_number }}</td>
+                <td>{{ b.created_at|date:"M d, Y" }}</td>
+                <td>{{ b.move_in_date|default:"N/A" }}</td>
                 <td>
-                    {% if room.status == 'booked' %}
-                    <a href="{% url 'approve_booking' room.id%}" class="approve-btn">Approve</a>
+                  {% if booking.status == 'approved' %}
+                    <span class="text-success">Approved</span>
+                    {% elif booking.status == 'pending' %}
+                      <span class="text-warning">Pending</span>
+                    {% else %}
+                      <span class="text-danger">{{ b.status|capfirst }}</span>
+                  </td>
+                <td>{{ b.room.price }}</td>
+                <td>
+                    {% if b.status != 'approved' %}
+                    <form action="{% url 'approve_booking' b.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="approve-btn">Approve</button>
+                    </form>
+                    {% else %}
+                    <span class="badge badge-secondary">No Action</span>
+                    {% endif %}
                 </td>
             </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No booked rooms found.</td>
+            </tr>
+            {% endfor %}
         </tbody>
-        {% endif %}
-        {% endfor %}
       </table>
   </div>
   <style>
@@ -80,5 +97,9 @@
 }.approve-btn:hover{
     background-color: #0a9c0a;
 }
+.text-success { color: green; font-weight: bold; }
+.text-warning { color: orange; font-weight: bold; }
+.text-danger { color: red; font-weight: bold; }
+
   </style>
 {% endblock %}

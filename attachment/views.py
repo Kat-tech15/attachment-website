@@ -803,7 +803,7 @@ def attachee_dashboard(request):
     user = request.user
 
     if hasattr(user, 'attachee'):
-        bookings = Booking.objects.filter(attachee=user.attachee).order_by('-created_at')
+        bookings = Booking.objects.filter(attachee=user.attachee).order_by('-created_at').exclude(status='cancelled')
         applications = AttachmentApplication.objects.filter(attachee=user.attachee).order_by('-start_date')
        
     elif user.is_superuser:
@@ -964,20 +964,31 @@ def view_booked_rooms(request):
     if not request.user.has_priviledge(['tenant']):
         return HttpResponseForbidden("You have no access to this page.")
     
-    rooms = Room.objects.filter(is_booked=True)
+    tenant = request.user.tenant
 
-    return render(request, 'view_booked_rooms.html',{'rooms': rooms})
+    bookings = Booking.objects.filter(
+        house_post__tenant=tenant,
+        ).select_related('room', 'attachee')
+
+    return render(request, 'view_booked_rooms.html',{'bookings': bookings})
 
 @login_required
-def approve_booking(request, room_id):
+def approve_booking(request, booking_id):
     if not request.user.has_priviledge(['tenant']):
-        return HttpResponseForbidden("Only tenants can approve a booking.")
-
-    room = get_object_or_404(Room, id=room_id, tenant=request.user.tenant)
+        return HttpResponseForbidden("Access denied.")
+    
+    booking = get_object_or_404(
+        Booking, 
+        id=booking_id,
+        house_post__tenant=request.user.tenant
+        )
 
     if request.method =='POST':
-        room.approve()
-        messages.success(request, "Room approved successfully.")
-        return redirect()
-    
-    return render(request, 'view_booked_rooms.html',{'room': room})
+        booking.status = 'approved'
+        booking.room.is_booked = True
+        booking.room.save()
+        booking.save()
+        messages.success(request, "Room booking approved successfully.")
+        return redirect('view_booked_rooms')
+
+    return redirect('view_booked_rooms')
