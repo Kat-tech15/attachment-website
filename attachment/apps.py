@@ -8,4 +8,4 @@ class AttachmentAppConfig(AppConfig):
 
         # Import signals to ensure they are registered
     def ready(self):
-       pass
+       import attachment.signals
