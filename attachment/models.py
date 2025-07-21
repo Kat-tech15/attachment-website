@@ -150,7 +150,7 @@ class Booking(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
-        return f"{self.full_name} booked {self.rental_post} "
+        return f"{self.full_name} booked {self.house_post} "
 
 
 
