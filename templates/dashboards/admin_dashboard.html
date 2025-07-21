@@ -46,7 +46,7 @@
         <small class="text-muted">({{ feedback.submitted_at|date:"M d, Y" }})</small>
       </li>
     {% empty %}
-      <li>No feedback submitted yet.</li>
+     <p style="text-align: center; font-style: italic; color: #999;>No Feedback yet</p>
     {% endfor %}
   </ul>
   <a href="{% url 'feedback_list' %}" class="btn">View all feedback</a>

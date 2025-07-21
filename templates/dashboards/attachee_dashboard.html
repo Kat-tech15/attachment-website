@@ -7,10 +7,7 @@
 
 {% block content %}
 <div class="dashboard-container">
-
-     
      <h2>🏠 My House Bookings</h2>
-
 {% if bookings %}
 <table class="booking-table">
   <thead>
@@ -45,33 +42,43 @@
 </table>
 <br><br>
 <hr>
+  
 
-<h2>📄 My Attachment Applications</h2>
-{% if applications %}
-<table class="application-table">
-  <thead>
-    <tr>
-      <th>Company</th>
-      <th>Status</th>
-      <th>Date</th>
-    </tr>
-    {% endif %}
-  </thead>
-  <tbody>
-    {% for a in applications %}
+<h2>📄 Visited Attachment Posts</h2>
+  <table class="feedback-table">
+    <thead>
       <tr>
-        <td>{{ a.company.name }}</td>
-        <td>{{ a.status }}</td>
-        <td>{{ a.created_at|date:"M d, Y" }}</td>
-         <td>
-            <a href="{% url 'print_application_letter' a.id %}" class="btn btn-outline-primary">🖨️ Print</a>
-         </td>
+        <th>Id</th>
+        <th>Attachment Title</th>
+        <th>Company</th>
+        <th>Visited On</th>
+        <th>Link</th>
       </tr>
-    {% empty %}
-      <tr><td colspan="3" class="text-center">No applications submitted.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% if visits %}
+        {% for visit in visits %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ visit.attachment_post.title }}</td>
+          <td>{{ visit.attachment_post.company.name }}</td>
+          <td>{{ visit.visited_at|date:"M d, Y H:i" }}</td>
+          <td>
+            <a href="{{ visit.attachment_post.application_link }}" target="_blank">
+              🔗 Visit Site
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="5" style="text-align: center; font-style: italic; color: #999;">
+            You haven't visited any posts yet.
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
 <div class="dashboard-actions">
             <a href="{% url 'visited_posts' %}" class="btn">Visited Posts</a>
             <a href="{% url 'view_attachments'%}" class="btn">View Attachments</a>
@@ -80,6 +87,8 @@
  
      </div>
 </div>
+</div>
+
 <style>
 .dashboard-container {
   max-width: 1000px;
@@ -127,8 +136,8 @@
 
 .dashboard-actions {
   margin-top: 30px;
+  text-align: center;
 }
-
 .btn {
   display: inline-block;
   margin: 10px;
@@ -168,6 +177,38 @@
     .btn-danger:hover {
         background-color: #c82333;
     }
+
+.feedback-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.feedback-table th,
+.feedback-table td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.feedback-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.feedback-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.feedback-table a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.feedback-table a:hover {
+  text-decoration: underline;
+}   
 </style>
  
 {% endblock %}

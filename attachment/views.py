@@ -159,7 +159,7 @@ def contact(request):
 
 def visited_posts(request):
     if not request.user.has_priviledge(['attachee']):
-        return HttpResponseForbidden("Only attachees have access to this page.")
+        return HttpResponseForbidden()
     
     attachee = request.user.attachee
     visits = ApplicationVisit.objects.filter(attachee=attachee).select_related('attachment_post__company')
@@ -172,7 +172,7 @@ def attachee_list(request):
 @login_required
 def my_bookings(request):
     if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
-        return HttpResponseForbidden("Only Attachees and Tenants can view bookings.")
+        return HttpResponseForbidden()
     user = request.user
     today = timezone.now().date()
 
@@ -185,7 +185,7 @@ def my_bookings(request):
             status='cancelled'
         ).select_related('room', 'house_post', 'attachee')
     else:
-        return HttpResponseForbidden("You must be an attachee  to view your bookings.")
+        return HttpResponseForbidden()
     
     
     return render(request, 'my_bookings.html', {
@@ -194,16 +194,22 @@ def my_bookings(request):
     })
 
 # Tenant's Views 
+@login_required
 def tenant_house_bookings(request):
-    if not request.user.is_superuser and not request.user.has_priviledge(['tenant']):
-        HttpResponseForbidden("Only tenants can access this page.")
+    if not request.user.has_priviledge(['tenant']):
+        HttpResponseForbidden()
     
     if request.user.is_superuser:
         bookings = Booking.objects.all().select_related('room', 'attachee')
     else:
         try:
-            tenant_rooms = Room.objects.filter(house__tenant=request.user)
-            bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'attachee')
+            if hasattr(request.user, 'tenant'):
+                tenant= request.user.tenant
+                tenant_rooms = Room.objects.filter(house__tenant=tenant)
+                bookings = Booking.objects.filter(room__in=tenant_rooms).select_related('room', 'room__house', 'attachee')
+
+            else:
+                return HttpResponseForbidden()
         except Room.DoesNotExist:
             bookings = []
 
@@ -238,7 +244,7 @@ def create_room(sender, instance, created, **kwargs):
 @login_required
 def book_room(request, room_id):
     if not request.user.has_priviledge(['tenant','attachee']):
-        return HttpResponseForbidden("Only tenants and attachees can book rooms.")
+        return HttpResponseForbidden()
     
     
 
@@ -292,7 +298,7 @@ def house_detail(request, house_id):
 @login_required
 def all_attachment_posts(request):
     if not request.user.has_priviledge(['company']):
-        return HttpResponseForbidden("Only companies have access to this page.")
+        return HttpResponseForbidden()
     
     query = request.GET.get('q')
     sort = request.GET.get('sort')
@@ -364,7 +370,7 @@ def post_house(request):
 @login_required
 def my_houses(request):
     if not request.user.has_priviledge(['tenant']):
-        return HttpResponseForbidden("Only tenants can view their houses.")
+        return HttpResponseForbidden()
 
     houses = House.objects.filter(tenant__user=request.user)  
 
@@ -450,7 +456,7 @@ def view_houses(request):
 @login_required 
 def cancel_booking(request, booking_id):
     if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
-        return HttpResponseForbidden("Only Attachees and Tenants can cancel bookings.")
+        return HttpResponseForbidden()
 
     booking = get_object_or_404(Booking, id=booking_id)
 
@@ -462,7 +468,7 @@ def cancel_booking(request, booking_id):
     )
 
     if not (is_attachee_booking_owner or is_house_wner or request.user.is_superuser):
-        return HttpResponseForbidden("You do not have permission to cancel this booking.")
+        return HttpResponseForbidden()
 
     if booking.move_in_date > timezone.now().date():
         booking.status = 'cancelled'
@@ -492,10 +498,10 @@ def delete_booking(request, booking_id):
     is_admin = user.is_superuser or user.is_staff
 
     if not (is_attachee_owner or is_tenant_owner or is_admin):
-        return HttpResponseForbidden("you don;t have permission to delete this booking.")
+        return HttpResponseForbidden()
     
     if booking.status != 'cancelled':
-        return HttpResponseForbidden("Only cancelled bookings can be deleted.")
+        return HttpResponseForbidden()
     
     booking.delete()
     messages.success(request, "Booking deleted successfully.")
@@ -508,7 +514,7 @@ def delete_booking(request, booking_id):
 @login_required
 def edit_booking(request, booking_id):
     if not request.user.has_priviledge(['attachee','tenant']):
-        return HttpResponseForbidden("You do not have permission to edit this booking.")
+        return HttpResponseForbidden()
     
     booking = get_object_or_404(Booking, id=booking_id)
 
@@ -556,7 +562,7 @@ def delete_past_bookings(request):
 @login_required
 def view_attachments(request):
     if not request.user.has_priviledge(['attachee', 'company']):
-        return HttpResponseForbidden("Only Attachees and Companies can view attachments.")
+        return HttpResponseForbidden()
         
     return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
 
@@ -564,7 +570,7 @@ def view_attachments(request):
 @login_required
 def post_attachment(request):
     if not request.user.has_priviledge(['company']):
-        return HttpResponseForbidden("Only companies can post attachments.")
+        return HttpResponseForbidden()
 
     company, _ = Company.objects.get_or_create(
         user=request.user,
@@ -807,7 +813,7 @@ def delete_feedback(request, feedback_id):
 @login_required
 def view_booked_rooms(request):
     if not request.user.has_priviledge(['tenant']):
-        return HttpResponseForbidden("You have no access to this page.")
+        return HttpResponseForbidden()
     
     tenant = request.user.tenant
 
@@ -820,7 +826,7 @@ def view_booked_rooms(request):
 @login_required
 def approve_booking(request, booking_id):
     if not request.user.has_priviledge(['tenant']):
-        return HttpResponseForbidden("Access denied.")
+        return HttpResponseForbidden()
     
     booking = get_object_or_404(
         Booking, 
