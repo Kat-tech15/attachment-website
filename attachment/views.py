@@ -251,7 +251,9 @@ def my_bookings(request):
     user = request.user
     today = timezone.now().date()
 
-    if hasattr(user, 'attachee'):
+    if user.is_superuser:
+        bookings = Booking.objects.all().select_related('room','house_post', 'attachee')
+    elif hasattr(user, 'attachee'):
         bookings = Booking.objects.filter(
             attachee=user.attachee
         ).exclude(
