@@ -330,14 +330,11 @@ def book_room(request, room_id):
     phone_number = "N/A"
 
     
-    if request.user.has_priviledge(['tenant']) and not (request.user.is_superuser or request.user.is_staff):
-        try:
-            attachee = request.user.attachee
-            full_name = attachee.full_name
-            contact = attachee.phone_number
-        except Attachee.DoesNotExist:
-            messages.error(request, "You need to be an Attachee to book a room.")
-            return redirect('all_houses')
+    if request.user.has_priviledge(['attachee']) and not request.user.is_superuser:
+        attachee = request.user.attachee
+        full_name = attachee.full_name
+        phone_number = attachee.phone_number
+       
 
     booking = Booking.objects.create(
         attachee=attachee,

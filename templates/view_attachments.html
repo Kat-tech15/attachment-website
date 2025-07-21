@@ -3,16 +3,12 @@
 {% block title %}Available Attachments{% endblock %}
 
 {% block content %}
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert alert-{{ message.tags }} mt-2" role="alert">
-        {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
+
 <style>
 .attachment-container {
     margin-top: 120px;
+    background-color: #fff;
+    border-radius: 8px;
 }
 h2 {
     text-align: center;
@@ -98,5 +94,5 @@ h2 {
         {% endfor %}
       </div>
 </div>
-<hr>
+
 {% endblock %}
