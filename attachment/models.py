@@ -4,8 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
-
-
+from django.utils import timezone
 
 
 
@@ -56,31 +55,17 @@ class AttachmentPost(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
    
 
-class AttachmentApplication(models.Model):
-    attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE, null=True, blank=True)
-    attachment_post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE, null=True, blank=True)
-
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('approaved', 'Approaved'),
-        ('rejected', 'Rejected'),
-    ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    full_name = models.CharField(max_length=200)
-    email = models.EmailField()
-    cv = models.ImageField()
-    cover_letter = models.ImageField()
-    recommendation = models.ImageField()
-    start_date = models.DateField(auto_created=True)
-    end_date = models.DateField(auto_created=True)
-
+class ApplicationVisit(models.Model):
+    attachee = models.ForeignKey('Attachee', on_delete=models.CASCADE)
+    attachment_post = models.ForeignKey('AttachmentPost', on_delete=models.CASCADE)
+    visited_at = models.DateTimeField(default=timezone.now)
 
 
     class Meta:
         unique_together = ('attachee', 'attachment_post')
 
     def __str__(self):
-        return f"{self.full_name} applied to {self.attachment.company.name}"
+        return f"{self.full_name} visited {self.attachment.company.name}"
     
 class Tenant(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

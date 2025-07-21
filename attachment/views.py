@@ -21,11 +21,11 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse
-from .models import CustomUser, Attachee, Company, House, AttachmentApplication, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials, Feedback
+from .models import CustomUser, Attachee, Company, House, ApplicationVisit, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials, Feedback
 from .forms import CustomUserCreationForm,HouseForm,FeedbackForm
 from django.contrib import messages
 from django.utils import timezone
-from .forms import AttachmentPostForm, HouseForm,BookingForm, AttachmentApplicationForm, HouseReviewForm, CompanyReviewForm
+from .forms import AttachmentPostForm, HouseForm,BookingForm, HouseReviewForm, CompanyReviewForm
 
 # Create your views here.
 
@@ -157,92 +157,17 @@ def contact(request):
 
 
 
-def my_applications(request):
+def visited_posts(request):
     if not request.user.has_priviledge(['attachee']):
         return HttpResponseForbidden("Only attachees have access to this page.")
     
-    applications = AttachmentApplication.objects.filter(attachee__user=request.user)
-    return render(request, 'my_applications.html', {'applications': applications})
+    attachee = request.user.attachee
+    visits = ApplicationVisit.objects.filter(attachee=attachee).select_related('attachment_post__company')
+    return render(request, 'visited_posts.html', {'visits': visits})
 
 def attachee_list(request):
     applications = Attachee.objects.all()
     return render(request, 'attachee_list.html',{'applications': applications})
-
-@login_required
-def apply_attachment(request, attachment_id):
-    if not request.user.has_priviledge(['attachee']):
-        return HttpResponseForbidden("Only attachees can apply for attachments.")
-
-     
-    try:
-        attachee_instance = Attachee.objects.get(user=request.user)
-        print("Attachee instance found:", attachee_instance)
-    except Attachee.DoesNotExist:
-        print("Attachee instance not found for user:", request.user)
-
-        # If the user does not have an Attachee profile, redirect to home with an error message
-        messages.error(request, "You need an Attachee profile to apply for attachment.")
-        return redirect('view_attachments') 
-    
-     # Get the attachment post
-    attachment_post = get_object_or_404(AttachmentPost, id=attachment_id)
-
-    # Prevent double applications
-    try: 
-        application = AttachmentApplication.objects.get(attachee=attachee_instance, attachment_post=attachment_post)
-        already_applied = True
-    except AttachmentApplication.DoesNotExist:
-        already_applied = False
-        application = None
-
-    if request.method == 'POST':
-        form = AttachmentApplicationForm(request.POST, request.FILES, instance=application)
-        if form.is_valid():
-            new_application = form.save(commit=False)
-            new_application.attachee = attachee_instance
-            new_application.attachment_post = attachment_post
-            new_application.save()
-            messages.success(request, "Application submitted successfully!")
-            return redirect('view_attachments')
-    else:
-        form = AttachmentApplicationForm(instance=application)
-
-    return render(request, 'apply_attachment.html', {
-        'form': form,
-        'attachment_post': attachment_post,
-        'already_applied': already_applied
-    })
-
-@user_passes_test(lambda u: u.is_superuser or u.is_staff)
-def approve_application(request, app_id):
-    app = get_object_or_404(AttachmentApplication, id=app_id)
-    app.status = 'approved'
-    app.save()
-
-    notify.send(
-        sender=request.user,
-        recipient=app.attacheee,
-        verb='Your attachment application was approved',
-        data={'url': f'/attachee/my_applications/{app.id}/'}
-    )
-
-    return redirect('admin_dashboard')
-
-
-@user_passes_test(lambda u: u.is_superuser or u.is_staff)
-def reject_application(request, app_id):
-    app = get_object_or_404(AttachmentApplication, id=app_id)
-    app.status= 'rejected'
-    app.save()
-
-    notify.send(
-        sender= request.uer,
-        recipient= app.attachee,
-        verb='Your attachment application was rejected',
-        data={'url': f'/attachee/my_applications/{app.id}/'}
-    )
-
-    return redirect('admin_dashboard')
 
 @login_required
 def my_bookings(request):
@@ -723,7 +648,7 @@ def dashboard_router(request):
 def admin_dashboard(request):
     users_by_role = CustomUser.objects.values('role').annotate(count=Count('id'))
     booking_count =Booking.objects.count()
-    application_count= AttachmentApplication.objects.count()
+    application_count= ApplicationVisit.objects.count()
     tenant_count = Tenant.objects.count()
     attachee_count = Attachee.objects.count()
     company_count = Company.objects.count()
@@ -736,22 +661,13 @@ def admin_dashboard(request):
     booking_month_data = [b['count'] for b in monthly_bookings]
 
     # Top 5 Compannies by applicant
-    top_companies_data = AttachmentApplication.objects.values('attachment_post__company__name')\
+    top_companies_data = ApplicationVisit.objects.values('attachment_post__company__name')\
         .annotate(application_count=Count('id')).order_by('-application_count')[:5]
 
     top_company_names  = [item['attachment_post__company__name'] for item in top_companies_data]
     top_company_counts = [item['application_count'] for item in top_companies_data]
 
-    # Top course by applicant count
-    course_data = AttachmentApplication.objects.values('attachee__course')\
-        .annotate(count=Count('id')).order_by('-count')[:6]
 
-    course_labels =[item['attachee__course'] for item in course_data]
-    course_counts = [item['count'] for item in course_data]
-
-    #Pending applications
-    pending_apps = AttachmentApplication.objects.filter(status='pending').select_related('attachee', 'company')
-    
     # Feedback data
     feedback_count = Feedback.objects.count()
     recent_feedbacks = Feedback.objects.order_by('-submitted_at')[:5]
@@ -767,9 +683,6 @@ def admin_dashboard(request):
         'booking_month_data': booking_month_data,
         'top_company_names': top_company_names,
         'top_company_counts': top_company_counts,
-        'course_labels': course_labels,
-        'course_count': course_counts,
-        'pending_apps': pending_apps,
         'feedback_count': feedback_count,
         'recent_feedbacks': recent_feedbacks,
     }
@@ -778,7 +691,7 @@ def admin_dashboard(request):
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 @login_required
 def download_approved_applications_pdf(request):
-    approved_apps = AttachmentApplication.objects.filter(status='approved')\
+    approved_apps = ApplicationVisit.objects.filter(status='approved')\
         .select_related('attachee', 'company')
 
     html_string = render_to_string('pdf/approved_applications.html', {
@@ -803,15 +716,11 @@ def attachee_dashboard(request):
 
     if hasattr(user, 'attachee'):
         bookings = Booking.objects.filter(attachee=user.attachee).order_by('-created_at').exclude(status='cancelled')
-        applications = AttachmentApplication.objects.filter(attachee=user.attachee).order_by('-start_date')
-       
-    elif user.is_superuser:
-        bookings = Booking.objects.all().order_by('-created_at')
-        applications = AttachmentApplication.objects.all().order_by('-start_date')
+        applications = ApplicationVisit.objects.filter(attachee=user.attachee)
 
     else:
         bookings = Booking.objects.none()
-        applications = AttachmentApplication.objects.none()
+        applications = ApplicationVisit.objects.none()
 
         
     return render(request, 'dashboards/attachee_dashboard.html',{ 
@@ -836,7 +745,7 @@ def calendar(request):
             'color': '#4caf50'
         })
 
-    attachment = AttachmentApplication.objects.filter(attachee=user,status= 'approved')   
+    attachment = ApplicationVisit.objects.filter(attachee=user,status= 'approved')   
     if attachment and hasattr(attachment, 'start_date') and hasattr(attachment, 'end_date'):
          events.append({
             'title': '📄 Attachment Period',
@@ -855,69 +764,6 @@ def mark_as_read(request, notification_id):
     notification =get_object_or_404(Notification, id=notification_id, recipient=request.user)
     notification.mark_as_read()
     return redirect(notification.data.get('url', '/'))
-
-@login_required
-def print_application_letter(request, application_id):
-    application = get_object_or_404(AttachmentApplication, id=application_id, attachment=request.user)
-
-
-    html_content = render_to_string("application_letter.html", {
-        'application': application,
-        'attachee': application.attachee,
-        'company': application.company,
-    })
-    pdf = HTML(string=html_content).write_pdf()
-
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="application_letter.pdf"'
-    return response
-
-@login_required
-def send_application_email(request, application_id):
-    app = get_object_or_404(AttachmentApplication, id=application_id, attachee=request.user)
-    company_email = app.company.email
-
-    html_string = render_to_string('attachee/application_letter.html', {
-        'application': app,
-        'attachee': app.attachee,
-        'company': app.company,
-    })
-
-    with tempfile.NamedTemporaryFile(delete=True, suffix=".pdf") as output:
-        HTML(string=html_string).write_pdf(output.name)
-        output.seek(0) 
-
-        # Create custom subject line
-        full_name = app.attachee.get_full_name()
-        course = getattr(app.attaachee.attachee, 'course', 'Attachment Program')
-        subject = f"Attachment Application - {full_name} ({course})"
-
-
-        # Create and send email
-        email = EmailMessage(
-            subject="Attachment Application Letter",
-            body=f"Dear {app.company.name},\n\nPlease find attached my application letter for attachment placement.\n\nKind regards,\n{app.attachee.get_full_name()}",
-            from_email=request.user.email,
-            to=[company_email],
-        )
-        email.attach("application_letter.pdf", output.read(), 'application/pdf')
-
-         # Try sending and log result
-        try:
-            email.send()
-            app.email_sent = True
-            app.email_sent_at = now()
-            app.email_error = None
-            messages.success(request, "✅ Email successfully sent to the company.")
-        except Exception as e:
-            app.email_sent = False
-            app.email_error = str(e)
-            messages.error(request, "❌ Email failed to send. Please try again later.")
-
-        app.save()
-
-    return redirect('attachee-dashboard')
-
 
 @login_required
 def company_dashboard(request):

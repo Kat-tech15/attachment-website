@@ -1,17 +1,10 @@
 from django import forms
-from .models import AttachmentApplication, House, AttachmentPost, CustomUser, Booking, HouseReview, CompanyReview, Feedback
+from .models import House, AttachmentPost, CustomUser, Booking, HouseReview, CompanyReview, Feedback
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from datetime import date
 
 user = get_user_model()
-
-class AttachmentApplicationForm(forms.ModelForm):
-    class Meta:
-        model = AttachmentApplication
-        fields = ['attachment_post', 'attachee', 'status']
-
-
 
 class CustomUserCreationForm(UserCreationForm):
     ROLE_CHOICES = [ 

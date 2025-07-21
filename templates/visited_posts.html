@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>Attachment Title</th>
+      <th>Company</th>
+      <th>Visited On</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for visit in visits %}
+      <tr>
+        <td>{{ visit.attachment_post.title }}</td>
+        <td>{{ visit.attachment_post.company.name }}</td>
+        <td>{{ visit.visited_at|date:"M d, Y H:i" }}</td>
+        <td><a href="{{ visit.attachment_post.application_link }}" target="_blank">🔗 Visit Site</a></td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="4">You haven't visited any posts yet.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
