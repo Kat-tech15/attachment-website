@@ -95,20 +95,11 @@ SITE_ID = 2
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-#DATABASES = {
-    #'default': {
-        #'ENGINE': 'django.db.backends.mysql',
-        #'NAME': 'attachment',
-        #'USER': 'root',
-        #'PASSWORD': '200315',
-        #'HOST': 'localhost',
-        #'PORT': '3306',
-    #}
-#}
+
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get("DATABASE_URL"),
-        engine='mysql.connector.django',
+        engine='mysql.connector.django'
     )
 }
 
