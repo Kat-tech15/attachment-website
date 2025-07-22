@@ -45,10 +45,12 @@
         {{ feedback.message|truncatechars:60 }}
         <small class="text-muted">({{ feedback.submitted_at|date:"M d, Y" }})</small>
       </li>
+      
     {% empty %}
-     <p style="text-align: center; font-style: italic; color: #999;>No Feedback yet</p>
-    {% endfor %}
+     <p style="text-align: center; font-style: italic; color: #999;">No Feedbacks yet </p>
+     {% endfor %}
   </ul>
+  <br>
   <a href="{% url 'feedback_list' %}" class="btn">View all feedback</a>
 </div>
   </div>
@@ -152,6 +154,7 @@
   padding: 30px;
   margin: 0 auto;
   margin-top: 120px;
+  margin-bottom: 80px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   display: flex;
@@ -241,6 +244,7 @@ h4 {
   background-color: #3498db;
   color: white;
   font-size: 14px;
+  align-self: center;
 }
 .btn:hover {
   background-color: #3498db;
