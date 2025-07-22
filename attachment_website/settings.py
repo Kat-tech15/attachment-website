@@ -99,10 +99,11 @@ SITE_ID = 2
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get("DATABASE_URL"),
-        engine='mysql.connector.django'
+        engine='django.db.backends.mysql'
     )
 }
 
+SILENCED_SYSTEM_CHECKS = ["models.W036"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
