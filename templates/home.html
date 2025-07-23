@@ -130,12 +130,41 @@ h4 {
 .cta-link a:hover {
   background-color: #006fd6;
 }
+
+.browse-button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.browse-button:hover {
+  background-color: #2980b9;
+}
   .testimonials {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
   padding: 20px;
+}
+.title-box {
+  border: 2px solid #1e90ff;
+  padding: 15px 25px;
+  text-align: center;
+  width: fit-content;
+  margin: 0 auto 30px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1rem;
+  color: #1e90ff;
 }
 .testimonial-card {
   background-color: white;
@@ -333,7 +362,9 @@ h4 {
 </section>
 </div>
 <section class="about" id="about">
-     <h4>About Us</h4>
+     <div class="title-box">
+    <h4 class="section-title">About Us</h4>
+  </div>
         <p>
           We are a bridge between the  students seeking for industrial attachment and internships,  and companies having slots for attachees as well as interns. 
           By providing a seamless way to post and apply, we ensure that both parties can find the best fit with ease.
@@ -341,7 +372,9 @@ h4 {
         </p>
 </section>
 <section class="services" id="services">
-  <h4>Our Services</h4>
+  <div class="title-box">
+    <h4 class="section-title">Our Services</h4>
+  </div>
     <ul>
       <p>Our sevices include the following: <br><br>
                 
@@ -359,7 +392,9 @@ h4 {
     </ul>
 </section>
 <section class="section">
-  <h4>🏠 Featured Houses</h4>
+  <div class="title-box">
+    <h4 class="section-title">🏠 Featured Houses</h4>
+  </div>
   <div class="card-grid">
     {% for house in featured_houses %}
       <div class="card">
@@ -375,11 +410,13 @@ h4 {
       </div>
     {% endfor %}
     <div class="cta-link">
-      <a href="{% url 'all_houses' %}">Browse All Houses</a>
+      <a href="{% url 'all_houses' %}" class="browser-button">Browse All Houses</a>
     </div>
 </section>
 <section class="section">
-  <h4 >📎 Recent Attachments</h4>
+  <div class="title-box">
+    <h4 class="section-title">📎 Recent Attachments</h4>
+  </div> 
   <div class="card-grid">
     {% for att in recent_attachments %}
       <div class="card">
@@ -395,10 +432,13 @@ h4 {
       </div>
     {% endfor %}
     <div class="cta-link">
-      <a href="{% url 'all_houses' %}" role="button" aria-label="Explore attachmnet opportunities">Explore Attachments</a>
+      <a href="{% url 'all_houses' %}" class="browser-button">Explore Attachments</a>
     </div>
 </section>
-<section class="testimonials">
+<section class="testimonials"> 
+  <div class="title-box">
+    <h4 class="section-title">💬 Testimonials</h4>
+  </div>
   {% for testimonial in testimonials %}
     <div class="testimonial-card">
       <p class="testimonial-quote">“{{ testimonial.message }}”</p>
@@ -408,7 +448,9 @@ h4 {
   {% endfor %}
 </section>
 <section class="contact" id="contact">
-  <h4>📞 Contact Us</h4>
+  <div class="title-box">
+    <h4 class="section-title">📞 Contact Us</h4>
+  </div>
     <p>
        For any inquiries, support or feedback, please reach out to us:
     </p>
