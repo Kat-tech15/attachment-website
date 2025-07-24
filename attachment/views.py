@@ -6,7 +6,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
 from notifications.signals import notify
 from django.template.loader import render_to_string
-from weasyprint import HTML
 from xhtml2pdf import pisa
 from django.db.models import Count,Avg
 from django.core.mail import EmailMessage

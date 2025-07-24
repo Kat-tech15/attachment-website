@@ -29,7 +29,8 @@ class Attachee(models.Model):
     institution = models.CharField(max_length= 255)
     course = models.CharField(max_length=255)
    
-
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
     
 
 class Company(models.Model):
@@ -52,7 +53,9 @@ class AttachmentPost(models.Model):
     application_deadline = models.DateField(auto_created=True)
     post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
     created_at = models.DateTimeField(auto_now_add=True)
-   
+    
+    def __str__(self):
+        return f"{self.company.name} - {self.post_type} ({self.application_deadline})"
 
 class ApplicationVisit(models.Model):
     attachee = models.ForeignKey('Attachee', on_delete=models.CASCADE)
@@ -72,6 +75,8 @@ class Tenant(models.Model):
     phone_number = PhoneNumberField(region='KE')
     location = models.CharField(max_length=255)
     
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
 class Contact(models.Model):
     name = models.CharField(max_length=30)
     email = models.EmailField()
