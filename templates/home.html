@@ -47,16 +47,17 @@
   .home a:hover {
     background-color: #0056b3;
   }
-section {
+.section {
   width: 100%;
   padding: 60px 0; 
   background: #fff ;
   margin-bottom: 0 auto;
+  text-align: center;
 }
 .about,
 .services,
 .section,
-.contact {
+.feedback {
   width: 100%;
   padding: 40px 20px;
   box-sizing: border-box;
@@ -75,14 +76,6 @@ h4 {
   text-align: center;
   padding: 0;
 } 
-.contact p {
-  font-size: 16px;
-  line-height: 1.5;
-  text-align: center;
-}
-.contact .info {
-    margin-top: 20px;
-}
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -117,20 +110,9 @@ h4 {
 }
 .cta-link {
   text-align: center;
-  margin-top: 20px;
-  align-self: center;
+  margin-top: 30px;
+  margin-bottom: 40px;
 }
-.cta-link a {
-  padding: 10px 20px;
-  background-color: #1e90ff;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-}
-.cta-link a:hover {
-  background-color: #006fd6;
-}
-
 .browse-button {
   background-color: #3498db;
   color: white;
@@ -144,72 +126,71 @@ h4 {
 .browse-button:hover {
   background-color: #2980b9;
 }
-  .testimonials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  padding: 20px;
-}
-.title-box {
-  border: 2px solid #1e90ff;
-  padding: 15px 25px;
+.testimonial-marquee-section {
+  background-color: #f5f5f5;
+  padding: 60px 20px;
+  overflow: hidden;
   text-align: center;
-  width: fit-content;
-  margin: 0 auto 30px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
 }
 
-.section-title {
-  margin: 0;
-  font-size: 1rem;
-  color: #1e90ff;
-}
-.testimonial-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 20px;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-.testimonial-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
-  border: 2px solid #ccc;
-}
-
-.testimonial-quote {
-  font-style: italic;
+.testimonial-marquee-wrapper {
   position: relative;
-  color: #444;
+  width: 100%;
+  overflow: hidden;
+}
+
+.testimonial-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: scrollTestimonials 40s linear infinite;
+}
+
+@keyframes scrollTestimonials {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.testimonial-card {
+  min-width: 300px;
+  max-width: 320px;
+  margin: 0 15px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: scale(1.05);
+}
+
+.testimonial-card p {
+  font-size: 1rem;
+  font-style: italic;
+  color: #333;
   margin-bottom: 10px;
 }
 
-.testimonial-quote::before {
-  content: "“";
-  font-size: 40px;
-  position: absolute;
-  top: -20px;
-  left: -10px;
-  color: #f52323;
+.testimonial-card h4 {
+  color: #666;
+  font-weight: normal;
 }
 
-.role {
-  font-weight: bold;
-  font-size: medium;
-  color: #777;
+.feedback {
+    background-color: #f0f8ff;
+    padding: 40px 20px;
+  
 }
 .feedback-contact-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     gap: 2rem;
     margin-top: 2rem;
     margin-bottom: 30px;
@@ -267,56 +248,7 @@ h4 {
     .btn-submit:hover {
       background-color: #0056b3;
     }
-
-    .contact-info-box {
-      flex: 1 1 300px;
-      background: #f7f9fb;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      text-align: center;
-    }
-
-    .contact-info-box p {
-      font-size: 16px;
-      margin: 12px 0;
-      color: #2c3e50;
-    }
-    .contact-info-box h3 {
-      margin-bottom: 20px;
-      font-size: 20px;
-      color: #2c3e50;
-      text-align: center;
-    }
   
-.social-icons {
-  margin-top: 20px;
-  text-align: center;
- 
-}
-
-.social-icons a {
-  display: inline-block;
-  margin: 0 8px;
-  color: white;
-  background-color: #494646;
-  padding: 10px;
-  border-radius: 50%;
-  font-size: 18px;
-  text-align: center;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.social-icons a:hover {
-  transform: scale(1.1);
-}
-
-.social-icons .fa-whatsapp { background-color: #25d366; }
-.social-icons .fa-facebook-f { background-color: #3b5998; }
-.social-icons .fa-twitter { background-color: #1da1f2; }
-.social-icons .fa-instagram { background-color: #e1306c; }
-.social-icons .fa-linkedin-in { background-color: #0077b5; }
-
 @media (max-width: 768px) {
       .card-grid {
           grid-template-columns: 1fr;
@@ -409,8 +341,9 @@ h4 {
         </div>
       </div>
     {% endfor %}
+  </div>
     <div class="cta-link">
-      <a href="{% url 'all_houses' %}" class="browser-button">Browse All Houses</a>
+      <a href="{% url 'all_houses' %}" class="browse-button">Browse All Houses</a>
     </div>
 </section>
 <section class="section">
@@ -431,31 +364,52 @@ h4 {
         </div>
       </div>
     {% endfor %}
+  </div>
     <div class="cta-link">
-      <a href="{% url 'all_houses' %}" class="browser-button">Explore Attachments</a>
+      <a href="{% url 'view_attachments' %}" class="browse-button">Explore Attachments</a>
     </div>
 </section>
-<section class="testimonials"> 
+<section class="testimonial-marquee-section"> 
   <div class="title-box">
-    <h4 class="section-title">💬 Testimonials</h4>
+    <h4 class="section-title">💬 What Our Users Say</h4>
   </div>
-  {% for testimonial in testimonials %}
-    <div class="testimonial-card">
-      <p class="testimonial-quote">“{{ testimonial.message }}”</p>
-      <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="testimonial-img">
-      <h4>{{ testimonial.name }} <span class="role"> - {{testimonial.role }}</span></h4>
+  <div class="testimonial-marquee-wrapper">
+    <div class="testimonial-marquee-track">
+      <!-- Repeatable testimonial card -->
+      <div class="testimonial-card">
+        <p>"This platform helped me get an attachment quickly!"</p>
+        <h4>- Sarah W.</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"Clean UI and smooth navigation. Great job!"</p>
+        <h4>- Kevin M.</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"Booking a house was never this easy!"</p>
+        <h4>- Lucy A.</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"I recommend this to all fellow students."</p>
+        <h4>- John O.</h4>
+      </div>
+      <!-- Clone the same cards to make smooth loop -->
+      <div class="testimonial-card">
+        <p>"This platform helped me get an attachment quickly!"</p>
+        <h4>- Sarah W.</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"Clean UI and smooth navigation. Great job!"</p>
+        <h4>- Kevin M.</h4>
+      </div>
     </div>
-  {% endfor %}
-</section>
-<section class="contact" id="contact">
-  <div class="title-box">
-    <h4 class="section-title">📞 Contact Us</h4>
   </div>
-    <p>
-       For any inquiries, support or feedback, please reach out to us:
-    </p>
-   
-    <div class="feedback-contact-wrapper">
+</section>
+
+<section class="feedback" id="feedback">
+  <div class="title-box">
+    <h4 class="section-title">💬 Feedback</h4>
+  </div>
+  <div class="feedback-contact-wrapper">
       <div class="feedback-card">
         <h2>💬 We value your feedback</h2>
         <form method="post" action="">
@@ -463,20 +417,6 @@ h4 {
           {{ form.as_p }}
           <button type="submit" class="btn-submit">Submit Feedback</button>
         </form>
-      </div>
-        <div class="contact-info-box">
-          <h3>📌 Contact Information</h3>
-          <p><i class="fas fa-envelope"></i>  support@attachmentportal.com</p>
-          <p><i class="fas fa-phone-alt"></i>  +254 112 871 337</p>
-          <p><i class="fas fa-map-marker-alt"></i>  Kilifi, Kenya</p>
-
-          <div class="social-icons">
-            <a href="https://wa.me/254711112233" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://facebook.com/kelvin katwai" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://twitter.com/yourhandle" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://instagram.com/yourprofile" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://linkedin.com/in/yourprofile" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-          </div>
       </div>
     </div>
 </section>
