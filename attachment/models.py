@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils import timezone
-
+import random
 
 
 class CustomUser(AbstractUser):
@@ -15,12 +15,17 @@ class CustomUser(AbstractUser):
         ('tenant', 'Tenant')
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    email_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=6, blank=True, null=True)
 
     def has_priviledge(self, allowed_roles):
         return self.role in allowed_roles or self.is_superuser or self.is_staff
 
-    def __str__(self):
-        return f"{self.username}({self.role})"
+    def generate_otp(self):
+        otp = f"{random.randint(100000, 999999)}"
+        self.otp = otp
+        self.save()
+        return otp
 
 class Attachee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

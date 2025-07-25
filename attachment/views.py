@@ -24,6 +24,8 @@ from .models import CustomUser, Attachee, Company, House, ApplicationVisit, Book
 from .forms import CustomUserCreationForm,HouseForm,FeedbackForm
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
 from .forms import AttachmentPostForm, HouseForm,BookingForm, HouseReviewForm, CompanyReviewForm
 
 # Create your views here.
@@ -69,18 +71,72 @@ def about(request):
 def services(request):
     return render(request, 'services.html')
 
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False  # Deactivate account until email is verified
+            otp = get_random_string(length=6, allowed_chars='0123456789')
+            user.otp = otp
+            user.save()
+
+            send_mail(
+                'Your OTP for Attachment Website',
+                f'Your OTP is: {otp}',
+                [user.email],
+                fail_silently=False,
+            )
+            request.session['email'] = user.email
+            messages.info(request, "An OTP has been sent to your email. Please verify your account.")
+            return redirect('verify_otp')
+    else:
+        form = CustomUserCreationForm()
+    return render(request,'registration/register.html', {'form': form})
+
+def verify_otp(request):
+    email = request.session.get('email')
+    if not email:
+        return redirect('register')
     
+    if request.method == 'POST':
+        input_otp = request.POST.get('otp')
+        try:
+            user = CustomUser.objects.get(email=email)
+            if user.otp == input_otp:
+                user.is_active = True
+                user.otp = ''
+                user.save()
+                messages.success(request, "Your account has been verified successfully!")
+                return redirect('login')
+            else:
+                messages.error(request, "Invalid OTP. Please try again.")
+        except CustomUser.DoesNotExist:
+            messages.error(request, "User not found. Please register again.")
+            return redirect('register')
+    return render(request, 'registration/verify_otp.html')
 
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
+            email = request.POST.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
+
+            try:
+                user_obj = get_user_model().objects.get(email=email)
+                user = authenticate(request, username=user_obj.username, password=password)
+            except get_user_model().DoesNotExist:
+                user = None
+
             if user is not None:
+                if not user.is_active:
+                    messages.error(request, "Account not verified. Please check your email for the OTP.")
+                    return redirect('login')
+                
                 login(request, user)
-                messages.success(request, f'Welcome back, {username}!')
+                messages.success(request, f"Welcome back, {user.username}!")
 
                 role = user.role
                 
@@ -98,7 +154,7 @@ def login_view(request):
                 else:
                     return redirect('home')
             else:
-                messages.error(request, "Invalid username or password.")
+                messages.error(request, "Invalid credentials.")
 
         else:
             messages.error(request, "Invalid form submission.")
@@ -113,18 +169,6 @@ def logout_view(request):
     return redirect('home')
 
 
-def register_view(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-
-        if form.is_valid():
-            user = form.save()
-           
-            messages.success(request, "Account created successfully. Please log in.")
-            return redirect('login')
-    else:
-        form = CustomUserCreationForm()
-    return render(request,'registration/register.html', {'form': form})
 
 def contact(request):
     if request.method == 'POST':
