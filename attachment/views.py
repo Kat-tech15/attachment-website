@@ -119,15 +119,7 @@ def register_view(request):
 
         if form.is_valid():
             user = form.save()
-            if user.role == 'company':
-                Company.objects.create(
-                    user=user,
-                    name=user.username,
-                    email=user.email,
-                    phone_number='',
-                    location=''
-                )
-
+           
             messages.success(request, "Account created successfully. Please log in.")
             return redirect('login')
     else:
