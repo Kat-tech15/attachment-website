@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🔔 Your Notifications</h2>
+    
+    {% if notifications %}
+        <ul class="list-group">
+        {% for notification in notifications %}
+            <li class="list-group-item {% if not notification.is_read %}bg-light{% endif %}">
+                <a href="{{ notification.url }}">{{ notification.message }}</a>
+                <small class="text-muted float-end">{{ notification.created_at|timesince }} ago</small>
+            </li>
+            <a href="{% url 'mark_all_notifications_read' %}" class="btn btn-sm btn-secondary mb-3">Mark all as read</a>
+
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no notifications.</p>
+    {% endif %}
+</div>
+{% endblock %}

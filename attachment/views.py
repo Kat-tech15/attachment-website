@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from django.db.models import Count,Avg
 from django.core.mail import EmailMessage
-import tempfile
+from django.urls import reverse
 from django.db.models.signals import post_save
 from django.views.decorators.http import require_POST
 from django.dispatch import receiver
@@ -19,7 +19,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
-from django.http import HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseForbidden, HttpResponse,HttpResponseRedirect
 from .models import CustomUser, Attachee, Company, House, ApplicationVisit, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials, Feedback
 from .forms import CustomUserCreationForm,HouseForm,FeedbackForm
 from django.contrib import messages
@@ -842,3 +842,29 @@ def approve_booking(request, booking_id):
         return redirect('view_booked_rooms')
 
     return redirect('view_booked_rooms')
+
+@staff_member_required
+def post_announcement(request):
+    if request.method == 'POST':
+        text = request.POST.get('announcement')
+
+        for user in CustomUser.objects.exclude(is_superuser):
+           Notification.objects.create(
+               recipient=user,
+               message=f"New Announcement: {text}",
+               url='/dashboard/'
+           )
+        messages.success(request, "Announcement sent successfully.")
+        return redirect('admin_dashboard')
+
+@login_required
+def notification_list(request):
+    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+    return render(request, 'notification_list.html', {'notifications': notifications})
+
+@login_required
+def mark_all_notifications_as_read(request):
+    notifications = Notification.objects.filter(recipient=request.user, is_read=False)
+    notifications.update(is_read=True)
+    messages.success(request, "All notifications marked as read.")
+    return HttpResponseRedirect(reverse('notification_list'))

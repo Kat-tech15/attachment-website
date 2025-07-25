@@ -53,7 +53,13 @@
   <br>
   <a href="{% url 'feedback_list' %}" class="btn">View all feedback</a>
 </div>
-  </div>
+<h4>Send Notifications</h4>
+<form method="post">
+  {% csrf_token %}
+  <textarea name="announcement" rows="3" required></textarea>
+  <button type="submit">Send to All Users</button>
+</form>
+</div>
 </div>
 
 <script>

@@ -171,9 +171,13 @@ class Testimonials(models.Model):
 User = get_user_model()
 
 class Notification(models.Model):
-    recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, 
+        related_name='notifications'
+        )
     message = models.TextField()
-    link = models.URLField(blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -191,3 +195,9 @@ class Feedback(models.Model):
     def __str__(self):
         user_identity = self.user.username if self.user else (self.name or "Anonymus")
         return f"Feeback by {user_identity} on {self.submitted_at.strftime('%Y-%m-%d')}"
+    
+class Announcement(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
