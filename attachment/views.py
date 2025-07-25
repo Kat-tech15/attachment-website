@@ -85,6 +85,7 @@ def register_view(request):
             send_mail(
                 'Your OTP for Attachment Website',
                 f'Your OTP is: {otp}',
+                'no-reply@example.com',
                 [user.email],
                 fail_silently=False,
             )
