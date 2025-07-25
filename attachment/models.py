@@ -15,7 +15,8 @@ class CustomUser(AbstractUser):
         ('tenant', 'Tenant')
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-    email_verified = models.BooleanField(default=False)
+    email = models.EmailField(unique=True)
+    email_verified = models.BooleanField(default=False, )
     otp = models.CharField(max_length=6, blank=True, null=True)
 
     def has_priviledge(self, allowed_roles):
