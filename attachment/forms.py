@@ -1,6 +1,7 @@
 from django import forms
+from django.contrib.auth import authenticate
 from .models import House, AttachmentPost, CustomUser, Booking, HouseReview, CompanyReview, Feedback
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from datetime import date
 
@@ -25,7 +26,21 @@ class CustomUserCreationForm(UserCreationForm):
         for field in self.fields:
             self.fields[field].help_text = None 
 
+class EmailLoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+        user = CustomUser.objects.filter(email=email).first()
+
+        if user and user.email_verified:
+            authenticated_user = authenticate(username=user.username, password=password)
+            if authenticated_user:
+                self.user = authenticated_user
+                return self.cleaned_data
+        raise forms.ValidationError("Invalid email or password, or email not verified.")
 class HouseForm(forms.ModelForm):
     class Meta:
         model = House

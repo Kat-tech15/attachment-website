@@ -33,7 +33,7 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost,attachment-website-production.up.railway.app").split(",")
 
-
+CSRF_TRUSTED_ORIGINS = ['https://attachment-website-production.up.railway.app']
 # Application definition
 
 INSTALLED_APPS = [
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -91,17 +92,24 @@ LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/dashboard/'  
 
-SITE_ID = 2
+SITE_ID = 1
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        engine='django.db.backends.mysql'
-    )
+    'default': {    
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get("PG_NAME"),
+        'USER': 'postgres',
+        'PASSWORD': os.environ.get("PG_PWD"),
+        'HOST': 'caboose.proxy.rlwy.net',
+        'PORT': '18141',
+ 
+    }
 }
+
+
 
 SILENCED_SYSTEM_CHECKS = ["models.W036"]
 
@@ -144,6 +152,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+# whitenoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
