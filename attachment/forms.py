@@ -36,10 +36,11 @@ class EmailLoginForm(forms.Form):
         password = cleaned_data.get('password')
         
         if not email or not password:
-            try:
-                user = CustomUser.objects.get(email=email)
-            except CustomUser.DoesNotExist:
-                raise forms.ValidationError("Invalid email or password, or email not verified.")
+            raise forms.ValidationError("Email and password are required.")
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            raise forms.ValidationError("Invalid email or password, or email not verified.")
 
         if not user.email_verified:
             raise forms.ValidationError("Email not verified. Please check your email for the OTP.")
@@ -51,6 +52,7 @@ class EmailLoginForm(forms.Form):
         
         self.user = authenticated_user
         return self.cleaned_data
+    
     def get_user(self):
         return getattr(self, 'user', None)
 class HouseForm(forms.ModelForm):
