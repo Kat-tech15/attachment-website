@@ -47,7 +47,18 @@ header {
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  margin-left: auto;
+  cursor: pointer;
+}
+#main-nav.collapsed {
+  display: none;
+}
 header h1 {
   margin: 0;
   font-size: 20px;
@@ -276,7 +287,18 @@ nav a:hover {
     align-items: flex-start;
     padding: 10px;
   }
-
+  .menu-toggle {
+    display: block;
+  }
+  nav {
+    width: 100%;
+    display: none;
+  }
+  .nav ul.nav-list {
+    flex-direction: column;
+    width: 100%;
+    background-color: #2c3e50;
+  }
   .nav-list {
     flex-direction: column;
     width: 100%;
@@ -310,38 +332,39 @@ nav a:hover {
 </head>
 <body>
     <header>
-        <h1>Attachment Portal</h1>
-       <nav>
-    {% if user.is_authenticated %}
-    <ul class="nav-list">
-         <li><a href="{% url 'home' %}"><i class="fa fa-home"></i> Home</a></li>
-        <li><a href="#about"><i class="fa fa-info-circle"></i> About</a></li>
-
-
-        <li class="dropdown">
-            <a href="#"><i class="fa fa-th-large"></i> Dashboards</a>
-            <ul class="dropdown-content">
-              <li><a href="{% url 'attachee_dashboard' %}">Attachee Dashboard</a></li>
-              <li><a href="{% url 'company_dashboard' %}">Company Dashboard</a></li>
-              <li><a href="{% url 'tenants_dashboard' %}">Tenants Dashboard</a></li>
-            </ul>
-        </li>
-
-            
-        <li><a href="#services"><i class="fa fa-cogs"></i> Services</a></li>
-        <li><a href="#feedback"><i class="fa fa-envelope"></i> Feedback</a></li>
-        <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
-    </ul>
-    {% else %}
-    <ul class="nav-list">
-        <li><a href="{% url 'home' %}"><i class="fa fa-home"></i> Home</a></li>
-        <li><a href="{% url 'login' %}"><i class="fa fa-sign-in-alt"></i> Login</a></li>
-        <li><a href="{% url 'register' %}"><i class="fa fa-user-plus"></i> Register</a></li>
-    </ul>
-    {% endif %}
-</nav>
+      <h1>Attachment Portal</h1>
+      <button class="menu-toggle" onclick="toggleMenu()">
+        <i class="fa fa-bars"></i>
+      </button>
+      <nav id="main-nav" class="collapsed">
+      {% if user.is_authenticated %}
+      <ul class="nav-list">
+          <li><a href="{% url 'home' %}"><i class="fa fa-home"></i> Home</a></li>
+          <li><a href="#about"><i class="fa fa-info-circle"></i> About</a></li>
+          <li class="dropdown">
+              <a href="#"><i class="fa fa-th-large"></i> Dashboards</a>
+              <ul class="dropdown-content">
+                <li><a href="{% url 'attachee_dashboard' %}">Attachee Dashboard</a></li>
+                <li><a href="{% url 'company_dashboard' %}">Company Dashboard</a></li>
+                <li><a href="{% url 'tenants_dashboard' %}">Tenants Dashboard</a></li>
+              </ul>
+          </li> 
+          <li><a href="#services"><i class="fa fa-cogs"></i> Services</a></li>
+          <li><a href="#feedback"><i class="fa fa-envelope"></i> Feedback</a></li>
+          <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+      {% else %}
+      <ul class="nav-list">
+          <li><a href="{% url 'home' %}"><i class="fa fa-home"></i> Home</a></li>
+          <li><a href="{% url 'login' %}"><i class="fa fa-sign-in-alt"></i> Login</a></li>
+          <li><a href="{% url 'register' %}"><i class="fa fa-user-plus"></i> Register</a></li>
+      </ul>
+      {% endif %}
+      </nav>
+          <div class="back-to-top">
+              <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+          </div>
     </header>
-
     <div class="container">
         {% block content %}
         <div class="notifications-dropdown" id="notificationsDropdown">
@@ -404,10 +427,17 @@ nav a:hover {
     </div>
 </footer>
 <script>
-    function toggleDropdown(){
-        var dropdown = document.getElementById('dropdownMenu');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    // Toggle Menu Logic
+    function toggleMenu() {
+      const nav = document.getElementById('main-nav');
+      nav.classList.toggle('collapsed');
+      if (nav.classList.contains('collapsed')) {
+        nav.style.display = 'none';
+      } else {
+        nav.style.display = 'flex';
+      }
     }
+    
 
     document.addEventListener('click', function(e) {
         var target = e.target;
