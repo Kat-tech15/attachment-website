@@ -20,6 +20,7 @@ urlpatterns = [
     path('dashboard/tenants/', views.tenants_dashboard, name='tenants_dashboard'),
     path('register/', views.register_view, name='register'),
     path('verify_otp/', views.verify_otp, name='verify_otp'),
+    path('resend_otp/', views.resend_otp, name='resend_otp'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', views.dashboard_router, name='dashboard'),

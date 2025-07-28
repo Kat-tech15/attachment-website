@@ -26,6 +26,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
+import random
 from .forms import AttachmentPostForm, HouseForm,BookingForm, HouseReviewForm, CompanyReviewForm
 
 # Create your views here.
@@ -105,20 +106,72 @@ def verify_otp(request):
         input_otp = request.POST.get('otp')
         try:
             user = CustomUser.objects.get(email=email)
+
+            # Check if OTP is expired
+            if user.is_otp_expired():
+                messages.error(request, "OTP has expired. Please request a new one.")
+                return redirect('resend_otp')
+            
             if user.otp == input_otp:
                 user.is_active = True
+                user.email_verified = True
                 user.otp = ''
+                user.otp_created_at = None
                 user.save()
                 messages.success(request, "Your account has been verified successfully!")
                 return redirect('login')
             else:
                 messages.error(request, "Invalid OTP. Please try again.")
+
         except CustomUser.DoesNotExist:
             messages.error(request, "User not found. Please register again.")
             return redirect('register')
+        
     return render(request, 'registration/verify_otp.html')
 
+def resend_otp(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        try:
+            user = CustomUser.objects.get(email=email)
+
+            if user.email_verified:
+                messages.info(request, "Your email is already verified.")   
+                return redirect('login')
+            
+            # Check if resend is allowed
+            if not user.can_resend_otp():
+                messages.warning(request, "please wait before requesting for a new OTP.")
+                return redirect('verify_otp')
+            
+            # Generate a  new OTP
+            otp = f"{random.randint(100000, 999999)}" 
+            user.otp = otp
+            user.otp_created_at = timezone.now()
+            user.otp_last_sent = timezone.now()
+            user.save()
+
+            send_mail(
+                'Your OTP for Attachment Website',
+                f'Your OTP is: {otp}',
+                'norepl@example.com',
+                [user.email],
+                fail_silently=False,
+            )
+            request.session['email'] = user.email
+            messages.success(request, "An OTP has been sent to your email. Please verify your account.")
+            return redirect('verify_otp')
+        
+        except CustomUser.DoesNotExist:
+            messages.error(request, "User not found. Please register again.")
+            return redirect('register')
+        
+    return render(request, 'registration/resend_otp.html')    
+
+
 def login_view(request):
+
     if request.method == 'POST':
         form = EmailLoginForm(request.POST)
         if form.is_valid():

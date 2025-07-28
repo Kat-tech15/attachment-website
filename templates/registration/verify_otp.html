@@ -5,11 +5,27 @@
 <div>
   <h4>Email Verification</h4>
   <p>Enter the OTP sent to your email</p>
-  <form method="post">
+
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif%}
+
+  <form method="post" action="{% url 'verify_otp' %}">
     {% csrf_token %}
     <input type="text" name="otp" placeholder="Enter OTP" class="otp-input" required>
     <button type="submit" class="verify-btn">Verify</button>
   </form>
+  <p id="timer-text">resend OTP in <span id="countdown">60</span> seconds.</p>
+
+    <form action="{% url 'resend_otp' %}" method="post" id="resend-form">
+      {% csrf_token %}
+      <input type="hidden" name="email" value="{{ request.session.email }}">
+      <button type="submit" class="verify-btn" id="resend-btn" disabled>Resend OTP</button>
+    </form>
 </div>
 <style>
   .form-container {
@@ -22,14 +38,6 @@
     text-align: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-  .form-container h4 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  .form-container p {
-    margin-bottom: 20px;
-    color: #555;
-  }
   .otp-input {
     width: 100%;
     padding: 10px;
@@ -39,7 +47,6 @@
     font-size: 1.1rem;
     box-sizing: border-box;
     margin-bottom: 20px;
-    transition: border-color 0.3s;
     letter-spacing: 5px;
     text-align: center;
   }
@@ -53,10 +60,32 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
   } 
   .verify-btn:hover {
     background-color: #0056b3;
   }
+  .verify-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 </style>
+<script>
+  let secondsLeft = 60;
+  const countdown = document.getElementById("countdown");
+  const resendBtn = document.getElementById("resend-btn");
+  const timerText = document.getElementById("timer-text");
 
+  const timer = setInterval(() => {
+    secondsLeft -= 1;
+    countdown.textContent = secondsLeft;
+
+    if (secondsLeft <= 0){
+      clearInterval(timer);
+      countdown.textContent = '0';
+      timerText.textContent = "Didn't receive OTP?"
+      resendBtn.disabled = False
+    }
+  }, 1000);
+</script>
 {% endblock %}

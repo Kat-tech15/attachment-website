@@ -17,6 +17,8 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False, )
     otp = models.CharField(max_length=6, blank=True, null=True)
+    otp_created_at = models.DateTimeField(null=True, blank=True)
+    otp_last_sent = models.DateTimeField(null=True, blank=True)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -28,10 +30,18 @@ class CustomUser(AbstractUser):
         return self.role in allowed_roles or self.is_superuser or self.is_staff
 
     def generate_otp(self):
-        otp = f"{random.randint(100000, 999999)}"
-        self.otp = otp
+        self.otp = f"{random.randint(100000, 999999)}"
+        self.otp_created_at = timezone.now()
+        self.otp_last_sent = timezone.now()
         self.save()
-        return otp
+        return self.otp
+    
+    def can_resend_otp(self):
+        return not self.otp_last_sent or (timezone.now() - self.otp_last_sent).total_seconds() > 60
+
+    def is_otp_expired(self):
+        return not self.otp_created_at or (timezone.now() - self.otp_created_at).total_seconds() > 120
+
 
 class Attachee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
