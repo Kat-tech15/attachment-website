@@ -120,7 +120,7 @@ def verify_otp(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = EmailLoginForm(request, data=request.POST)
+        form = EmailLoginForm(request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
