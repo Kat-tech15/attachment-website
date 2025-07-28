@@ -21,7 +21,7 @@ from django.contrib.auth.forms  import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse,HttpResponseRedirect
 from .models import CustomUser, Attachee, Company, House, ApplicationVisit, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials, Feedback
-from .forms import CustomUserCreationForm,HouseForm,FeedbackForm
+from .forms import CustomUserCreationForm,HouseForm,FeedbackForm,EmailLoginForm
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -120,47 +120,29 @@ def verify_otp(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = EmailLoginForm(request, data=request.POST)
         if form.is_valid():
-            email = request.POST.get('username')
-            password = form.cleaned_data.get('password')
+            user = form.get_user()
+            login(request, user)
 
-            try:
-                user_obj = get_user_model().objects.get(email=email)
-                user = authenticate(request, username=user_obj.username, password=password)
-            except get_user_model().DoesNotExist:
-                user = None
-
-            if user is not None:
-                if not user.is_active:
-                    messages.error(request, "Account not verified. Please check your email for the OTP.")
-                    return redirect('home')
+            role = user.role
                 
-                login(request, user)
-                messages.success(request, f"Welcome back, {user.username}!")
+            if user.is_superuser or user.is_staff:
+                return redirect('admin_dashboard')
 
-                role = user.role
-                
-                if user.is_superuser or user.is_staff:
-                    return redirect('admin_dashboard')
+            elif role == 'attachee':
+                return redirect('attachee_dashboard')       
 
-                elif role == 'attachee':
-                    return redirect('attachee_dashboard')       
+            elif role == 'company':
+                return redirect('company_dashboard')
 
-                elif role == 'company':
-                    return redirect('company_dashboard')
-
-                elif role == 'tenant':
-                    return redirect('tenants_dashboard')
-                else:
-                    return redirect('home')
+            elif role == 'tenant':
+                return redirect('tenants_dashboard')
             else:
-                messages.error(request, "Invalid credentials.")
+                return redirect('home')
 
-        else:
-            messages.error(request, "Invalid form submission.")
     else:
-        form = AuthenticationForm()
+        form = EmailLoginForm()
     return render(request, 'registration/login.html', {'form': form}) 
     
       

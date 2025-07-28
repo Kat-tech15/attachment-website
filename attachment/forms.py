@@ -31,16 +31,28 @@ class EmailLoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean(self):
-        email = self.cleaned_data.get('email')
-        password = self.cleaned_data.get('password')
-        user = CustomUser.objects.filter(email=email).first()
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        password = cleaned_data.get('password')
+        
+        if not email or not password:
+            try:
+                user = CustomUser.objects.get(email=email)
+            except CustomUser.DoesNotExist:
+                raise forms.ValidationError("Invalid email or password, or email not verified.")
 
-        if user and user.email_verified:
-            authenticated_user = authenticate(username=user.username, password=password)
-            if authenticated_user:
-                self.user = authenticated_user
-                return self.cleaned_data
-        raise forms.ValidationError("Invalid email or password, or email not verified.")
+        if not user.email_verified:
+            raise forms.ValidationError("Email not verified. Please check your email for the OTP.")
+        
+            
+        authenticated_user = authenticate(username=user.username, password=password)
+        if authenticated_user is None:
+            raise forms.ValidationError("Invalid email or password, or email not verified.")
+        
+        self.user = authenticated_user
+        return self.cleaned_data
+    def get_user(self):
+        return getattr(self, 'user', None)
 class HouseForm(forms.ModelForm):
     class Meta:
         model = House
