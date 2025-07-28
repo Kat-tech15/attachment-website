@@ -17,6 +17,12 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False, )
     otp = models.CharField(max_length=6, blank=True, null=True)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return self.email
 
     def has_priviledge(self, allowed_roles):
         return self.role in allowed_roles or self.is_superuser or self.is_staff
