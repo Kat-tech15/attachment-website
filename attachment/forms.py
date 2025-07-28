@@ -37,20 +37,17 @@ class EmailLoginForm(forms.Form):
         
         if not email or not password:
             raise forms.ValidationError("Email and password are required.")
-        try:
-            user = CustomUser.objects.get(email=email)
-        except CustomUser.DoesNotExist:
-            raise forms.ValidationError("Invalid email or password, or email not verified.")
-
+        
+        user = authenticate(username=email, password=password)
+        if user is None:
+            raise forms.ValidationError("Invalid email or password.")
+        
         if not user.email_verified:
             raise forms.ValidationError("Email not verified. Please check your email for the OTP.")
         
             
-        authenticated_user = authenticate(username=user.username, password=password)
-        if authenticated_user is None:
-            raise forms.ValidationError("Invalid email or password, or email not verified.")
-        
-        self.user = authenticated_user
+       
+        self.user = user
         return self.cleaned_data
     
     def get_user(self):
