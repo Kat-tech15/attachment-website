@@ -2,11 +2,61 @@
 {% block title %}Verify OTP{% endblock %}
 
 {% block content %}
-<h4>Email Verification</h4>
-<p>Enter the OTP sent to your email</p>
-<form method="post">
-  {% csrf_token %}
-  <input type="text" name="otp" placeholder="Enter OTP" required>
-  <button type="submit">Verify</button>
-</form>
+<div>
+  <h4>Email Verification</h4>
+  <p>Enter the OTP sent to your email</p>
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="otp" placeholder="Enter OTP" class="otp-input" required>
+    <button type="submit" class="verify-btn">Verify</button>
+  </form>
+</div>
+<style>
+  .form-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .form-container h4 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .form-container p {
+    margin-bottom: 20px;
+    color: #555;
+  }
+  .otp-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    transition: border-color 0.3s;
+    letter-spacing: 5px;
+    text-align: center;
+  }
+  .verify-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  } 
+  .verify-btn:hover {
+    background-color: #0056b3;
+  }
+</style>
+
 {% endblock %}
