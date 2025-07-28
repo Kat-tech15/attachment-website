@@ -134,7 +134,7 @@ def login_view(request):
             if user is not None:
                 if not user.is_active:
                     messages.error(request, "Account not verified. Please check your email for the OTP.")
-                    return redirect('login')
+                    return redirect('verify_otp')
                 
                 login(request, user)
                 messages.success(request, f"Welcome back, {user.username}!")
