@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils import timezone
+from datetime import timedelta
 import random
 
 
@@ -26,7 +27,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
-    def has_priviledge(self, allowed_roles):
+    def has_privilege(self, allowed_roles):
         return self.role in allowed_roles or self.is_superuser or self.is_staff
 
     def generate_otp(self):
@@ -36,13 +37,11 @@ class CustomUser(AbstractUser):
         self.save()
         return self.otp
     
-    def can_resend_otp(self):
-        return not self.otp_last_sent or (timezone.now() - self.otp_last_sent).total_seconds() > 60
-
     def is_otp_expired(self):
-        return not self.otp_created_at or (timezone.now() - self.otp_created_at).total_seconds() > 120
-
-
+        return not self.otp_created_at or timezone.now() > self.otp_created_at + timedelta(minutes=2)
+    
+    def can_resend_otp(self):
+        return not self.otp_last_sent or timezone.now() > self.otp_last_sent + timedelta(seconds=60)
 class Attachee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length= 255)

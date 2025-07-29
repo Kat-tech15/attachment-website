@@ -153,9 +153,9 @@ def resend_otp(request):
             user.save()
 
             send_mail(
-                'Your OTP for Attachment Website',
-                f'Your OTP is: {otp}',
-                'norepl@example.com',
+                'Verify Your Account - OTP',
+                f'Hello {user.username},\n\nYour OTP is: {otp}\n\nIt expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
+                'noreply@example.com',
                 [user.email],
                 fail_silently=False,
             )
@@ -229,7 +229,7 @@ def contact(request):
 
 
 def visited_posts(request):
-    if not request.user.has_priviledge(['attachee']):
+    if not request.user.has_privilege(['attachee']):
         return HttpResponseForbidden()
     
     attachee = request.user.attachee
@@ -242,7 +242,7 @@ def attachee_list(request):
 
 @login_required
 def my_bookings(request):
-    if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
+    if not request.user.has_privilege(['attachee', 'tenant']) and not request.user.is_superuser:
         return HttpResponseForbidden()
     user = request.user
     today = timezone.now().date()
@@ -267,7 +267,7 @@ def my_bookings(request):
 # Tenant's Views 
 @login_required
 def tenant_house_bookings(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         HttpResponseForbidden()
     
     if request.user.is_superuser:
@@ -291,7 +291,7 @@ def tenant_house_bookings(request):
 
 @login_required
 def all_houses(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
 
     houses = House.objects.all().prefetch_related('tenant')
@@ -314,7 +314,7 @@ def create_room(sender, instance, created, **kwargs):
 
 @login_required
 def book_room(request, room_id):
-    if not request.user.has_priviledge(['tenant','attachee']):
+    if not request.user.has_privilege(['tenant','attachee']):
         return HttpResponseForbidden()
     
     
@@ -332,7 +332,7 @@ def book_room(request, room_id):
     phone_number = "N/A"
 
     
-    if request.user.has_priviledge(['attachee']) and not request.user.is_superuser:
+    if request.user.has_privilege(['attachee']) and not request.user.is_superuser:
         attachee = request.user.attachee
         full_name = attachee.full_name
         phone_number = attachee.phone_number
@@ -368,7 +368,7 @@ def house_detail(request, house_id):
 
 @login_required
 def all_attachment_posts(request):
-    if not request.user.has_priviledge(['company']):
+    if not request.user.has_privilege(['company']):
         return HttpResponseForbidden()
     
     query = request.GET.get('q')
@@ -410,7 +410,7 @@ def all_attachment_posts(request):
 
 @login_required
 def post_house(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
 
     if request.method == 'POST':
@@ -440,7 +440,7 @@ def post_house(request):
 
 @login_required
 def my_houses(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
 
     houses = House.objects.filter(tenant__user=request.user)  
@@ -526,7 +526,7 @@ def view_houses(request):
 
 @login_required 
 def cancel_booking(request, booking_id):
-    if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
+    if not request.user.has_privilege(['attachee', 'tenant']) and not request.user.is_superuser:
         return HttpResponseForbidden()
 
     booking = get_object_or_404(Booking, id=booking_id)
@@ -554,7 +554,7 @@ def cancel_booking(request, booking_id):
         messages.error(request, "Move-in date has passed. Cannot cancel.")
 
         #Redirect based on the roles
-    if request.user.has_priviledge(['attachee']):
+    if request.user.has_privilege(['attachee']):
         return redirect('my_bookings')
     else:
         return redirect('tenant_house_bookings')
@@ -584,7 +584,7 @@ def delete_booking(request, booking_id):
 
 @login_required
 def edit_booking(request, booking_id):
-    if not request.user.has_priviledge(['attachee','tenant']):
+    if not request.user.has_privilege(['attachee','tenant']):
         return HttpResponseForbidden()
     
     booking = get_object_or_404(Booking, id=booking_id)
@@ -632,7 +632,7 @@ def delete_past_bookings(request):
 
 @login_required
 def view_attachments(request):
-    if not request.user.has_priviledge(['attachee', 'company']):
+    if not request.user.has_privilege(['attachee', 'company']):
         return HttpResponseForbidden()
         
     return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
@@ -640,7 +640,7 @@ def view_attachments(request):
 # companys' Views 
 @login_required
 def post_attachment(request):
-    if not request.user.has_priviledge(['company']):
+    if not request.user.has_privilege(['company']):
         return HttpResponseForbidden()
 
     company, _ = Company.objects.get_or_create(
@@ -661,7 +661,7 @@ def post_attachment(request):
     return render(request, 'post_attachment.html', {'form': form})
 @login_required
 def my_attachment_posts(request):
-    if not request.user.has_priviledge(['company']):
+    if not request.user.has_privilege(['company']):
         return HttpResponseForbidden()
 
     my_attachment_posts = AttachmentPost.objects.filter(company__user=request.user)
@@ -883,7 +883,7 @@ def delete_feedback(request, feedback_id):
 
 @login_required
 def view_booked_rooms(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
     
     tenant = request.user.tenant
@@ -896,7 +896,7 @@ def view_booked_rooms(request):
 
 @login_required
 def approve_booking(request, booking_id):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
     
     booking = get_object_or_404(
