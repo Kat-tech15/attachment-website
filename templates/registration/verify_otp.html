@@ -2,74 +2,117 @@
 {% block title %}Verify OTP{% endblock %}
 
 {% block content %}
-<div>
-  <h4>Email Verification</h4>
-  <p>Enter the OTP sent to your email</p>
+<div class="otp-container">
+  <h2>Email Verification</h2>
+  <p>Enter the OTP sent to your email address</p>
 
-    {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <li class="{{ message.tags }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif%}
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 
   <form method="post" action="{% url 'verify_otp' %}">
     {% csrf_token %}
     <input type="text" name="otp" placeholder="Enter OTP" class="otp-input" required>
     <button type="submit" class="verify-btn">Verify</button>
   </form>
-  <p id="timer-text">resend OTP in <span id="countdown">60</span> seconds.</p>
 
-    <form action="{% url 'resend_otp' %}" method="post" id="resend-form">
-      {% csrf_token %}
-      <input type="hidden" name="email" value="{{ request.session.email }}">
-      <button type="submit" class="verify-btn" id="resend-btn" disabled>Resend OTP</button>
-    </form>
+  <p id="timer-text">Resend OTP in <span id="countdown">60</span> seconds.</p>
+
+  <form action="{% url 'resend_otp' %}" method="post" id="resend-form">
+    {% csrf_token %}
+    <input type="hidden" name="email" value="{{ request.session.email }}">
+    <button type="submit" class="verify-btn" id="resend-btn" disabled>Resend OTP</button>
+  </form>
 </div>
+
 <style>
-  .form-container {
-    max-width: 120px;
+  body {
+    background-color: #f0f2f5;
+  }
+
+  .otp-container {
+    max-width: 400px;
     margin: 80px auto;
     padding: 30px;
+    background: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background: #fff;
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.1);
     text-align: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
+
+  h2 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
   .otp-input {
+    padding: 12px;
+    margin: 10px 0;
     width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-    letter-spacing: 5px;
-    text-align: center;
+    border-radius: 6px;
   }
+
   .verify-btn {
-    width: 100%;
-    padding: 10px;
+    padding: 12px 20px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-weight: bold;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
     margin-top: 10px;
-  } 
+    transition: background-color 0.3s ease;
+  }
+
   .verify-btn:hover {
     background-color: #0056b3;
   }
+
   .verify-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
   }
+
+  .messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+  }
+
+  .messages li {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .messages .success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .messages .info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
 </style>
+
 <script>
   let secondsLeft = 60;
   const countdown = document.getElementById("countdown");

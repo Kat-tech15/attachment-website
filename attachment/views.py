@@ -81,12 +81,13 @@ def register_view(request):
             user.is_active = False  # Deactivate account until email is verified
             otp = get_random_string(length=6, allowed_chars='0123456789')
             user.otp = otp
+            user.otp_created_at = timezone.now()
             user.save()
 
             send_mail(
-                'Your OTP for Attachment Website',
-                f'Your OTP is: {otp}',
-                'no-reply@example.com',
+                'Verify Your Account - OTP',
+                f'Hello {user.username},\n\nYour OTP is: {otp}\n\nIt expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
+                'noreply@example.com',
                 [user.email],
                 fail_silently=False,
             )
@@ -111,27 +112,30 @@ def verify_otp(request):
             if user.email_verified:
                 messages.info(request, "Your email is already verified.")
                 return redirect('login')
-
+            
+            # Check if OTP is correct
+            if user.otp != input_otp:
+                messages.error(request, "Invalid OTP. Please try again.")
+                return redirect('verify_otp')
+            
             # Check if OTP is expired
             if user.is_otp_expired():
                 messages.error(request, "OTP has expired. Please request a new one.")
                 return redirect('resend_otp')
             
-            if user.otp == input_otp:
-                user.is_active = True
-                user.email_verified = True
-                user.otp = ''
-                user.otp_created_at = None
-                user.save()
+        # Activate user account
+            user.is_active = True
+            user.email_verified = True
+            user.otp = ''
+            user.otp_created_at = None
+            user.save()
                 
-                # Clear the session
-                request.session.pop('email', None)
+            # Clear the session
+            request.session.pop('email', None)
 
-                messages.success(request, "Your account has been verified successfully!")
-                return redirect('login')
-            else:
-                messages.error(request, "Invalid OTP. Please try again.")
-
+            messages.success(request, "Your account has been verified successfully!")
+            return redirect('login')
+        
         except CustomUser.DoesNotExist:
             messages.error(request, "User not found. Please register again.")
             return redirect('register')
