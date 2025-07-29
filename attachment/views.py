@@ -107,6 +107,11 @@ def verify_otp(request):
         try:
             user = CustomUser.objects.get(email=email)
 
+            # Check if user email is already verified
+            if user.email_verified:
+                messages.info(request, "Your email is already verified.")
+                return redirect('login')
+
             # Check if OTP is expired
             if user.is_otp_expired():
                 messages.error(request, "OTP has expired. Please request a new one.")
@@ -165,7 +170,7 @@ def resend_otp(request):
                 [user.email],
                 fail_silently=False,
             )
-            
+
             request.session['email'] = user.email
             messages.success(request, "An OTP has been sent to your email. Please verify your account.")
             return redirect('verify_otp')

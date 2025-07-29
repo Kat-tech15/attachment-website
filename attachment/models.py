@@ -38,10 +38,16 @@ class CustomUser(AbstractUser):
         return self.otp
     
     def is_otp_expired(self):
-        return not self.otp_created_at or timezone.now() > self.otp_created_at + timedelta(minutes=2)
-    
+        if self.otp_created_at is None:
+            return True
+        expiration_time = self.otp_created_at + timedelta(minutes=10)
+        return timezone.now() > expiration_time
+
     def can_resend_otp(self):
-        return not self.otp_last_sent or timezone.now() > self.otp_last_sent + timedelta(seconds=60)
+        if self.otp_last_sent is None:
+            return True
+        next_allowed_time = self.otp_last_sent + timedelta(minutes=1)
+        
 class Attachee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length= 255)
