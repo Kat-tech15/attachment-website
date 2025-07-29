@@ -178,6 +178,13 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
 
+            remember = request.POST.get('remember', None)
+            if remember:
+                request.session.set_expiry(604800)     # 7 days in seconds
+
+            else:
+                request.session.set_expiry(0)
+
             role = user.role
                 
             if user.is_superuser or user.is_staff:
