@@ -101,6 +101,8 @@ def register_view(request):
 def verify_otp(request):
     email = request.session.get('email')
     if not email:
+        request.session['email'] = user.email
+
         return redirect('register')
     
     if request.method == 'POST':

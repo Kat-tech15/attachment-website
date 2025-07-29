@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="otp-container">
-  <h2>Email Verification</h2>
+  <h5>Email Verification</h5>
   <p>Enter the OTP sent to your email address</p>
 
   {% if messages %}
@@ -14,9 +14,16 @@
   </ul>
   {% endif %}
 
-  <form method="post" action="{% url 'verify_otp' %}">
+  <form method="post" action="{% url 'verify_otp' %}" id="otp-form">
     {% csrf_token %}
-    <input type="text" name="otp" placeholder="Enter OTP" class="otp-input" required>
+    <div class="otp-input-group">
+      <input type="text" name="otp_digit1" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit2" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit3" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit4" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit5" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit6" maxlength="1" class="otp-digit" required>
+    </div>
     <button type="submit" class="verify-btn">Verify</button>
   </form>
 
@@ -44,9 +51,9 @@
     text-align: center;
   }
 
-  h2 {
+  h5 {
     margin-bottom: 10px;
-    color: #333;
+    color: #2ed344;
   }
 
   p {
@@ -55,12 +62,27 @@
     margin-bottom: 20px;
   }
 
-  .otp-input {
-    padding: 12px;
-    margin: 10px 0;
-    width: 100%;
+  .otp-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .otp-digit {
+    width: 40px;
+    height: 50px;
+    font-size: 24px;
+    text-align: center;
     border: 1px solid #ccc;
     border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .otp-digit:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
   }
 
   .verify-btn {
@@ -126,9 +148,25 @@
     if (secondsLeft <= 0){
       clearInterval(timer);
       countdown.textContent = '0';
-      timerText.textContent = "Didn't receive OTP?"
+      timerText.textContent = "Didn't receive OTP?";
       resendBtn.disabled = false;
     }
   }, 1000);
+
+  // Auto move to next input
+  const inputs = document.querySelectorAll(".otp-digit");
+  inputs.forEach((input, idx) => {
+    input.addEventListener("input", () => {
+      if (input.value.length === 1 && idx < inputs.length - 1) {
+        inputs[idx + 1].focus();
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && idx > 0) {
+        inputs[idx - 1].focus();
+      }
+    });
+  });
 </script>
 {% endblock %}
