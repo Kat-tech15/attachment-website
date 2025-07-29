@@ -84,8 +84,8 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
-        #main-nav.collapsed {
-            display: none;
+        #main-nav {
+            display: block;
         }
         .footer {
             background-color: #2c3e50;
@@ -159,8 +159,10 @@
                 display: none;
             }
             #main-nav {
+                display: none;
+            }
+            #main-nav:not(.collapsed) {
                 display: block;
-                width: 100%;
             }
             .nav-list {
                 flex-direction: column;
