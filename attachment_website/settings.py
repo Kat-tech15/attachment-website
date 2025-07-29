@@ -154,7 +154,7 @@ USE_I18N = True
 USE_TZ = True
 
 AUTHENTICATION_BACKENDS = [
-    'attachment.backends.EmailAuthBackend',
+    'attachment.backend.EmailAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 # Static files (CSS, JavaScript, Images)
