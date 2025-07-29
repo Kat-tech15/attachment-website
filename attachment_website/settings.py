@@ -92,13 +92,13 @@ LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/dashboard/'  
 
-SITE_ID = 1
+SITE_ID = 2
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-IS_RAILWAY = os.environ.get("RAILWAY_ENVIRONMENT") is not None or 'railway.app' in os.environ.get("ALLOWED_HOSTS", "")
+USE_RAILWAY= os.environ.get("USE_RAILWAY", "False") == "True"
 
-if IS_RAILWAY:
+if USE_RAILWAY:
     DATABASES = {
         'default': {    
             'ENGINE': 'django.db.backends.postgresql',

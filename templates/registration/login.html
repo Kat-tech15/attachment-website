@@ -110,7 +110,7 @@
                 {% if field.name == "password" %}
                     <div class="label-with-forgot">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        <a href="#" class="forgot-link">Forgot password?</a>
+                        <a href="{% url 'password_reset' %}" class="forgot-link">Forgot password?</a>
                     </div>
                     <input type="password" name="password" id="password-field" required>
                     <span class="toggle-password" onclick="togglePassword()">👁️</span>

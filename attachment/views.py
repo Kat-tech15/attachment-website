@@ -118,6 +118,10 @@ def verify_otp(request):
                 user.otp = ''
                 user.otp_created_at = None
                 user.save()
+                
+                # Clear the session
+                request.session.pop('email', None)
+
                 messages.success(request, "Your account has been verified successfully!")
                 return redirect('login')
             else:
@@ -130,8 +134,10 @@ def verify_otp(request):
     return render(request, 'registration/verify_otp.html')
 
 def resend_otp(request):
+    session_email = request.session.get('email')    
+
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email') or session_email
 
         try:
             user = CustomUser.objects.get(email=email)
@@ -159,6 +165,7 @@ def resend_otp(request):
                 [user.email],
                 fail_silently=False,
             )
+            
             request.session['email'] = user.email
             messages.success(request, "An OTP has been sent to your email. Please verify your account.")
             return redirect('verify_otp')
