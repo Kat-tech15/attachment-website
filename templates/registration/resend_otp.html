@@ -2,15 +2,75 @@
 {% block title %}Resend OTP{% endblock %}
 
 {% block content %}
+<h6>Resend Verification OTP</h6>
+
 <div class="container mt-5">
-    <h2>Resend Verification OTP</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <div>
-            <label for="email">Enter your email:</label>
-            <input type="email" name="email" required>
-        </div>
-        <button type="submit">Resend OTP</button>
-    </form>
+    <div class="otp-form-box">
+        <form method="POST">
+            {% csrf_token %}
+            <div>
+                <label for="email">Enter your email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <button type="submit">Resend OTP</button>
+        </form>
+    </div>
 </div>
+
+<style>
+h6 {
+    text-align: center;
+    margin-bottom: 0;
+    color: rgb(66, 209, 66);
+    margin-top: 40px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.otp-form-box {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.otp-form-box form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.otp-form-box form input[type="email"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.otp-form-box form button {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.otp-form-box form button:hover {
+    background-color: #0056b3;
+}
+</style>
 {% endblock %}

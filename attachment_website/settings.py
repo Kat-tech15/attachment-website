@@ -106,7 +106,7 @@ if IS_RAILWAY:
             'USER': 'postgres',
             'PASSWORD': os.environ.get("PG_PWD"),
             'HOST': os.environ.get("PG_HOST", 'caboose.proxy.rlwy.net'),
-            'PORT': os.environ.get("PG_PORT", '18141'),
+            'PORT': '18141',
     
         }
     }
