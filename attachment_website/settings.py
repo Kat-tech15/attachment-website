@@ -96,18 +96,28 @@ SITE_ID = 1
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+IS_RAILWAY = os.environ.get("RAILWAY_ENVIRONMENT") is not None or 'railway.app' in os.environ.get("ALLOWED_HOSTS", "")
 
-DATABASES = {
-    'default': {    
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("PG_NAME"),
-        'USER': 'postgres',
-        'PASSWORD': os.environ.get("PG_PWD"),
-        'HOST': 'caboose.proxy.rlwy.net',
-        'PORT': '18141',
- 
+if IS_RAILWAY:
+    DATABASES = {
+        'default': {    
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get("PG_NAME"),
+            'USER': 'postgres',
+            'PASSWORD': os.environ.get("PG_PWD"),
+            'HOST': os.environ.get("PG_HOST", 'caboose.proxy.rlwy.net'),
+            'PORT': os.environ.get("PG_PORT", '18141'),
+    
+        }
     }
-}
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 
