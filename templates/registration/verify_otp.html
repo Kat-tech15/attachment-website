@@ -2,11 +2,171 @@
 {% block title %}Verify OTP{% endblock %}
 
 {% block content %}
-<h4>Email Verification</h4>
-<p>Enter the OTP sent to your email</p>
-<form method="post">
-  {% csrf_token %}
-  <input type="text" name="otp" placeholder="Enter OTP" required>
-  <button type="submit">Verify</button>
-</form>
+<div class="otp-container">
+  <h5>Email Verification</h5>
+  <p>Enter the OTP sent to your email address</p>
+
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <form method="post" action="{% url 'verify_otp' %}" id="otp-form">
+    {% csrf_token %}
+    <div class="otp-input-group">
+      <input type="text" name="otp_digit1" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit2" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit3" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit4" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit5" maxlength="1" class="otp-digit" required>
+      <input type="text" name="otp_digit6" maxlength="1" class="otp-digit" required>
+    </div>
+    <button type="submit" class="verify-btn">Verify</button>
+  </form>
+
+  <p id="timer-text">Resend OTP in <span id="countdown">60</span> seconds.</p>
+
+  <form action="{% url 'resend_otp' %}" method="post" id="resend-form">
+    {% csrf_token %}
+    <input type="hidden" name="email" value="{{ request.session.email }}">
+    <button type="submit" class="verify-btn" id="resend-btn" disabled>Resend OTP</button>
+  </form>
+</div>
+
+<style>
+  body {
+    background-color: #f0f2f5;
+  }
+
+  .otp-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  h5 {
+    margin-bottom: 10px;
+    color: #2ed344;
+  }
+
+  p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .otp-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .otp-digit {
+    width: 40px;
+    height: 50px;
+    font-size: 24px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .otp-digit:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+  }
+
+  .verify-btn {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  .verify-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .verify-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+  }
+
+  .messages li {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .messages .success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .messages .info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+</style>
+
+<script>
+  let secondsLeft = 60;
+  const countdown = document.getElementById("countdown");
+  const resendBtn = document.getElementById("resend-btn");
+  const timerText = document.getElementById("timer-text");
+
+  const timer = setInterval(() => {
+    secondsLeft -= 1;
+    countdown.textContent = secondsLeft;
+
+    if (secondsLeft <= 0){
+      clearInterval(timer);
+      countdown.textContent = '0';
+      timerText.textContent = "Didn't receive OTP?";
+      resendBtn.disabled = false;
+    }
+  }, 1000);
+
+  // Auto move to next input
+  const inputs = document.querySelectorAll(".otp-digit");
+  inputs.forEach((input, idx) => {
+    input.addEventListener("input", () => {
+      if (input.value.length === 1 && idx < inputs.length - 1) {
+        inputs[idx + 1].focus();
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && idx > 0) {
+        inputs[idx - 1].focus();
+      }
+    });
+  });
+</script>
 {% endblock %}

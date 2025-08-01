@@ -16,6 +16,8 @@
                 <a href="{% url 'house_detail' house.id %}" class="btn">View Rooms</a>
             </div>
         </div>
+        {% empty %}
+        <p>No houses available.</p>
         {% endfor %}
     </div>
 </div>
@@ -43,7 +45,6 @@
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #007bff;
     padding: 16px;
     transition: transform 0.3s ease;
 }
@@ -85,6 +86,11 @@ h3 {
 
 .house-link {
     text-align: center;
+}
+p {
+    text-align: center;
+    font-style: italic;
+    color: #555;
 }
 </style>
 <hr>

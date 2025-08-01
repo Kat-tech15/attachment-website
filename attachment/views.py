@@ -21,11 +21,12 @@ from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate , get_user_model 
 from django.http import HttpResponseForbidden, HttpResponse,HttpResponseRedirect
 from .models import CustomUser, Attachee, Company, House, ApplicationVisit, Booking, AttachmentPost,Company,Contact, Room, Notification, Tenant,Testimonials, Feedback
-from .forms import CustomUserCreationForm,HouseForm,FeedbackForm
+from .forms import CustomUserCreationForm,HouseForm,FeedbackForm,EmailLoginForm
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
+import random
 from .forms import AttachmentPostForm, HouseForm,BookingForm, HouseReviewForm, CompanyReviewForm
 
 # Create your views here.
@@ -80,12 +81,13 @@ def register_view(request):
             user.is_active = False  # Deactivate account until email is verified
             otp = get_random_string(length=6, allowed_chars='0123456789')
             user.otp = otp
+            user.otp_created_at = timezone.now()
             user.save()
 
             send_mail(
-                'Your OTP for Attachment Website',
-                f'Your OTP is: {otp}',
-                'no-reply@example.com',
+                'Verify Your Account - OTP',
+                f'Hello {user.username},\n\nYour OTP is: {otp}\n\nIt expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
+                'noreply@example.com',
                 [user.email],
                 fail_silently=False,
             )
@@ -99,68 +101,126 @@ def register_view(request):
 def verify_otp(request):
     email = request.session.get('email')
     if not email:
+        request.session['email'] = user.email
+
         return redirect('register')
     
     if request.method == 'POST':
         input_otp = request.POST.get('otp')
         try:
             user = CustomUser.objects.get(email=email)
-            if user.otp == input_otp:
-                user.is_active = True
-                user.otp = ''
-                user.save()
-                messages.success(request, "Your account has been verified successfully!")
+
+            # Check if user email is already verified
+            if user.email_verified:
+                messages.info(request, "Your email is already verified.")
                 return redirect('login')
-            else:
+            
+            # Check if OTP is correct
+            if user.otp != input_otp:
                 messages.error(request, "Invalid OTP. Please try again.")
+                return redirect('verify_otp')
+            
+            # Check if OTP is expired
+            if user.is_otp_expired():
+                messages.error(request, "OTP has expired. Please request a new one.")
+                return redirect('resend_otp')
+            
+        # Activate user account
+            user.is_active = True
+            user.email_verified = True
+            user.otp = ''
+            user.otp_created_at = None
+            user.save()
+                
+            # Clear the session
+            request.session.pop('email', None)
+
+            messages.success(request, "Your account has been verified successfully!")
+            return redirect('login')
+        
         except CustomUser.DoesNotExist:
             messages.error(request, "User not found. Please register again.")
             return redirect('register')
+        
     return render(request, 'registration/verify_otp.html')
 
-def login_view(request):
+def resend_otp(request):
+    session_email = request.session.get('email')    
+
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        email = request.POST.get('email') or session_email
+
+        try:
+            user = CustomUser.objects.get(email=email)
+
+            if user.email_verified:
+                messages.info(request, "Your email is already verified.")   
+                return redirect('login')
+            
+            # Check if resend is allowed
+            if not user.can_resend_otp():
+                messages.warning(request, "please wait before requesting for a new OTP.")
+                return redirect('verify_otp')
+            
+            # Generate a  new OTP
+            otp = f"{random.randint(100000, 999999)}" 
+            user.otp = otp
+            user.otp_created_at = timezone.now()
+            user.otp_last_sent = timezone.now()
+            user.save()
+
+            send_mail(
+                'Verify Your Account - OTP',
+                f'Hello {user.username},\n\nYour OTP is: {otp}\n\nIt expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
+                'noreply@example.com',
+                [user.email],
+                fail_silently=False,
+            )
+
+            request.session['email'] = user.email
+            messages.success(request, "An OTP has been sent to your email. Please verify your account.")
+            return redirect('verify_otp')
+        
+        except CustomUser.DoesNotExist:
+            messages.error(request, "User not found. Please register again.")
+            return redirect('register')
+        
+    return render(request, 'registration/resend_otp.html')    
+
+
+def login_view(request):
+
+    if request.method == 'POST':
+        form = EmailLoginForm(request.POST)
         if form.is_valid():
-            email = request.POST.get('username')
-            password = form.cleaned_data.get('password')
+            user = form.get_user()
+            login(request, user)
 
-            try:
-                user_obj = get_user_model().objects.get(email=email)
-                user = authenticate(request, username=user_obj.username, password=password)
-            except get_user_model().DoesNotExist:
-                user = None
+            remember = request.POST.get('remember', None)
+            if remember:
+                request.session.set_expiry(604800)     # 7 days in seconds
 
-            if user is not None:
-                if not user.is_active:
-                    messages.error(request, "Account not verified. Please check your email for the OTP.")
-                    return redirect('login')
-                
-                login(request, user)
-                messages.success(request, f"Welcome back, {user.username}!")
-
-                role = user.role
-                
-                if user.is_superuser or user.is_staff:
-                    return redirect('admin_dashboard')
-
-                elif role == 'attachee':
-                    return redirect('attachee_dashboard')       
-
-                elif role == 'company':
-                    return redirect('company_dashboard')
-
-                elif role == 'tenant':
-                    return redirect('tenants_dashboard')
-                else:
-                    return redirect('home')
             else:
-                messages.error(request, "Invalid credentials.")
+                request.session.set_expiry(0)
 
-        else:
-            messages.error(request, "Invalid form submission.")
+            role = user.role
+                
+            if user.is_superuser or user.is_staff:
+                return redirect('admin_dashboard')
+
+            elif role == 'attachee':
+                return redirect('attachee_dashboard')       
+
+            elif role == 'company':
+                return redirect('company_dashboard')
+
+            elif role == 'tenant':
+                return redirect('tenants_dashboard')
+            else:
+                return redirect('home')
+
     else:
-        form = AuthenticationForm()
+        form = EmailLoginForm()
     return render(request, 'registration/login.html', {'form': form}) 
     
       
@@ -194,7 +254,7 @@ def contact(request):
 
 
 def visited_posts(request):
-    if not request.user.has_priviledge(['attachee']):
+    if not request.user.has_privilege(['attachee']):
         return HttpResponseForbidden()
     
     attachee = request.user.attachee
@@ -207,7 +267,7 @@ def attachee_list(request):
 
 @login_required
 def my_bookings(request):
-    if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
+    if not request.user.has_privilege(['attachee', 'tenant']) and not request.user.is_superuser:
         return HttpResponseForbidden()
     user = request.user
     today = timezone.now().date()
@@ -232,7 +292,7 @@ def my_bookings(request):
 # Tenant's Views 
 @login_required
 def tenant_house_bookings(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         HttpResponseForbidden()
     
     if request.user.is_superuser:
@@ -256,7 +316,7 @@ def tenant_house_bookings(request):
 
 @login_required
 def all_houses(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
 
     houses = House.objects.all().prefetch_related('tenant')
@@ -279,7 +339,7 @@ def create_room(sender, instance, created, **kwargs):
 
 @login_required
 def book_room(request, room_id):
-    if not request.user.has_priviledge(['tenant','attachee']):
+    if not request.user.has_privilege(['tenant','attachee']):
         return HttpResponseForbidden()
     
     
@@ -297,7 +357,7 @@ def book_room(request, room_id):
     phone_number = "N/A"
 
     
-    if request.user.has_priviledge(['attachee']) and not request.user.is_superuser:
+    if request.user.has_privilege(['attachee']) and not request.user.is_superuser:
         attachee = request.user.attachee
         full_name = attachee.full_name
         phone_number = attachee.phone_number
@@ -333,7 +393,7 @@ def house_detail(request, house_id):
 
 @login_required
 def all_attachment_posts(request):
-    if not request.user.has_priviledge(['company']):
+    if not request.user.has_privilege(['company']):
         return HttpResponseForbidden()
     
     query = request.GET.get('q')
@@ -375,7 +435,7 @@ def all_attachment_posts(request):
 
 @login_required
 def post_house(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
 
     if request.method == 'POST':
@@ -405,7 +465,7 @@ def post_house(request):
 
 @login_required
 def my_houses(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
 
     houses = House.objects.filter(tenant__user=request.user)  
@@ -491,7 +551,7 @@ def view_houses(request):
 
 @login_required 
 def cancel_booking(request, booking_id):
-    if not request.user.has_priviledge(['attachee', 'tenant']) and not request.user.is_superuser:
+    if not request.user.has_privilege(['attachee', 'tenant']) and not request.user.is_superuser:
         return HttpResponseForbidden()
 
     booking = get_object_or_404(Booking, id=booking_id)
@@ -519,7 +579,7 @@ def cancel_booking(request, booking_id):
         messages.error(request, "Move-in date has passed. Cannot cancel.")
 
         #Redirect based on the roles
-    if request.user.has_priviledge(['attachee']):
+    if request.user.has_privilege(['attachee']):
         return redirect('my_bookings')
     else:
         return redirect('tenant_house_bookings')
@@ -549,7 +609,7 @@ def delete_booking(request, booking_id):
 
 @login_required
 def edit_booking(request, booking_id):
-    if not request.user.has_priviledge(['attachee','tenant']):
+    if not request.user.has_privilege(['attachee','tenant']):
         return HttpResponseForbidden()
     
     booking = get_object_or_404(Booking, id=booking_id)
@@ -597,7 +657,7 @@ def delete_past_bookings(request):
 
 @login_required
 def view_attachments(request):
-    if not request.user.has_priviledge(['attachee', 'company']):
+    if not request.user.has_privilege(['attachee', 'company']):
         return HttpResponseForbidden()
         
     return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
@@ -605,7 +665,7 @@ def view_attachments(request):
 # companys' Views 
 @login_required
 def post_attachment(request):
-    if not request.user.has_priviledge(['company']):
+    if not request.user.has_privilege(['company']):
         return HttpResponseForbidden()
 
     company, _ = Company.objects.get_or_create(
@@ -626,7 +686,7 @@ def post_attachment(request):
     return render(request, 'post_attachment.html', {'form': form})
 @login_required
 def my_attachment_posts(request):
-    if not request.user.has_priviledge(['company']):
+    if not request.user.has_privilege(['company']):
         return HttpResponseForbidden()
 
     my_attachment_posts = AttachmentPost.objects.filter(company__user=request.user)
@@ -848,7 +908,7 @@ def delete_feedback(request, feedback_id):
 
 @login_required
 def view_booked_rooms(request):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
     
     tenant = request.user.tenant
@@ -861,7 +921,7 @@ def view_booked_rooms(request):
 
 @login_required
 def approve_booking(request, booking_id):
-    if not request.user.has_priviledge(['tenant']):
+    if not request.user.has_privilege(['tenant']):
         return HttpResponseForbidden()
     
     booking = get_object_or_404(

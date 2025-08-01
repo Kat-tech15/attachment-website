@@ -1,4 +1,3 @@
-<!-- templates/registration/login.html -->
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 
@@ -8,61 +7,149 @@
         background: white;
         padding: 30px;
         margin: 50px auto;
-        margin-top: 120px;
-        width: 100%;
         max-width: 400px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .auth-form h2 {
-        margin-bottom: 20px;
+    h5 {
         text-align: center;
+        color: #42d142;
+        margin-top: 20px;
     }
 
-    .auth-form form {
+    .auth-group {
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .auth-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .auth-group input {
+        width: 100%;
+        padding: 10px;
+        padding-right: 40px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .toggle-password {
+        position: absolute;
+        top: 36px;
+        right: 10px;
+        cursor: pointer;
+        color: #777;
+        font-size: 18px;
+        user-select: none;
+    }
+
+    .label-with-forgot {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
     }
 
-    .auth-form form p {
+    .label-with-forgot label {
+        margin: 0;
+    }
+
+    .forgot-link {
+        color: #007bff;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
         margin-bottom: 15px;
     }
 
-    .auth-form input {
-        padding: 10px;
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: 5px;
+    .remember-me input {
+        margin-right: 5px;
     }
 
     .auth-form button {
         padding: 10px;
-         background-color: #007bff;
+        background-color: #007bff;
         color: white;
         border: none;
         margin-top: 10px;
         cursor: pointer;
         border-radius: 5px;
         font-size: 16px;
+        width: 100%;
     }
 
     .auth-form button:hover {
-        background-color: #0056b3
+        background-color: #0056b3;
     }
 
-    .auth-form p {
+    .register-link {
         text-align: center;
+        margin-top: 15px;
     }
 </style>
 
+<h5>Login to your account</h5>
+
 <div class="auth-form">
-    <h2>Login</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        {% for field in form %}
+            <div class="auth-group">
+                {% if field.name == "password" %}
+                    <div class="label-with-forgot">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <a href="{% url 'password_reset' %}" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <input type="password" name="password" id="password-field" required>
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                {% else %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <div style="color: red; font-size: 13px;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="remember-me">
+            <input type="checkbox" name="remember" id="remember">
+            <label for="remember">Remember me</label>
+        </div>
+
         <button type="submit">Login</button>
     </form>
-    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+
+    <div class="register-link">
+        <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+    </div>
 </div>
+
+<script>
+    function togglePassword() {
+        const input = document.getElementById("password-field");
+        const icon = document.querySelector(".toggle-password");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.textContent = "🙈";
+        } else {
+            input.type = "password";
+            icon.textContent = "👁️";
+        }
+    }
+</script>
 {% endblock %}

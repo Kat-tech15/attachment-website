@@ -91,22 +91,32 @@ LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/dashboard/'  
 
-SITE_ID = 1
+SITE_ID = 2
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+USE_RAILWAY= os.environ.get("USE_RAILWAY", "False") == "True"
 
-DATABASES = {
-    'default': {    
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("PG_NAME"),
-        'USER': 'postgres',
-        'PASSWORD': os.environ.get("PG_PWD"),
-        'HOST': 'caboose.proxy.rlwy.net',
-        'PORT': '18141',
- 
+if USE_RAILWAY:
+    DATABASES = {
+        'default': {    
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get("PG_NAME"),
+            'USER': 'postgres',
+            'PASSWORD': os.environ.get("PG_PWD"),
+            'HOST': os.environ.get("PG_HOST", 'caboose.proxy.rlwy.net'),
+            'PORT': '18141',
+    
+        }
     }
-}
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 
@@ -142,7 +152,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+AUTHENTICATION_BACKENDS = [
+    'attachment.backend.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -167,5 +180,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = 'noreply@attachment-website-production.up.railway.app'
 
