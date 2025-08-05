@@ -227,7 +227,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.')
-    return render('registration/logout.html')
+    return render(request, 'registration/logout.html')
 
 
 
