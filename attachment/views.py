@@ -885,7 +885,7 @@ def submit_feedback(request):
                 feedback.name = request.user.get_full_name() or request.user.username
                 feedback.email = request.user.email
             feedback.save()
-            return redirect('contact')
+            return redirect('feedback')
             messages.success(request, "Thank you for your feedback!")
 
     else:
