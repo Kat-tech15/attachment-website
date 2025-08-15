@@ -6,9 +6,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
 from notifications.signals import notify
 from django.template.loader import render_to_string
-from xhtml2pdf import pisa
 from django.db.models import Count,Avg
 from django.core.mail import EmailMessage
+from django.conf import settings
 from django.urls import reverse
 from django.db.models.signals import post_save
 from django.views.decorators.http import require_POST
@@ -87,7 +87,7 @@ def register_view(request):
             send_mail(
                 'Verify Your Account - OTP',
                 f'Hello {user.username},\n\nYour OTP is: {otp}\n\nIt expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
-                'noreply@example.com',
+                settings.EMAIL_HOST_USER,
                 [user.email],
                 fail_silently=False,
             )
