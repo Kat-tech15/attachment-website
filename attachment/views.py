@@ -80,10 +80,11 @@ def register_view(request):
             user = form.save(commit=False)
             user.is_active = False  # Deactivate account until email is verified
             otp = get_random_string(length=6, allowed_chars='0123456789')
-            user.otp = otp
+            user.otp = str(otp)
             user.otp_created_at = timezone.now()
             user.save()
 
+            # Send  OTP email
             send_mail(
                 'Verify Your Account - OTP',
                 f'Hello {user.username},\n\nYour OTP is: {otp}\n\nIt expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
@@ -101,22 +102,34 @@ def register_view(request):
 def verify_otp(request):
     email = request.session.get('email')
     if not email:
-        request.session['email'] = user.email
-
+        messages.error(request, "Session expired. Please register again. ")
         return redirect('register')
     
     if request.method == 'POST':
-        input_otp = request.POST.get('otp')
+        otp_digits = [
+            request.POST.get("otp_digit1", ""),
+            request.POST.get("otp_digit2", ""),
+            request.POST.get("otp_digit3", ""),
+            request.POST.get("otp_digit4", ""),
+            request.POST.get("otp_digit5", ""),
+            request.POST.get("otp_digit6", ""),
+        ]
+        input_otp = "".join(otp_digits).strip()
+
         try:
             user = CustomUser.objects.get(email=email)
 
+            print("DEBUG - User email:", user.email)
+            print("DEBUG - Saved OTP:", repr(user.otp))
+            print("DEBUG - Input OTP:", repr(input_otp))
+
             # Check if user email is already verified
             if user.email_verified:
-                messages.info(request, "Your email is already verified.")
+                messages.info(request, "Email verified.")
                 return redirect('login')
             
             # Check if OTP is correct
-            if user.otp != input_otp:
+            if str(user.otp) != str(input_otp):
                 messages.error(request, "Invalid OTP. Please try again.")
                 return redirect('verify_otp')
             
@@ -154,7 +167,7 @@ def resend_otp(request):
             user = CustomUser.objects.get(email=email)
 
             if user.email_verified:
-                messages.info(request, "Your email is already verified.")   
+                messages.info(request, "Email already verified.")   
                 return redirect('login')
             
             # Check if resend is allowed
@@ -163,7 +176,7 @@ def resend_otp(request):
                 return redirect('verify_otp')
             
             # Generate a  new OTP
-            otp = f"{random.randint(100000, 999999)}" 
+            otp = str(random.randint(100000, 999999))
             user.otp = otp
             user.otp_created_at = timezone.now()
             user.otp_last_sent = timezone.now()
@@ -172,7 +185,7 @@ def resend_otp(request):
             send_mail(
                 'Verify Your Account - OTP',
                 f'Hello {user.username},\n\nYour OTP is: {otp}\n\nIt expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
-                'noreply@example.com',
+                settings.EMAIL_HOST_USER,
                 [user.email],
                 fail_silently=False,
             )
@@ -191,12 +204,12 @@ def resend_otp(request):
 def login_view(request):
 
     if request.method == 'POST':
-        form = EmailLoginForm(request.POST)
+        form = EmailLoginForm(request.POST, request=request)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
 
-            remember = request.POST.get('remember', None)
+            remember = request.POST.get('remember')
             if remember:
                 request.session.set_expiry(604800)     # 7 days in seconds
 
@@ -218,7 +231,9 @@ def login_view(request):
                 return redirect('tenants_dashboard')
             else:
                 return redirect('home')
-
+        else:
+            messages.error(request, "Login failed. Check your credentials and verify your email.")
+            
     else:
         form = EmailLoginForm()
     return render(request, 'registration/login.html', {'form': form}) 

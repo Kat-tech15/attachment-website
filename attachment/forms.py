@@ -30,6 +30,11 @@ class EmailLoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
+    def __init__(self, *rgs, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.user = None
+        super().__init__(*rgs, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         email = cleaned_data.get('email')
@@ -38,20 +43,21 @@ class EmailLoginForm(forms.Form):
         if not email or not password:
             raise forms.ValidationError("Email and password are required.")
         
-        user = authenticate(username=email, password=password)
-        if user is None:
+        self.user = authenticate(request=self.request, email=email, password=password)
+        if self.user is None:
             raise forms.ValidationError("Invalid email or password.")
         
         if not user.email_verified:
             raise forms.ValidationError("Email not verified. Please check your email for the OTP.")
         
+        if not self.user.is_active:
+            raise forms.ValidationError("This account is inactive. Please verify your eamil to activate.")
             
-       
-        self.user = user
-        return self.cleaned_data
+        return cleaned_data
     
     def get_user(self):
-        return getattr(self, 'user', None)
+        return self.user
+
 class HouseForm(forms.ModelForm):
     class Meta:
         model = House
