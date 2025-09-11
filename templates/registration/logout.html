@@ -18,7 +18,13 @@
     .auth-form h2 {
         margin-bottom: 15px;
     }
+    .buttons {
+        display: flex;
+        gap: 20px;
+        text-align: center;
+        justify-content: center;
 
+    }
     .auth-form a {
         display: inline-block;
         margin-top: 10px;
@@ -36,6 +42,11 @@
 
 <div class="auth-form">
     <h4>You have been logged out.</h4>
-    <p><a href="{% url 'login' %}">Login</a></p>
+    <div class="buttons">
+        <p><a href="{% url 'login' %}">Login</a></p><br>
+        <p><a href="{% url 'register' %}">Register</a></p>
+    </div>
+    
+
 </div>
 {% endblock %}

@@ -233,7 +233,7 @@ def login_view(request):
                 return redirect('home')
         else:
             messages.error(request, "Login failed. Check your credentials and verify your email.")
-            
+
     else:
         form = EmailLoginForm()
     return render(request, 'registration/login.html', {'form': form}) 
@@ -834,6 +834,8 @@ def attachee_dashboard(request):
     if hasattr(user, 'attachee'):
         bookings = Booking.objects.filter(attachee=user.attachee).order_by('-created_at').exclude(status='cancelled')
         applications = ApplicationVisit.objects.filter(attachee=user.attachee)
+        notifications = Notification.objects.filter(recipient=request.user)
+        unread_count = notifications.filter(is_read=False).count()
 
     else:
         bookings = Booking.objects.none()
@@ -843,6 +845,7 @@ def attachee_dashboard(request):
     return render(request, 'dashboards/attachee_dashboard.html',{ 
                   'bookings': bookings,
                   'applications': applications,
+                  'unread_count':  unread_count,
                   'user': request.user,
                   })
 

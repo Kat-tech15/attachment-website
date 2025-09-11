@@ -206,9 +206,13 @@ class Notification(models.Model):
     url = models.URLField(blank=True, null=True)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    notify_type = models.CharField(max_length=50, blank=True, null=True)
     
     def __str__(self):
-        return f"To {self.recipient}: {self.message}"
+        return f"To {self.recipient.email}: {self.message[:20]}"
+    
+    class Meta:
+        ordering = ['-created_at']
 
 class Feedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
