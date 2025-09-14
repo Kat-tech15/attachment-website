@@ -79,17 +79,7 @@ class AttachmentPostForm(forms.ModelForm):
            self.fields['email'].initial = self.user.company.email
            self.fields['location'].initial = self.user.company.location
 
-class HouseReviewForm(forms.ModelForm):
-    class Meta:
-        model = HouseReview
-        fields = ['rating', 'comment']
 
-
-class CompanyReviewForm(forms.ModelForm):
-    class Meta:
-        model = CompanyReview
-        fields = ['rating', 'comment']
-    
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback

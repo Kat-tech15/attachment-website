@@ -14,7 +14,6 @@ from django.db.models.signals import post_save
 from django.views.decorators.http import require_POST
 from django.dispatch import receiver
 from django.db.models.functions import TruncMonth
-from django.core.paginator import Paginator
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms  import AuthenticationForm
@@ -27,9 +26,8 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 import random
-from .forms import AttachmentPostForm, HouseForm,BookingForm, HouseReviewForm, CompanyReviewForm
+from .forms import AttachmentPostForm, HouseForm,BookingForm
 
-# Create your views here.
 
 
 
@@ -66,11 +64,6 @@ def home(request):
         'testimonials': testimonials
         })
 
-def about(request):
-    return render(request, 'about.html')
-
-def services(request):
-    return render(request, 'services.html')
 
 def register_view(request):
     if request.method == 'POST':
@@ -263,6 +256,7 @@ def contact(request):
         return redirect('contact')
 
     return render(request, 'contact.html')
+
 
 # Attachee's views
 
@@ -514,43 +508,6 @@ def delete_house(request, house_id):
     
     return render(request, 'delete_house.html', {'house': house})
 
-@login_required
-def submit_house_review(request, house_id):
-    house = get_object_or_404(House, id=house_id)
-
-    if request.method == 'POST':
-        form = HouseReviewForm(request.POST)
-        if form.is_valid():
-            review =form.save(commit=False)
-            review.user = request.user
-            review.house = house
-            review.save()
-            return redirect('all_houses', house_id=house.id)
-
-
-    else:
-        form =HouseReviewForm()
-    return render(request, 'submit_house_review.htnl', {'form': form, 'house': house})
-
-@login_required
-def submit_company_review(request, company_id):
-    company =get_object_or_404(Company, id=company_id)
-
-    if request.method == 'POST':
-        form = CompanyReviewForm(request.POST)
-        if form.is_valid():
-            review =form.save(commit=False)
-            review.user = request.user
-            review.company = company
-            review.save()
-            return redirect('all_attachment_posts')
-
-    else:
-        form = CompanyReviewForm()
-
-    return render(request, 'submit_company_review.html', {'form': form, 'company': company})
-
-    
 
 @login_required
 def view_houses(request):
@@ -740,12 +697,9 @@ def delete_attachment(request, attachment_id):
 
     return render(request, 'delete_attachment.html', {'attachment': attachment})
 
-def view_applicants(request):
-    return render(request, 'view_applicants.html')
 
 
 
-# Login views
 @login_required
 def dashboard_router(request):
     role = request.user.role
@@ -805,27 +759,6 @@ def admin_dashboard(request):
     }
     return render(request, 'dashboards/admin_dashboard.html',context)
 
-@user_passes_test(lambda u: u.is_superuser or u.is_staff)
-@login_required
-def download_approved_applications_pdf(request):
-    approved_apps = ApplicationVisit.objects.filter(status='approved')\
-        .select_related('attachee', 'company')
-
-    html_string = render_to_string('pdf/approved_applications.html', {
-        'applications': approved_apps,
-        'requested_by': request.user,
-    })
-
-    try:
-        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-        pdf = html.write_pdf()
-
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="approved_applications.pdf"'
-        return response
-
-    except Exception as e:
-        return HttpResponse(f"Failed to generate PDF: {str(e)}", status=500)
 
 @login_required
 def attachee_dashboard(request):
@@ -850,33 +783,6 @@ def attachee_dashboard(request):
                   })
 
 
-
-@login_required
-def calendar(request):
-    user=request.user
-    events = [] 
-
-    booking = Booking.objects.filter(user=user, status='approved').first()
-    if booking:
-        events.append({
-            'title': '🏠 House Booking',
-            'start': booking.move_in_date.isoformat(),
-            'end': booking.move_in_date.isoformat(),
-            'color': '#4caf50'
-        })
-
-    attachment = ApplicationVisit.objects.filter(attachee=user,status= 'approved')   
-    if attachment and hasattr(attachment, 'start_date') and hasattr(attachment, 'end_date'):
-         events.append({
-            'title': '📄 Attachment Period',
-            'start': attachment.start_date.isoformat(),
-            'end': attachment.end_date.isoformat(),
-            'color': '#2196f3'
-         })
-    
-    return render(request, 'calendar.html', {
-        'calendaar_events': json.dumps(events)
-    })
 
 
 @user_passes_test(lambda u:u.is_superuser or u.is_staff)
