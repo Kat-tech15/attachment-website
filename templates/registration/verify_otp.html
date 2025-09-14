@@ -13,7 +13,6 @@
     {% endfor %}
   </ul>
   {% endif %}
-
   <form method="post" action="{% url 'verify_otp' %}" id="otp-form">
     {% csrf_token %}
     <div class="otp-input-group">
@@ -26,16 +25,13 @@
     </div>
     <button type="submit" class="verify-btn">Verify</button>
   </form>
-
   <p id="timer-text">Resend OTP in <span id="countdown">60</span> seconds.</p>
-
   <form action="{% url 'resend_otp' %}" method="post" id="resend-form">
     {% csrf_token %}
     <input type="hidden" name="email" value="{{ request.session.email }}">
     <button type="submit" class="verify-btn" id="resend-btn" disabled>Resend OTP</button>
   </form>
 </div>
-
 <style>
   .otp-container {
     max-width: 400px;
@@ -130,7 +126,6 @@
     color: #0c5460;
   }
 </style>
-
 <script>
   let secondsLeft = 60;
   const countdown = document.getElementById("countdown");

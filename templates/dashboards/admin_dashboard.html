@@ -4,34 +4,27 @@
 
 {% block content %}
 <div class="dashboard-container">
-   <h3>Admin Dashboard</h3>
-  <!-- Stats Section -->
- <div class="stats">
-    <div class="card card-blue">Total Bookings: {{ booking_count }}</div>
-    <div class="card card-purple">Total Applications: {{ application_count }}</div>
-    <div class="card card-orange">Total Tenants: {{ tenant_count }}</div>
-    <div class="card card-green">Total Attachees: {{ attachee_count }}</div>
-    <div class="card card-pink">Total Companies: {{ company_count }}</div>
+  <h3>Admin Dashboard</h3>
+  <div class="stats">
+    <div class="card card-blue"><p>Bookings</p> {{ booking_count }}</div>
+    <div class="card card-purple"><p>Applications</p>{{ application_count }}</div>
+    <div class="card card-orange"><p>Tenants</p> {{ tenant_count }}</div>
+    <div class="card card-green"><p>Attachees</p> {{ attachee_count }}</div>
+    <div class="card card-pink"><p>Companies</p> {{ company_count }}</div>
   </div>
-
-
-  <!-- Charts Section -->
   <div class="charts">
     <div class="chart-block">
       <h4>Users by Role</h4>
       <canvas id="usersChart"></canvas>
     </div>
-
     <div class="chart-block">
       <h4>Monthly Booking Trends</h4>
       <canvas id="bookingTrendChart"></canvas>
     </div>
-
     <div class="chart-block">
       <h4>Top Companies by Applications</h4>
       <canvas id="topCompaniesChart"></canvas>
     </div>
-
     <div class="chart-block">
       <h4>Applications by Course</h4>
       <canvas id="courseChart"></canvas>
@@ -41,11 +34,9 @@
   <ul class="feedback-list">
     {% for feedback in recent_feedbacks %}
       <li>
-        <strong>{{ feedback.name|default:"Anonymous" }}</strong>: 
-        {{ feedback.message|truncatechars:60 }}
-        <small class="text-muted">({{ feedback.submitted_at|date:"M d, Y" }})</small>
+        <p>{{ feedback.name|default:"Anonymous" }}: 
+        {{ feedback.message|truncatechars:60 }}</p>
       </li>
-      
     {% empty %}
      <p style="text-align: center; font-style: italic; color: #999;">No Feedbacks yet </p>
      {% endfor %}
@@ -53,14 +44,15 @@
   <br>
   <a href="{% url 'feedback_list' %}" class="btn">View all feedback</a>
 </div>
-<h4>Send Notifications</h4>
-<form method="post">
-  {% csrf_token %}
-  <textarea name="announcement" rows="3" required></textarea>
-  <button type="submit">Send to All Users</button>
-</form>
+<div class="chart-block">
+  <h4>Make Announcement</h4>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="announcement" rows="3" required></textarea><br><br>
+    <button type="submit" class="btn">Announce</button>
+  </form>
 </div>
-</div>
+
 
 <script>
   const ctx = document.getElementById('usersChart').getContext('2d');
@@ -166,10 +158,13 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
-}
-h3 {
   text-align: center;
-  font-family: sans-serif;
+}
+h3, h4 {
+  text-align: center;
+  color: rgb(52, 156, 160);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-style: oblique;
 }
 .stats {
   display: flex;
@@ -181,11 +176,11 @@ h3 {
   height: 100px;
   width: 30%;
   padding: 5px 6px;
-  color: #fff;
+  color: rgb(235, 241, 241);
   border-radius: 12px;
   font-size: 28px;
   text-align: center;
- 
+  font-family:'Times New Roman', Times, serif;
   cursor: default;
 }
 .card-blue {
@@ -203,7 +198,6 @@ h3 {
 .card-green {
   background: #2ecc71;
 }
-
 .card-pink {
   background: #e84393;
 }
@@ -212,7 +206,6 @@ h3 {
   padding: 0;
   margin: 0;
 }
-
 .feedback-list li {
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -221,9 +214,6 @@ h3 {
 .feedback-list li strong {
   color: #2c3e50;
 }
-
-
-/* Charts */
 .charts {
   display: flex;
   flex-direction: column;
@@ -234,26 +224,32 @@ h3 {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  align-items: center;
 }
 canvas {
   margin-top: 15px;
   max-width: 100%;
 }
-h4 {
-  text-align: center;
-  font-family: sans-serif;
-}
 .btn {
   padding: 6px 12px;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 50px;
+  border: none;
   background-color: #3498db;
   color: white;
   font-size: 14px;
-  align-self: center;
 }
 .btn:hover {
-  background-color: #3498db;
+  background-color: #52a8e0;
+}
+textarea {
+  align-self: center;
+  border-radius: 5px;
+  margin-top: 20px;
+  outline: none;
+  color: rgb(63, 150, 153);
+  border: 1px solid #3498db;
+  width: 500px;
 }
 </style>
 

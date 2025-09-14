@@ -103,7 +103,6 @@
 </style>
 <div class="attachment-container">
   <h1 style="text-align:center;">Attachment Opportunities</h1>
-
 <div class="search-sort">
   <form method="get">
     <input type="text" name="q" placeholder="Search by title or location" value="{{ query|default_if_none:'' }}">
@@ -114,7 +113,6 @@
     </select>
   </form>
 </div>
-
 <div class="attachment-grid">
   {% for att in page_obj %}
     <div class="attachment-card">
@@ -123,7 +121,6 @@
       <div class="attachment-info">Location: {{ att.location }}</div>
       <div class="attachment-info">Description: {{ att.description }}</div>
       <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
-
       {% if att.is_eapired %}
         <span class="tag tag-soon">Deadline Passed</span>
       {% elif att.is_soon %}
@@ -131,7 +128,6 @@
       {% else %}
         <span class="tag tag-upcoming">Open</span>
       {% endif %}
-
       {% if att.link %}
         <a href="{{ att.link }}" class="attachment-link" target="_blank" aria-label="Apply for {{ att.title }}">View More / Apply</a>
       {% endif %}
@@ -141,40 +137,6 @@
   {% endfor %}
 </div>
 
-<div class="pagination">
-  {% if page_obj.has_previous %}
-    <a href="?q={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">Previous</a>
-  {% endif %}
-
-  {% for num in page_obj.paginator.page_range %}
-    {% if page_obj.number == num %}
-      <span class="current">{{ num }}</span>
-    {% else %}
-      <a href="?q={{ query }}&sort={{ sort }}&page={{ num }}">{{ num }}</a>
-    {% endif %}
-  {% endfor %}
-
-  {% if page_obj.has_next %}
-    <a href="?q={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">Next</a>
-  {% endif %}
-
-  
-{% if company and company.id %}
-  <h3>⭐ Company Reviews</h3>
-  <p>Average: {{ average_rating }} / 5</p>
-  <ul>
-    {% for r in company.reviews.all %}
-      <li>
-        ⭐ {{ r.rating }} – {{ r.comment }}
-        <br><small>{{ r.user.get_full_name }} – {{ r.created_at|date:"M d, Y" }}</small>
-      </li>
-    {% endfor %}
-  </ul>
-
-  <a href="{% url 'submit_company_review' company.id %}">Review this company</a>
-{% endif %}
-</div>
-</div>
 
 
 {% endblock %}

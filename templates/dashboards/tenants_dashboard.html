@@ -2,30 +2,27 @@
 
 {% block title %}Tenant Dashboard{% endblock %}
 
-
-
-
 {% block content %}
 <div class="dashboard-container">
-<h2>Tenants Dashboard</h2>
-    <!-- Loop through tenant's posted houses -->
-     <div class="dashboard-actions">
+<h2>Landlord Dashboard</h2>
+    <div class="dashboard-actions">
         <a href="{% url 'post_house'%}" class="btn">Post House</a>
         <a href="{% url 'my_houses'%}" class="btn">My Houses</a> 
-        <a href="{% url 'all_houses'%}" class="btn">View All Houses</a>
-        <a href="{% url 'tenant_house_bookings' %}" class="btn">📖 View Bookings</a>
-        <a href="{% url 'view_booked_rooms' %}" class="btn">View Booked Rooms</a>
-
-     </div>
+        <a href="{% url 'all_houses'%}" class="btn">All Houses</a>
+        <a href="{% url 'tenant_house_bookings' %}" class="btn">Bookings</a>
+        <a href="{% url 'view_booked_rooms' %}" class="btn">Booked Rooms</a>
+    </div>
 </div>
-
 <style>
     .dashboard-container {
         padding: 20px;
         text-align: center;
         margin-top: 160px;
     }
-
+    h2 {
+        color: #358f92;
+        font-style: oblique;
+    }
     .dashboard-actions {
         margin-top: 30px;
     }
@@ -33,11 +30,12 @@
     .btn {
         display: inline-block;
         margin: 10px;
-        padding: 5px 10px;
+        padding: 12px;
         background-color: #007bff;
         color: white;
+        font-weight: bold;
         text-decoration: none;
-        border-radius: 6px;
+        border-radius: 50px;
     }
 
     .btn:hover {

@@ -38,7 +38,6 @@
 <div class="delete-confirm-box">
   <h3>⚠️ Confirm Deletion</h3>
   <p>Are you sure you want to delete <strong>{{ house.title }}</strong>?</p>
-
   <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Yes, Delete</button>

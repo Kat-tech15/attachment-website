@@ -8,7 +8,12 @@
     padding: 20px;
     margin-top: 100px;
   }
-
+  h3 {
+    margin-top: 20px;
+    text-align: center;
+    color: #358f92;
+    font-style: oblique;
+  }
   .attachment-card {
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -50,10 +55,14 @@
 .btn:hover {
   opacity: 0.9;
 }
-  
+p {
+  text-align: center;
+  font-style: italic;
+  color: cadetblue;
+} 
 </style>
 
-<h2 style="text-align:center;">📄 My Posted Attachments</h2>
+<h3>📄 My Posted Attachments</h3>
 
 <div class="attachment-list">
   {% for post in my_attachment_posts %}
@@ -71,7 +80,7 @@
       </div>
     </div>
   {% empty %}
-    <p style="text-align:center;">You have not posted any attachments yet.</p>
+    <p>You have not posted any attachments yet.</p>
   {% endfor %}
 </div>
 {% endblock %}

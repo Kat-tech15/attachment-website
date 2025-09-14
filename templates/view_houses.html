@@ -33,7 +33,11 @@
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
         margin-bottom: 30px;
     }
-
+    h3 {
+        text-align: center;
+        color: #358f92;
+        font-style: oblique;
+    }
     .room-summary {
         margin-bottom: 20px;
         font-size: 15px;
@@ -108,7 +112,7 @@
 </style>
 
 <div class="rental-list">
-    <h2>Available Houses</h2>
+    <h3>Available Houses</h3>
 
     {% for rental in rentals %}
     <div class="container">
@@ -146,24 +150,6 @@
                 <p>No rooms found.</p>
             {% endfor %}
         </div>
-
-        <h3>⭐ Reviews ({{ rental.reviews.count }})</h3>
-        <ul>
-            {% for r in rental.reviews.all %}
-                <li>
-                    ⭐ {{ r.rating }} - {{ r.comment }}<br>
-                    <small>By {{ r.user.get_full_name }} on {{ r.created_at|date:"M d, Y" }}</small>
-                </li>
-            {% empty %}
-                <li>No reviews yet.</li>
-            {% endfor %}
-        </ul>
-
-        {% if rental.id %}
-            <a href="{% url 'submit_house_review' rental.id %}" class="btn">Write a review</a>
-        {% else %}
-            <span class="btn disabled">Review not available</span>
-        {% endif %}
     </div>
     {% endfor %}
 </div>

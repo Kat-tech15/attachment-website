@@ -10,8 +10,10 @@
     background-color: #fff;
     border-radius: 8px;
 }
-h2 {
+h3 {
     text-align: center;
+    color: #358f92;
+    font-style: oblique;
 }
   .attachment-grid {
     display: grid;
@@ -70,9 +72,14 @@ h2 {
    .attachment-link:hover {
     text-decoration: underline;
   }
+  p {
+    text-align: center; 
+    font-style: italic;
+    color: cadetblue;
+  }
 </style>
 <div class="attachment-container">
-    <h2>Availabe Attachments and Internships</h2>
+    <h3>Availabe Attachments and Internships</h3>
     <div class="attachment-grid">
         {% for att in attachments %}
         <div class="attachment-card">
@@ -90,7 +97,7 @@ h2 {
             
             {% endif %}  
           {% empty %}
-                <p style="text-align: center; font-style: italic; color: #999">No application link provided</p> 
+                <p >No application link provided</p> 
         {% endfor %}
       </div>
 </div>

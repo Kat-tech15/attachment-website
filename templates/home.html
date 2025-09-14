@@ -31,9 +31,15 @@
     color: green;
     margin-bottom: 20px;
   }
-  .home p {
+  .home p,
+  .about p,
+  .services p {
     font-size: 18px;
     margin-bottom: 30px;
+    font-size: 25px;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+
   }
   .home a {
     display: inline-block;
@@ -41,7 +47,7 @@
     background-color: #007bff;
     color: white;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 50px;
     font-weight: bold;
   }
   .home a:hover {
@@ -50,13 +56,21 @@
 .section {
   width: 100%;
   padding: 60px 0; 
-  background: #fff ;
   margin-bottom: 0 auto;
-  text-align: center;
+}
+.section-title {
+  color: rgb(11, 230, 175);
+  font-style: oblique;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+  width: fit-content;
+  padding: 5px 5px;
+  border-radius: 10px;
+  margin: 50px auto;
+  border: 1px solid rgb(240, 71, 93);
 }
 .about,
 .services,
-.section,
 .feedback {
   width: 100%;
   padding: 40px 20px;
@@ -66,10 +80,6 @@
 h4 {
   text-align: center;
   margin-bottom: 20px;
-}
-.about p {
-  line-height: 1.6;
-  font-size: 16px;
 }
 .services ul {
   list-style: none;
@@ -118,7 +128,7 @@ h4 {
   color: white;
   padding: 10px 20px;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 50px;
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
@@ -127,7 +137,6 @@ h4 {
   background-color: #2980b9;
 }
 .testimonial-marquee-section {
-  background-color: #f5f5f5;
   padding: 60px 20px;
   overflow: hidden;
   text-align: center;
@@ -169,7 +178,12 @@ h4 {
 .testimonial-card:hover {
   transform: scale(1.05);
 }
-
+.testimonial-card img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 1px solid #3498db;
+}
 .testimonial-card p {
   font-size: 1rem;
   font-style: italic;
@@ -183,7 +197,6 @@ h4 {
 }
 
 .feedback {
-    background-color: #f0f8ff;
     padding: 40px 20px;
   
 }
@@ -205,11 +218,12 @@ h4 {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
-    .feedback-card h2 {
+    .feedback-card h3 {
       margin-bottom: 25px;
       font-size: 24px;
       text-align: center;
-      color: #2c3e50;
+      color: #358f92;
+      font-style: oblique;
     }
 
     .feedback-card form p {
@@ -220,7 +234,7 @@ h4 {
     .feedback-card textarea {
       width: 100%;
       padding: 12px 14px;
-      border: 1px solid #ccc;
+      border: 1px solid #72b7f0;
       border-radius: 6px;
       font-size: 15px;
       transition: border 0.2s ease-in-out;
@@ -309,23 +323,19 @@ h4 {
   </div>
     <ul>
       <p>Our sevices include the following: <br><br>
-                
         Handling account creation for the attachees, companies and the tenants,<br><br>
-          <hr>
         Posting attachment opportunities for the attachees to apply.
         <br><br>
-        <hr>
         Having the tenant post there rentals to easen the peocess of the attachees looking for places to stay while in there attachment.
         <br><br> 
-        <hr>
         We aslo carry out tracking of the processes carried out by each user registered in the platform to ensure <br> that intrgrity is upheld and ensuring that the intented purpse of the platform is attained.
-        <br><br><hr>
+        <br><br>
       </p>
     </ul>
 </section>
 <section class="section">
   <div class="title-box">
-    <h4 class="section-title">🏠 Featured Houses</h4>
+    <h4 class="section-title">Featured Houses</h4>
   </div>
   <div class="card-grid">
     {% for house in featured_houses %}
@@ -348,7 +358,7 @@ h4 {
 </section>
 <section class="section">
   <div class="title-box">
-    <h4 class="section-title">📎 Recent Attachments</h4>
+    <h4 class="section-title">Recent Attachments</h4>
   </div> 
   <div class="card-grid">
     {% for att in recent_attachments %}
@@ -371,47 +381,57 @@ h4 {
 </section>
 <section class="testimonial-marquee-section"> 
   <div class="title-box">
-    <h4 class="section-title">💬 What Our Users Say</h4>
+    <h4 class="section-title"> What Our Users Say</h4>
   </div>
   <div class="testimonial-marquee-wrapper">
     <div class="testimonial-marquee-track">
-      <!-- Repeatable testimonial card -->
       <div class="testimonial-card">
+        <img src="media/images/about6.jpg" alt="">
         <p>"This platform helped me get an attachment quickly!"</p>
         <h4>- Sarah W.</h4>
       </div>
       <div class="testimonial-card">
+        <img src="media/images/about6.jpg" alt="">
         <p>"Clean UI and smooth navigation. Great job!"</p>
         <h4>- Kevin M.</h4>
       </div>
       <div class="testimonial-card">
+        <img src="media/images/about6.jpg" alt="">
         <p>"Booking a house was never this easy!"</p>
         <h4>- Lucy A.</h4>
       </div>
       <div class="testimonial-card">
+        <img src="media/images/about6.jpg" alt="">
         <p>"I recommend this to all fellow students."</p>
         <h4>- John O.</h4>
       </div>
-      <!-- Clone the same cards to make smooth loop -->
       <div class="testimonial-card">
+        <img src="media/images/about6.jpg" alt="">
         <p>"This platform helped me get an attachment quickly!"</p>
         <h4>- Sarah W.</h4>
       </div>
       <div class="testimonial-card">
+        <img src="media/images/footer2.jpg" alt="">
         <p>"Clean UI and smooth navigation. Great job!"</p>
         <h4>- Kevin M.</h4>
       </div>
     </div>
   </div>
 </section>
-
 <section class="feedback" id="feedback">
   <div class="title-box">
-    <h4 class="section-title">💬 Feedback</h4>
+    <h4 class="section-title">Feedback</h4>
   </div>
   <div class="feedback-contact-wrapper">
       <div class="feedback-card">
-        <h2>💬 We value your feedback</h2>
+        <h3>💬 We value your feedback</h3>
+         {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
         <form method="post" action="">
           {% csrf_token %}
           {{ form.as_p }}

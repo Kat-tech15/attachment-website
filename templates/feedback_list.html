@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="feedback-container">
-  <h2>All Feedbacks</h2>
+  <h3>All Feedbacks</h3>
 
   {% if feedbacks %}
     <table class="feedback-table">
@@ -58,7 +58,12 @@
   box-shadow: 0 1px 6px rgba(0,0,0,0.1);
   font-family: 'Segoe UI', sans-serif;
 }
-
+h3 {
+  text-align: center;
+  color: rgb(52, 156, 160);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-style: oblique;
+}
 .feedback-container h2 {
   text-align: center;
   margin-bottom: 30px;
@@ -67,6 +72,7 @@
 
 .feedback-table {
   width: 100%;
+  margin-top: 20px;
   border-collapse: collapse;
 }
 
@@ -83,7 +89,9 @@
   font-weight: 600;
   color: #333;
 }
-
+th {
+  font-style: italic;
+}
 .feedback-table tr:hover {
   background-color: #f9f9f9;
 }
@@ -100,6 +108,11 @@
 
 .btn-delete:hover {
   background-color: #c0392b;
+}
+p {
+  font-style: oblique;
+  text-align: center;
+  color: cadetblue;
 }
 </style>
 {% endblock %}

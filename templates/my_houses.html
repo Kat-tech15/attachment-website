@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="house-table-container">
-  <h2>🏠 My Posted Houses</h2>
+  <h3>🏠 My Posted Houses</h3>
 
   {% if houses %}
     <table class="house-table">
@@ -34,7 +34,7 @@
       </tbody>
     </table>
   {% else %}
-    <p class="text-center">You haven’t posted any houses yet.</p>
+    <p>You haven’t posted any houses yet.</p>
   {% endif %}
 </div>
 
@@ -49,10 +49,11 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-.house-table-container h2 {
+.house-table-container h3 {
   text-align: center;
   margin-bottom: 30px;
-  color: #2c3e50;
+  color: #358f92;
+  font-style: oblique;
 }
 
 .house-table {
@@ -106,10 +107,10 @@
   background-color: #c82333;
 }
 
-.text-center {
+p {
   text-align: center;
-  color: #888;
-  font-size: 15px;
+  color: cadetblue;
+  font-style: italic;
 }
 </style>
 {% endblock %}
