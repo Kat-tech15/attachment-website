@@ -10,6 +10,7 @@ from django.db.models import Count,Avg
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.urls import reverse
+from django.core.paginator import Paginator
 from django.db.models.signals import post_save
 from django.views.decorators.http import require_POST
 from django.dispatch import receiver
@@ -51,7 +52,7 @@ def home(request):
         form = FeedbackForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Thank you for your feedback!")
+            messages.success(request, "Thank you for your feedback!", extra_tags ="feedback")
             return redirect('home')
         else:
             form = FeedbackForm()
@@ -86,7 +87,7 @@ def register_view(request):
                 fail_silently=False,
             )
             request.session['email'] = user.email
-            messages.info(request, "An OTP has been sent to your email. Please verify your account.")
+            messages.info(request, "An OTP has been sent to your email. Please verify your account.", extra_tags="register")
             return redirect('verify_otp')
     else:
         form = CustomUserCreationForm()
@@ -95,7 +96,7 @@ def register_view(request):
 def verify_otp(request):
     email = request.session.get('email')
     if not email:
-        messages.error(request, "Session expired. Please register again. ")
+        messages.error(request, "Session expired. Please register again.", extra_tags="verify")
         return redirect('register')
     
     if request.method == 'POST':
@@ -111,11 +112,6 @@ def verify_otp(request):
 
         try:
             user = CustomUser.objects.get(email=email)
-
-            print("DEBUG - User email:", user.email)
-            print("DEBUG - Saved OTP:", repr(user.otp))
-            print("DEBUG - Input OTP:", repr(input_otp))
-
             # Check if user email is already verified
             if user.email_verified:
                 messages.info(request, "Email verified.")
@@ -123,12 +119,12 @@ def verify_otp(request):
             
             # Check if OTP is correct
             if str(user.otp) != str(input_otp):
-                messages.error(request, "Invalid OTP. Please try again.")
+                messages.error(request, "Invalid OTP. Please try again.", extra_tags="verify")
                 return redirect('verify_otp')
             
             # Check if OTP is expired
             if user.is_otp_expired():
-                messages.error(request, "OTP has expired. Please request a new one.")
+                messages.error(request, "OTP has expired. Please request a new one.", extra_tags="verify")
                 return redirect('resend_otp')
             
         # Activate user account
@@ -141,11 +137,11 @@ def verify_otp(request):
             # Clear the session
             request.session.pop('email', None)
 
-            messages.success(request, "Your account has been verified successfully!")
+            messages.success(request, "Your account has been verified successfully!", extra_tags="verify")
             return redirect('login')
         
         except CustomUser.DoesNotExist:
-            messages.error(request, "User not found. Please register again.")
+            messages.error(request, "User not found. Please register again.", extra_tags="verify")
             return redirect('register')
         
     return render(request, 'registration/verify_otp.html')
@@ -165,7 +161,7 @@ def resend_otp(request):
             
             # Check if resend is allowed
             if not user.can_resend_otp():
-                messages.warning(request, "please wait before requesting for a new OTP.")
+                messages.warning(request, "please wait before requesting for a new OTP.", extra_tags="resend")
                 return redirect('verify_otp')
             
             # Generate a  new OTP
@@ -184,11 +180,11 @@ def resend_otp(request):
             )
 
             request.session['email'] = user.email
-            messages.success(request, "An OTP has been sent to your email. Please verify your account.")
+            messages.success(request, "An OTP has been sent to your email. Please verify your account.", extra_tags="resend")
             return redirect('verify_otp')
         
         except CustomUser.DoesNotExist:
-            messages.error(request, "User not found. Please register again.")
+            messages.error(request, "User not found. Please register again.", extra_tags="resend")
             return redirect('register')
         
     return render(request, 'registration/resend_otp.html')    
@@ -225,7 +221,7 @@ def login_view(request):
             else:
                 return redirect('home')
         else:
-            messages.error(request, "Login failed. Check your credentials and verify your email.")
+            messages.error(request, "Login failed. Check your credentials and verify your email.", extra_tags="login")
 
     else:
         form = EmailLoginForm()
@@ -234,7 +230,7 @@ def login_view(request):
       
 def logout_view(request):
     logout(request)
-    messages.success(request, 'You have been logged out successfully.')
+    messages.success(request, 'You have been logged out successfully.', extra_tags="logout")
     return render(request, 'registration/logout.html')
 
 
@@ -252,7 +248,7 @@ def contact(request):
         )
 
         contact.save()
-        messages.success(request, 'Your message has been sent successfully!')   
+        messages.success(request, 'Your message has been sent successfully!', extra_tags="contact")   
         return redirect('contact')
 
     return render(request, 'contact.html')
@@ -383,7 +379,7 @@ def book_room(request, room_id):
     room.is_booked = True
     room.save()
 
-    messages.success(request, f"Room{room.room_number} booked successfully!")
+    messages.success(request, f"Room{room.room_number} booked successfully!", extra_tags="book_room")
 
     return redirect('house_detail', house_id=house.id)
 
@@ -458,14 +454,8 @@ def post_house(request):
             )
             house.tenant = tenant
             house.save()
-
-    
-            Notification.objects.create(
-                recipient=request.user,
-                message="Your rental has been posted successfully.",
-                link="/dashboard/"  
-            )
-            return redirect('tenants_dashboard')
+            messages.success(request, "House posted successfully!", extra_tags="post_house")
+            return redirect('post_house')
 
     else:
         form = HouseForm()
@@ -490,6 +480,7 @@ def edit_house(request, house_id):
         form = HouseForm(request.POST, instance=house)
         if form.is_valid():
             form.save()
+            messages.success(request, "House edited successfully.", extra_tags="edit_house")
             return redirect('my_houses')
     else:
         form = HouseForm(instance=house)
@@ -503,7 +494,7 @@ def delete_house(request, house_id):
 
     if request.method == 'POST':
         house.delete()
-        messages.success(request, "House deleted successfully.")
+        messages.success(request, "House deleted successfully.", extra_tags="delete_house")
         return redirect('my_houses')    
     
     return render(request, 'delete_house.html', {'house': house})
@@ -546,9 +537,9 @@ def cancel_booking(request, booking_id):
             booking.room.is_booked = False
             booking.room.save()
                 
-        messages.success(request, "Booking cancelled successfully")
+        messages.success(request, "Booking cancelled successfully", extra_tags="cancel_booking")
     else:
-        messages.error(request, "Move-in date has passed. Cannot cancel.")
+        messages.error(request, "Move-in date has passed. Cannot cancel.", extra_tags="cancel_booking")
 
         #Redirect based on the roles
     if request.user.has_privilege(['attachee']):
@@ -572,7 +563,7 @@ def delete_booking(request, booking_id):
         return HttpResponseForbidden()
     
     booking.delete()
-    messages.success(request, "Booking deleted successfully.")
+    messages.success(request, "Booking deleted successfully.", extra_tags="delete_booking")
 
     if is_tenant_owner:
         return redirect('tenant_house_bookings')
@@ -621,9 +612,9 @@ def delete_past_bookings(request):
     count= past_bookings.count()
     if count > 0:
         past_bookings.delete()
-        messages.success(request, f"{count} past bookings deleted successfully.")
+        messages.success(request, f"{count} past bookings deleted successfully.", extra_tags="delete_past_booking")
     else:
-        messages.info(request, "No past bookings to delete.")
+        messages.info(request, "No past bookings to delete.", extra_tags="delete_past_booking")
 
     return redirect('my_bookings')
 
@@ -675,7 +666,7 @@ def edit_attachment(request, attachment_id):
         form = AttachmentPostForm(request.POST, instance=attachment, user=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, "Attachment updated successfully.")
+            messages.success(request, "Attachment updated successfully.", extra_tags="edit_attachment")
             return redirect('my_attachment_posts')
 
     else:
@@ -827,7 +818,7 @@ def feedback_list(request):
 def delete_feedback(request, feedback_id):
     feedback = get_object_or_404(Feedback, id=feedback_id)
     feedback.delete()
-    messages.success(request, "Feedback deleted successfully.")
+    messages.success(request, "Feedback deleted successfully.", extra_tags="delete_feedback")
     return redirect('feedback_list')
 
 @login_required
@@ -859,7 +850,7 @@ def approve_booking(request, booking_id):
         booking.room.is_booked = True
         booking.room.save()
         booking.save()
-        messages.success(request, "Room booking approved successfully.")
+        messages.success(request, "Room booking approved successfully.", extra_tags="approve_booking")
         return redirect('view_booked_rooms')
 
     return redirect('view_booked_rooms')
@@ -875,7 +866,7 @@ def post_announcement(request):
                message=f"New Announcement: {text}",
                url='/dashboard/'
            )
-        messages.success(request, "Announcement sent successfully.")
+        messages.success(request, "Announcement sent successfully.", extra_tags="announcement")
         return redirect('admin_dashboard')
 
 @login_required
@@ -887,5 +878,5 @@ def notification_list(request):
 def mark_all_notifications_as_read(request):
     notifications = Notification.objects.filter(recipient=request.user, is_read=False)
     notifications.update(is_read=True)
-    messages.success(request, "All notifications marked as read.")
+    messages.success(request, "All notifications marked as read.", extra_tags="announcement")
     return HttpResponseRedirect(reverse('notification_list'))
