@@ -52,8 +52,8 @@ def home(request):
         form = FeedbackForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Thank you for your feedback!", extra_tags ="feedback")
-            return redirect('home')
+            messages.success(request, "Thank you for your feedback!", extra_tags="feedback")
+            return redirect('/#feedback')
         else:
             form = FeedbackForm()
 
@@ -758,8 +758,6 @@ def attachee_dashboard(request):
     if hasattr(user, 'attachee'):
         bookings = Booking.objects.filter(attachee=user.attachee).order_by('-created_at').exclude(status='cancelled')
         applications = ApplicationVisit.objects.filter(attachee=user.attachee)
-        notifications = Notification.objects.filter(recipient=request.user)
-        unread_count = notifications.filter(is_read=False).count()
 
     else:
         bookings = Booking.objects.none()
@@ -769,7 +767,6 @@ def attachee_dashboard(request):
     return render(request, 'dashboards/attachee_dashboard.html',{ 
                   'bookings': bookings,
                   'applications': applications,
-                  'unread_count':  unread_count,
                   'user': request.user,
                   })
 
