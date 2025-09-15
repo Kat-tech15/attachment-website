@@ -5,7 +5,7 @@
   {% if messages %}
         {% for message in messages %}
             {% if "edit_booking" in message.tags %}
-                <div class="alert">{{ message }}</div>
+                <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
             {% endif %}
         {% endfor %}
     {% endif %}

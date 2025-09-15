@@ -18,7 +18,7 @@
   {% if messages %}
         {% for message in messages %}
             {% if "delete_attachment" in message.tags %}
-                <div class="alert">{{ message }}</div>
+                <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
             {% endif %}
         {% endfor %}
     {% endif %}

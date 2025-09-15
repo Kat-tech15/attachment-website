@@ -285,21 +285,36 @@ h4 {
         max-width: 500px;
   }
 }
-.messages {
-    padding: 10px 15px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    color: #ffffff;
-    text-align: center;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    animation: slideDown 0.5s ease;
-}
-.success {
-    background-color: #4CAF50;
-}
+.alert {
+        padding: 12px 20px;
+        margin: 10px 0;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        animation: fadeIn 0.3s ease-in-out;
+        transition: opacity 0.5s ease-out;
+    }
+    .alert-success {
+        background-color: #e6ffed;
+        color: #1a7f37;
+        border: 1px solid #1a7f37;
+    }
+    .alert-error {
+        background-color: #ffe6e6;
+        color: #a30000;
+        border: 1px solid #a30000;
+    }
+    .alert-warning {
+        background-color: #fff8e6;
+        color: #946200;
+        border: 1px solid #946200;
+    }
+    .alert-info {
+        background-color: #e6f0ff;
+        color: #004085;
+        border: 1px solid #004085;
+    }
+
 </style>
 <section class="home" id="home">
       <form action="{% url 'view_attachments' %}" method="GET" class="search-form">
@@ -440,12 +455,12 @@ h4 {
   <div class="feedback-contact-wrapper">
       <div class="feedback-card">
         <h3>💬 We value your feedback</h3>
-         {% if messages %}
-        <ul class="messages">
+        {% if messages %} 
           {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
+            {% if "feedback" in message.tags %}
+              <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
+            {% endif %}
           {% endfor %}
-        </ul>
         {% endif %}
         <form method="post" action="">
           {% csrf_token %}

@@ -57,8 +57,10 @@
         <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
     </div>
 </header>
-    {% block content %}
-    {% endblock %}
+<main class="content">
+    {% block content %}{% endblock %}
+</main>
+    
 <footer class="footer">
     <div class="footer-container">
         <div class="footer-column">
@@ -114,7 +116,7 @@
             alert.style.opacity = "0";
             setTimeout(() => alert.remove(), 500);
         });
-    }, 3000);
+    }, 6000);
 </script>
 </body>
 <style>
@@ -126,12 +128,14 @@
         html {
             scroll-padding-top: 120px;
             scroll-behavior: smooth;
+            height: 100%;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-image: url(media/images/about5.jpg);
             background-repeat: no-repeat;
             background-size: cover;
+            height: 100%;
         }
         header {
             background-color: #2c3e50;
@@ -156,6 +160,9 @@
             font-size: 24px;
             margin-left: auto;
             cursor: pointer;
+        }
+        .content {
+            flex: 1;
         }
         header h1 {
             font-size: 20px;
@@ -193,8 +200,6 @@
             display: block;
             text-align: center;
             font-size: large;
-        }
-        .dropdown-content li a:hover {
         }
         .dropdown:hover .dropdown-content {
             display: block;
@@ -234,7 +239,6 @@
             color: white;
             padding: 40px 20px;
             width: 100%;
-            position: fixed;
         }
         .footer-container {
             display: flex;
