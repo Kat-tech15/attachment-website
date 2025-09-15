@@ -5,6 +5,13 @@
 {% block content %}
 <div class="dashboard-container">
   <h3>Admin Dashboard</h3>
+  {% if messages %}
+        {% for message in messages %}
+            {% if "post_announcement" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
   <div class="stats">
     <div class="card card-blue"><p>Bookings</p> {{ booking_count }}</div>
     <div class="card card-purple"><p>Applications</p>{{ application_count }}</div>

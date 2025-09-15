@@ -4,6 +4,13 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Confirm Feedback Deletion</h2>
+    {% if messages %}
+        {% for message in messages %}
+            {% if "delete_feedback" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     <p>Are you sure you want to delete the following feedback?</p>
     <div class="border p-3 mb-3">
         <p><strong>Name:</strong> {{ feedback.name|default:"Anonymous" }}</p>

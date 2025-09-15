@@ -15,6 +15,13 @@
 
 <div class="delete-confirm-box">
   <h3>⚠️ Confirm Deletion</h3>
+  {% if messages %}
+        {% for message in messages %}
+            {% if "delete_attachment" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
   <p>Are you sure you want to delete <strong>{{ attachment.title }}</strong>?</p>
   <form method="post">
     {% csrf_token %}

@@ -59,6 +59,13 @@
     }
 </style>
 <h5>Create account</h5>
+{% if messages %}
+        {% for message in messages %}
+            {% if "register" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 <div class="auth-form">
     <form method="post" novalidate>
         {% csrf_token %}

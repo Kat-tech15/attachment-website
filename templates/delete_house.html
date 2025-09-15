@@ -37,6 +37,13 @@
 
 <div class="delete-confirm-box">
   <h3>⚠️ Confirm Deletion</h3>
+  {% if messages %}
+        {% for message in messages %}
+            {% if "delete_house" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
   <p>Are you sure you want to delete <strong>{{ house.title }}</strong>?</p>
   <form method="post">
     {% csrf_token %}

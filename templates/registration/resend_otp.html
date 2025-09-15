@@ -3,6 +3,13 @@
 
 {% block content %}
 <h6>Resend Verification OTP</h6>
+{% if messages %}
+        {% for message in messages %}
+            {% if "resend" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 <div class="container mt-5">
     <div class="otp-form-box">
         <form method="POST">

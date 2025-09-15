@@ -7,12 +7,12 @@
   <p>Enter the OTP sent to your email address</p>
 
   {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li class="{{ message.tags }}">{{ message }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+        {% for message in messages %}
+            {% if "verify" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
   <form method="post" action="{% url 'verify_otp' %}" id="otp-form">
     {% csrf_token %}
     <div class="otp-input-group">

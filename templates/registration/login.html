@@ -99,6 +99,13 @@
     }
 </style>
 <h5>Login to your account</h5>
+{% if messages %}
+        {% for message in messages %}
+            {% if "login" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 <div class="auth-form">
     <form method="post">
         {% csrf_token %}

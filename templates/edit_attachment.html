@@ -53,6 +53,13 @@
 
 <div class="form-container">
   <h2>Edit Attachment</h2>
+  {% if messages %}
+        {% for message in messages %}
+            {% if "edit_attachment" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

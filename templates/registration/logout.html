@@ -42,6 +42,13 @@
 
 <div class="auth-form">
     <h4>You have been logged out.</h4>
+    {% if messages %}
+        {% for message in messages %}
+            {% if "logout" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     <div class="buttons">
         <p><a href="{% url 'login' %}">Login</a></p><br>
         <p><a href="{% url 'register' %}">Register</a></p>

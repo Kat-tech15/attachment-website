@@ -2,6 +2,13 @@
 {% block content %}
 <div class="booking-container">
   <h2>Edit Booking</h2>
+  {% if messages %}
+        {% for message in messages %}
+            {% if "edit_booking" in message.tags %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
