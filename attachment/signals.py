@@ -25,28 +25,56 @@ def booking_status_notification(sender, instance, created, **kwargs):
         if instance.status == 'approaved':
             Notification.objects.create(
                 recipient=instance.attachee,
-                message = f"Your booking for {instance.house_post} has been approved."
+                message = f"Your booking for {instance.house_post} has been approved.",
+                url=f"/bookings/{instance.id}/",
+                notify_type="booking"
             )
         elif instance.status == 'cancelled':
             Notification.objects.create(
                 recipient=instance.attachee,
-                message = f"Your booking for {instance.house_post} has been cancelled."
+                message = f"Your booking for {instance.house_post} has been cancelled.",
+                url=f"/bookings/{instance.id}/",
+                notify_type="booking"
             ) 
 
 @receiver(post_save, sender=Booking)
 def notify_tenant_on_booking(sender, instance, created, **kwargs):
     if created:
-        Notification.object.create(
+        Notification.objects.create(
             user=instance.house.tenant,
-            message=f"{instance.attachee.username} booked your house: {instance.house.title}"
+            message=f"{instance.attachee.username} booked your house: {instance.house.title}",
+            url=f"/houses/{instance.id}/",
+            notify_type="booking"
         )
 
 @receiver(post_save, sender=AttachmentPost)
 def notify_attachees_on_new_post(sender, instance, created, **kwargs):
     if created:
-        attachees = User.objects.filter(role="attachee")
-        for user in attachees:
+        attachees = get_user_model().objects.filter(role="attachee")
+        notifications = [
             Notification.objects.create(
-                user = user,
-                message=f"New attachment posted by {instance.company.name}: {instance.title}"
+                recipient = user,
+                message=f"New attachment posted by {instance.company.name}: {instance.title}",
+                url=f"/attachments/{instance.id}/",
+                notify_type="attachment"
             )
+            for user in attachees
+        ]
+        Notification.objects.bulk_create(notifications)
+
+    
+@receiver(post_save, sender=Announcement)
+def notify_all_users_on_announcement(sender, instance, created, **kwargs):
+    if created:
+        users = get_user_model().objects.all()
+        notifications = [
+            Notification(
+                recipient=user,
+                message=f"{instance.title} - {instance.content[:50]}..."
+            )
+            for user in users
+        ]
+        Notification.objects.bulk_create(notifications)
+
+            
+        
