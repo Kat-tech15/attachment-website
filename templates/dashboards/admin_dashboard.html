@@ -60,68 +60,57 @@
   </form>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  const ctx = document.getElementById('usersChart').getContext('2d');
-    const usersChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [{% for item in users_by_role %}'{{ item.role }}',{% endfor %}],
-        datasets: [{
-          label: 'Users by Role',
-          data: [{% for item in users_by_role %}{{ item.count }},{% endfor %}],
-          backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-        }
-      }
-    });
+  
+  const usersData = {{ users_by_role_json|safe }};
+  const userLabels = usersData.map(u => u.role);
+  const userCounts = usersData.map(u => u.count);
 
+  new Chart(document.getElementById('usersChart'), {
+    type: 'bar',
+    data: {
+      labels: userLabels,
+      datasets: [{
+        label: 'Users by Role',
+        data: userCounts,
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
 
-  const trendCtx = document.getElementById('bookingTrendChart').getContext('2d');
-  const trendChart = new Chart(trendCtx, {
+ 
+  new Chart(document.getElementById('bookingTrendChart'), {
     type: 'bar',
     data: {
       labels: {{ booking_month_labels|safe }},
       datasets: [{
         label: 'Bookings per Month',
         data: {{ booking_month_data|safe }},
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        backgroundColor: 'rgba(75, 192, 192, 0.6)'
       }]
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-      }
-    }
+    options: { responsive: true, plugins: { legend: { display: false } } }
   });
 
-  const companyCtx = document.getElementById('topCompaniesChart').getContext('2d');
-  const companyChart = new Chart(companyCtx, {
+ 
+  new Chart(document.getElementById('topCompaniesChart'), {
     type: 'bar',
     data: {
       labels: {{ top_company_names|safe }},
       datasets: [{
         label: 'Applications',
         data: {{ top_company_counts|safe }},
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        backgroundColor: 'rgba(255, 99, 132, 0.6)'
       }]
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-      }
-    }
+    options: { responsive: true, plugins: { legend: { display: false } } }
   });
 
-  const courseCtx = document.getElementById('courseChart').getContext('2d');
-  const courseChart = new Chart(courseCtx, {
+  
+  new Chart(document.getElementById('courseChart'), {
     type: 'bar',
     data: {
       labels: {{ course_labels|safe }},
@@ -140,15 +129,7 @@
         borderWidth: 1
       }]
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom',
-        }
-
-      }
-    }
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
   });
 </script>
 

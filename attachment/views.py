@@ -27,6 +27,8 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 import random
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 from .forms import AttachmentPostForm, HouseForm,BookingForm
 
 
@@ -709,6 +711,7 @@ def dashboard_router(request):
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def admin_dashboard(request):
     users_by_role = CustomUser.objects.values('role').annotate(count=Count('id'))
+    users_by_role_json = json.dumps(users_by_role, cls=DjangoJSONEncoder)
     booking_count =Booking.objects.count()
     application_count= ApplicationVisit.objects.count()
     tenant_count = Tenant.objects.count()
@@ -729,22 +732,28 @@ def admin_dashboard(request):
     top_company_names  = [item['attachment_post__company__name'] for item in top_companies_data]
     top_company_counts = [item['application_count'] for item in top_companies_data]
 
+    course_data = ApplicationVisit.objects.values('course__name')\
+        .annotate(count=Count('id')).order_by('-count')
 
+    curse_labels = [c['course__name'] for c in course_data]
+    course_count = [c['count'] for c in course_data]
     # Feedback data
     feedback_count = Feedback.objects.count()
     recent_feedbacks = Feedback.objects.order_by('-submitted_at')[:5]
     # Final context 
     context = {
-        'users_by_role': users_by_role,
+        'users_by_role_json': users_by_role_json,
         'booking_count': booking_count,
         'application_count': application_count,
         'tenant_count': tenant_count,
         'attachee_count': attachee_count,
         'company_count': company_count,
-        'booking_month_labels': booking_month_labels,
-        'booking_month_data': booking_month_data,
-        'top_company_names': top_company_names,
-        'top_company_counts': top_company_counts,
+        'booking_month_labels': json.dumps(booking_month_labels),
+        'booking_month_data': json.dumps(booking_month_data),
+        'top_company_names': json.dumps(top_company_names),
+        'top_company_counts': json.dumps(top_company_counts),
+        'course_labels': json.dumps(course_labels),
+        'course_count': json.dumps(course_count),
         'feedback_count': feedback_count,
         'recent_feedbacks': recent_feedbacks,
     }
