@@ -64,5 +64,6 @@ urlpatterns = [
     path('view_ booked_rooms/', views.view_booked_rooms, name='view_booked_rooms'),
     path('tenant/bookings', views.tenant_house_bookings, name='tenant_house_bookings'),
     path('notifications/', views.notification_list, name='notification_list'),
+    path('announcement_list/', views.announcement_list, name='announcement_list'),
     path('notifications/mark_all_read/', views.mark_all_notifications_as_read, name='mark_all_notifications_as_read'),
     ]

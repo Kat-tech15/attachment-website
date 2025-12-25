@@ -886,3 +886,7 @@ def mark_all_notifications_as_read(request):
     notifications.update(is_read=True)
     messages.success(request, "All notifications marked as read.", extra_tags="announcement")
     return HttpResponseRedirect(reverse('notification_list'))
+
+def announcement_list(request):
+    announcements = Announcement.objects.order_by('-created_at')
+    return render(request, 'announcement_list.html', {'announcements': announcements})
