@@ -17,6 +17,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -47,8 +48,13 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'attachment',
+    #'allauth.socialaccount.providers.google',
+    #'attachment',
+    'accounts',
+    'housing',
+    'opportunities',
+    'reviews',
+    'notifications',
 
 ]
 
@@ -67,7 +73,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-AUTH_USER_MODEL = 'attachment.CustomUser'
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 TEMPLATES = [
     {
@@ -80,7 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'attachment.context_processors.notifications',
+                #'attachment.context_processors.notifications',
             ],
         },
     },

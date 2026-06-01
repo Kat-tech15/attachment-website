@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
-from notifications.signals import notify
 from django.template.loader import render_to_string
 from django.db.models import Count,Avg
 from django.core.mail import EmailMessage
