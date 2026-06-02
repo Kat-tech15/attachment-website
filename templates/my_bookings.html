@@ -41,7 +41,7 @@
             </form>
             <a href="{% url 'edit_booking' booking.id %}" class="edit-button">Edit</a>
             {% else %}
-            <p class="text-muted">Cancelled</p>
+            <p class="text-soft">Cancelled</p>
             <form method="post" action="{% url 'delete_booking' booking.id %}" style="margin-top: 10px;">
               {% csrf_token %}
               <button type="submit" onclick="return confirm('Delete this booking permanently?')" class="delete-button">

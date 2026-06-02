@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import HouseReview, CompanyReview
 
-# Register your models here.
+admin.site.register(HouseReview)
+admin.site.register(CompanyReview)

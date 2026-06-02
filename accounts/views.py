@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from phonenumbers import timezone
+from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from .models import CustomUser, Contact, Attachee, Company, Tenant
 from .forms import CustomUserCreationForm, EmailLoginForm
 from opportunities.models import ApplicationVisit
 from housing.models import Booking
-from notifications.models import Feedback, Announcement
+from notifications.models import Feedback
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required

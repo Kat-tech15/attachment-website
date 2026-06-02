@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import ApplicationVisit, AttachmentPost
 
-# Register your models here.
+admin.site.register(ApplicationVisit)
+admin.site.register(AttachmentPost)

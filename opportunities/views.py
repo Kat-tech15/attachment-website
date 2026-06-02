@@ -1,4 +1,5 @@
-from datetime import timedelta, timezone
+from datetime import timedelta
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Company, AttachmentPost, ApplicationVisit
@@ -54,14 +55,14 @@ def all_attachment_posts(request):
     })
 
 
-@login_required
+#@login_required
 def view_attachments(request):
     if not request.user.has_privilege(['attachee', 'company']):
         return HttpResponseForbidden()
         
     return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
 
-# companys' Views 
+ 
 @login_required
 def post_attachment(request):
     if not request.user.has_privilege(['company']):
@@ -128,7 +129,7 @@ def visited_posts(request):
     if not request.user.has_privilege(['attachee']):
         return HttpResponseForbidden()
     
-    attachee = request.user.attachee
+    attachee = request.user
     visits = ApplicationVisit.objects.filter(attachee=attachee).select_related('attachment_post__company')
     return render(request, 'visited_posts.html', {'visits': visits})
 

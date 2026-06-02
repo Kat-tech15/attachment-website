@@ -12,10 +12,10 @@
           <strong>{{ ann.title }}</strong>
         </a>
         <br>
-        <small class="text-muted">{{ ann.created_at|date:"M d, Y H:i" }}</small>
+        <small class="text-soft">{{ ann.created_at|date:"M d, Y H:i" }}</small>
       </li>
     {% empty %}
-      <li class="list-group-item text-muted">No announcements yet.</li>
+      <li class="list-group-item text-soft">No announcements yet.</li>
     {% endfor %}
   </ul>
 </div>

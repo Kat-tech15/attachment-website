@@ -29,7 +29,7 @@ def post_house(request):
             house.tenant = tenant
             house.save()
             messages.success(request, "House posted successfully!", extra_tags="post_house")
-            return redirect('post_house')
+            return redirect('my_houses')
 
     else:
         form = HouseForm()
