@@ -20,6 +20,7 @@ class ApplicationVisit(models.Model):
     attachee = models.ForeignKey(Attachee, on_delete=models.CASCADE)
     attachment_post = models.ForeignKey(AttachmentPost, on_delete=models.CASCADE)
     visited_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
     class Meta:

@@ -35,16 +35,13 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}#services">Services</a>
         </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                Dashboards
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard_router' %}">
+                Dashboard
             </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'attachee_dashboard' %}">Student</a></li>
-                <li><a class="dropdown-item" href="{% url 'company_dashboard' %}">Company</a></li>
-                <li><a class="dropdown-item" href="{% url 'tenants_dashboard' %}">Housing</a></li>
-            </ul>
         </li>
+        {% endif %}
     </ul>
     <ul class="navbar-nav ms-auto align-items-center">
         <li class="nav-item me-2">

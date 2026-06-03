@@ -1,7 +1,6 @@
 from rest_framework import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from attachment.models import Attachee, Company, Tenant, Booking, House, Notification, Announcement, AttachmentPost
 from housing.models import Booking
 from django.contrib.auth import get_user_model
 from notifications.models import Notification

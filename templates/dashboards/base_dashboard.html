@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="dashboard-layout">
+
+    <aside class="dashboard-sidebar">
+
+        <div class="sidebar-header">
+            <h3>Dashboard</h3>
+            <p>{{ request.user.username }}</p>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{% url 'dashboard_router' %}"
+            class="sidebar-link {% if request.resolver_match.url_name == 'dashboard_router' %}active-link{% endif %}">
+                🏠 Overview
+            </a>
+
+            {% if request.user.role == 'attachee' %}
+
+                <a href="{% url 'view_attachments' %}"
+                class="sidebar-link {% if request.resolver_match.url_name == 'view_attachments' %}active-link{% endif %}">
+                    📄 Attachments
+                </a>
+
+                <a href="{% url 'view_houses' %}"
+                class="sidebar-link {% if request.resolver_match.url_name == 'view_houses' %}active-link{% endif %}">
+                    🏡 Houses
+                </a>
+
+                <a href="{% url 'my_bookings' %}"
+                class="sidebar-link {% if request.resolver_match.url_name == 'my_bookings' %}active-link{% endif %}">
+                    📅 Bookings
+                </a>
+
+            {% elif request.user.role == 'company' %}
+
+                <a href="{% url 'post_attachment' %}"
+                class="sidebar-link {% if request.resolver_match.url_name == 'post_attachment' %}active-link{% endif %}">
+                    ➕ Post Attachment
+                </a>
+
+                <a href="{% url 'my_attachment_posts' %}"
+                class="sidebar-link {% if request.resolver_match.url_name == 'my_attachment_posts' %}active-link{% endif %}">
+                    📁 My Posts
+                </a>
+
+            {% elif request.user.role == 'tenant' %}
+
+                <a href="{% url 'all_houses' %}"
+                class="sidebar-link {% if request.resolver_match.url_name == 'all_houses' %}active-link{% endif %}">
+                    🔍 Browse Houses
+                </a>
+
+                <a href="{% url 'tenant_house_bookings' %}"
+                class="sidebar-link {% if request.resolver_match.url_name == 'tenant_house_bookings' %}active-link{% endif %}">
+                    📦 My Bookings
+                </a>
+
+            {% endif %}
+
+            <hr>
+
+            <a href="{% url 'logout' %}" class="sidebar-link logout">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ================= MAIN AREA ================= -->
+    <main class="dashboard-main">
+
+        {% block dashboard_body %}
+
+        {% block dashboard_cards %}{% endblock %}
+
+        <div class="dashboard-content">
+
+            <div class="dashboard-left">
+                {% block dashboard_left %}{% endblock %}
+            </div>
+
+            <div class="dashboard-right">
+                {% block dashboard_right %}{% endblock %}
+            </div>
+
+        </div>
+
+        {% endblock %}
+
+    </main>
+
+</div>
+
+{% endblock %}

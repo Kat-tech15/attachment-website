@@ -197,13 +197,13 @@ def login_view(request):
                 return redirect('admin_dashboard')
 
             elif role == 'attachee':
-                return redirect('attachee_dashboard')       
+                return render(request, 'dashboards/attachee_dashboard.html')
 
             elif role == 'company':
-                return redirect('company_dashboard')
+                return render(request, 'dashboards/company_dashboard.html')
 
             elif role == 'tenant':
-                return redirect('tenants_dashboard')
+                return render(request, 'dashboards/tenants_dashboard.html')
             else:
                 return redirect('home')
         else:
@@ -239,19 +239,26 @@ def contact(request):
 
     return render(request, 'contact.html')
 
+
 @login_required
 def dashboard_router(request):
     role = request.user.role
+
     if request.user.is_superuser or request.user.is_staff:
         return redirect('admin_dashboard')
+
     elif role == 'attachee':
-        return redirect('attachee_dashboard')
+        return render(request, 'dashboards/attachee_dashboard.html')
+
     elif role == 'company':
-        return redirect('company_dashboard')
+        return render(request, 'dashboards/company_dashboard.html')
+
     elif role == 'tenant':
-        return redirect('tenants_dashboard')
-    else:
-        return redirect(request, 'erro.html', {'message': 'unknown role'})
+        return render(request, 'dashboards/tenants_dashboard.html')
+
+    return render(request, 'error.html', {
+        'message': 'Unknown role.'
+    })
    
 @staff_member_required
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -281,12 +288,10 @@ def admin_dashboard(request):
     course_data = ApplicationVisit.objects.values('course__name')\
         .annotate(count=Count('id')).order_by('-count')
 
-    curse_labels = [c['course__name'] for c in course_data]
+    course_labels = [c['course__name'] for c in course_data]    
     course_count = [c['count'] for c in course_data]
-    # Feedback data
     feedback_count = Feedback.objects.count()
     recent_feedbacks = Feedback.objects.order_by('-submitted_at')[:5]
-    # Final context 
     context = {
         'users_by_role_json': users_by_role_json,
         'booking_count': booking_count,
@@ -308,29 +313,97 @@ def admin_dashboard(request):
 
 @login_required
 def attachee_dashboard(request):
+
     user = request.user
+    attachee = getattr(user, "attachee", None)
 
-    if hasattr(user, 'attachee'):
-        bookings = Booking.objects.filter(attachee=user.attachee).order_by('-created_at').exclude(status='cancelled')
-        applications = ApplicationVisit.objects.filter(attachee=user.attachee)
+    if not attachee:
+        messages.error(request, "Attachee profile not found.")
+        return redirect("home")
 
-    else:
-        bookings = Booking.objects.none()
-        applications = ApplicationVisit.objects.none()
+    # Base querysets (single source of truth)
+    bookings_qs = Booking.objects.filter(
+        attachee=attachee,
+    ).exclude(
+        status="cancelled"
+    )
 
-        
-    return render(request, 'dashboards/attachee_dashboard.html',{ 
-                  'bookings': bookings,
-                  'applications': applications,
-                  'user': request.user,
-                  })
+    applications_qs = ApplicationVisit.objects.filter(
+        attachee=attachee
+    )
+
+    context = {
+        # recent items (for dashboard preview)
+        "bookings": bookings_qs.order_by("-id")[:5],
+        "applications": applications_qs.order_by("-id")[:5],
+
+        # stats
+        "booking_count": bookings_qs.count(),
+        "application_count": applications_qs.count(),
+
+        "pending_applications": applications_qs.filter(status="pending").count(),
+        "accepted_applications": applications_qs.filter(status="accepted").count(),
+
+        "user": user,
+    }
+
+    return render(request, "dashboards/attachee_dashboard.html", context)
 
 @login_required
 def company_dashboard(request):
-    return render(request, 'dashboards/company_dashboard.html')
+
+    company = getattr(request.user, 'company', None)
+
+    if not company:
+        messages.error(request, "Company profile not found.")
+        return redirect('home')
+
+    posts = AttachmentPost.objects.filter(company=company).order_by('-created_at')
+
+    applications = ApplicationVisit.objects.filter(
+        attachment_post__company=company
+    ).order_by('-created_at')
+
+    active_posts = posts.filter(is_active=True)
+
+    context = {
+        'post_count': posts.count(),
+        'application_count': applications.count(),
+        'active_post_count': active_posts.count(),
+
+        'recent_posts': posts[:5],
+        'recent_applications': applications[:5],
+
+        'inactive_post_count': posts.filter(is_active=False).count(),
+    }
+
+    return render(request, 'dashboards/company_dashboard.html', context)
+
 @login_required
 def tenants_dashboard(request):
-    return render(request, 'dashboards/tenants_dashboard.html')
+
+    tenant = getattr(request.user, 'tenant', None)
+
+    if not tenant:
+        messages.error(request, "Tenant profile not found.")
+        return redirect('home')
+
+    from housing.models import House, Booking
+
+    bookings = Booking.objects.filter(tenant=tenant).order_by('-created_at')
+    houses = House.objects.all()
+
+    context = {
+        'booking_count': bookings.count(),
+        'house_count': houses.count(),
+        'active_booking_count': bookings.filter(status='active').count(),
+
+        'recent_bookings': bookings[:5],
+
+        'pending_bookings': bookings.filter(status='pending').count(),
+    }
+
+    return render(request, 'dashboards/tenant_dashboard.html', context)
 
 
 

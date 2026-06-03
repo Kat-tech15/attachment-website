@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-container">
+
+        <!-- ================= TOP HEADER ================= -->
+        <div class="dashboard-header">
+
+            <div class="dashboard-welcome">
+                <h3>Welcome, {{ request.user.username }}</h3>
+                <p>Your dashboard overview based on your account activity</p>
+            </div>
+
+            <div class="dashboard-header-actions">
+                <a href="{% url 'dashboard_router' %}" class="btn-outline">
+                    Refresh Dashboard
+                </a>
+            </div>
+
+        </div>
+
+        <!-- ================= METRICS GRID ================= -->
+        <div class="dashboard-grid">
+
+            {% block dashboard_cards %}
+            <!-- Cards injected by child templates -->
+            {% endblock %}
+
+        </div>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <div class="dashboard-content">
+
+            <div class="dashboard-left">
+
+                {% block dashboard_left %}
+                <!-- Tables / lists -->
+                {% endblock %}
+
+            </div>
+
+            <div class="dashboard-right">
+
+                {% block dashboard_right %}
+                <!-- Charts / summaries -->
+                {% endblock %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

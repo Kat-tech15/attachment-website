@@ -1,50 +1,92 @@
-{% extends 'base.html' %}
+{% extends "dashboards/base_dashboard.html" %}
 
 {% block title %}Company Dashboard{% endblock %}
 
-{% block header %}Welcome, {{ user.username }} (Company){% endblock %}
+{% block dashboard_cards %}
 
-
-
-{% block content %}
-<div class="dashboard-container">
-    <h3>Company Dashboard</h3>
-    <div class="dashboard-actions">
-        <a href="{% url 'post_attachment' %}" class="btn">Post Attachment</a>
-        <a href="{% url 'all_attachment_posts' %}" class="btn">View Attachments</a>
-        <a href="{% url 'my_attachment_posts' %}" class="btn">My Posts</a>
-    </div>
+<div class="dashboard-card">
+    <h4>Attachment Posts</h4>
+    <p>{{ attachment_count|default:0 }}</p>
 </div>
 
-<style>
-.dashboard-container {
-    padding: 20px;
-    text-align: center;
-    margin-top: 160px;
-}
-.dashboard-actions {
-    margin-top: 30px;
-}
-h3 {
-    text-align: center;
-    color: #358f92;
-    font-style: oblique;
-}
-.btn {
-    display: inline-block;
-    margin: 10px;
-    padding: 12px 20px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-}
-.btn:hover {
-    background-color: #0056b3;
-}
-</style>
+<div class="dashboard-card">
+    <h4>My Posts</h4>
+    <p>{{ my_posts_count|default:0 }}</p>
+</div>
+
+<div class="dashboard-card">
+    <h4>Applications Received</h4>
+    <p>{{ applications_count|default:0 }}</p>
+</div>
+
+<div class="dashboard-card">
+    <h4>Active Listings</h4>
+    <p>{{ active_listings|default:0 }}</p>
+</div>
+
 {% endblock %}
-    
 
 
-    
+{% block dashboard_left %}
+
+<h3 class="dashboard-title">Quick Actions</h3>
+
+<div class="dashboard-actions">
+
+    <a href="{% url 'post_attachment' %}" class="dashboard-btn">
+        + Post Attachment
+    </a>
+
+    <a href="{% url 'all_attachment_posts' %}" class="dashboard-btn">
+        View Attachments
+    </a>
+
+    <a href="{% url 'my_attachment_posts' %}" class="dashboard-btn">
+        My Posts
+    </a>
+
+</div>
+
+<hr>
+
+<h3 class="dashboard-title">Recent Posts</h3>
+
+{% if my_posts %}
+<table class="dashboard-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Created</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in my_posts %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ post.title }}</td>
+            <td>{{ post.created_at|date:"M d, Y" }}</td>
+            <td>{{ post.status|default:"active" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No posts yet.</p>
+{% endif %}
+
+{% endblock %}
+
+
+{% block dashboard_right %}
+
+<h3 class="dashboard-title">Insights</h3>
+
+<ul class="dashboard-list">
+    <li><strong>Most Viewed:</strong> {{ most_viewed_post.title|default:"N/A" }}</li>
+    <li><strong>Total Applications:</strong> {{ applications_count|default:0 }}</li>
+    <li><strong>Engagement Rate:</strong> {{ engagement_rate|default:"0%" }}</li>
+</ul>
+
+{% endblock %}

@@ -1,219 +1,107 @@
-{% extends 'base.html' %}
+{% extends "dashboards/base_dashboard.html" %}
 
 {% block title %}Attachee Dashboard{% endblock %}
 
-{% block header %}Hello, {{ user.username }} (Attachee){% endblock %}
+{% block dashboard_cards %}
 
-
-{% block content %}
-<div class="dashboard-container">
-  <h3>🏠 My House Bookings</h3>
-  {% if bookings %}
-  <table class="booking-table">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>House</th>
-        <th>Move-in</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-      {% endif %}
-    </thead>
-    <tbody>
-      {% if bookings %}
-      {% for b in bookings %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ b.full_name }}</td>
-          <td>{{ b.move_in_date|date:"M d, Y" }}</td>
-          <td>{{ b.status }}</td>
-          <td>
-              {% if b.status == 'pending'%}
-                <a href="{% url 'cancel_booking' b.id %}" class="btn btn-danger">Cancel</a>
-              {% else %}
-                <span class="text-soft">N/A</span>
-              {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-        {% else %}
-        <tr>
-          <p colspan="5" style="text-align: center; font-style: italic;  color: #999;">
-            You haven't booked any view_houses yet.
-          </p>
-        </tr>
-      {% endif %}
-    </tbody><br><br>
-  </table>
-  <hr>
-  <br>
-  <h3>📄 Visited Attachment Posts</h3>
-    <table class="application-table">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Attachment Title</th>
-          <th>Company</th>
-          <th>Visited On</th>
-          <th>Link</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if visits %}
-          {% for visit in visits %}
-          <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ visit.attachment_post.title }}</td>
-            <td>{{ visit.attachment_post.company.name }}</td>
-            <td>{{ visit.visited_at|date:"M d, Y H:i" }}</td>
-            <td>
-              <a href="{{ visit.attachment_post.application_link }}" target="_blank">
-                🔗 Visit Site
-              </a>
-            </td>
-          </tr>
-          {% endfor %}
-        {% else %}
-          <tr>
-            <td colspan="5" style="text-align: center; font-style: italic; color: #999;">
-              You haven't visited any posts yet.
-            </td>
-          </tr>
-        {% endif %}
-      </tbody>
-    </table>
-    <div class="dashboard-actions">
-      <a href="{% url 'visited_posts' %}" class="btn">Visited Posts</a>
-      <a href="{% url 'view_attachments'%}" class="btn">View Attachments</a>
-      <a href="{% url 'view_houses'%}" class="btn">View All Houses</a>
-      <a href="{% url 'my_bookings'%}" class="btn">My Bookings</a>
-    </div>
+<div class="dashboard-card">
+    <h4>{{ booking_count }}</h4>
+    <p>Total Bookings</p>
 </div>
 
-<style>
-.dashboard-container {
-  max-width: 1000px;
-  margin: 100px auto;
-  padding: 30px;
-  margin-top: 150px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-  font-family: 'Segoe UI', sans-serif;
-}
-.dashboard-container h3 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #358f92;
-  font-style: oblique;
-}
+<div class="dashboard-card">
+    <h4>{{ application_count }}</h4>
+    <p>Applications Visited</p>
+</div>
 
-.booking-table, 
-.application-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+<div class="dashboard-card">
+    <h4>{{ pending_applications }}</h4>
+    <p>Pending Applications</p>
+</div>
 
-.booking-table th,
-.application-table th,
-.application-table td,
-.booking-table td {
-  padding: 12px 10px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-  
-}
+<div class="dashboard-card">
+    <h4>{{ accepted_applications }}</h4>
+    <p>Accepted Applications</p>
+</div>
 
-.booking-table th,
-.application-table th {
-  background-color: #f5f5f5;
-  font-weight: 600;
-  color: #333;
-  font-style: italic;
-}
+{% endblock %}
 
-.application-table tr:hover,
-.booking-table tr:hover {
-  background-color: #f9f9f9;
-}
+{% block dashboard_left %}
 
-.dashboard-actions {
-  margin-top: 30px;
-  text-align: center;
-}
-.btn {
-  display: inline-block;
-  margin: 10px;
-  padding: 12px 20px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 50px;
-}
-.btn:hover {
-  background-color: #0056b3;
-}
+<h3 class="dashboard-title">🏠 Recent Bookings</h3>
 
-    .btn-outline-primary {
-        background-color: white;
-        color: #007bff;
-        border: 1px solid #007bff;
-        padding: 6px 12px;
-        border-radius: 4px;
-        text-decoration: none;
-    }
+{% if bookings %}
+<table class="dashboard-table">
 
-    .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: white;
-    }
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>House</th>
+            <th>Move-in Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
 
-    .btn-danger {
-        background-color: #dc3545;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-    }
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ b.house.name|default:"House Booking" }}</td>
+            <td>{{ b.move_in_date|date:"M d, Y" }}</td>
+            <td>{{ b.status }}</td>
+            <td>
+                {% if b.status == "pending" %}
+                    <a href="{% url 'cancel_booking' b.id %}" class="btn-primary">
+                        Cancel
+                    </a>
+                {% else %}
+                    <span class="text-soft">N/A</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
+</table>
+{% else %}
+    <p class="text-soft">No bookings found.</p>
+{% endif %}
 
-.feedback-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+{% endblock %}
 
-.feedback-table th,
-.feedback-table td {
-  padding: 12px 10px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-}
+{% block dashboard_right %}
 
-.feedback-table th {
-  background-color: #f5f5f5;
-  font-weight: 600;
-  color: #333;
-}
+<h3 class="dashboard-title">📄 Recent Applications</h3>
 
-.feedback-table tr:hover {
-  background-color: #f9f9f9;
-}
+{% if applications %}
+<ul class="dashboard-list">
 
-.feedback-table a {
-  color: #3498db;
-  text-decoration: none;
-}
+    {% for visit in applications %}
+        <li>
+            <strong>{{ visit.attachment_post.title }}</strong><br>
+            <span>{{ visit.attachment_post.company.name }}</span><br>
+            <small>{{ visit.visited_at|date:"M d, Y H:i" }}</small><br>
 
-.feedback-table a:hover {
-  text-decoration: underline;
-}   
-</style>
- 
+            <a href="{{ visit.attachment_post.application_link }}" target="_blank" class="btn-outline">
+                Visit
+            </a>
+        </li>
+    {% endfor %}
+
+</ul>
+{% else %}
+    <p class="text-soft">No applications visited yet.</p>
+{% endif %}
+
+<!-- QUICK ACTIONS -->
+<div class="dashboard-actions" style="margin-top: 25px;">
+
+    <a href="{% url 'visited_posts' %}" class="btn-outline">Visited Posts</a>
+    <a href="{% url 'view_attachments' %}" class="btn-outline">Attachments</a>
+    <a href="{% url 'view_houses' %}" class="btn-outline">View Houses</a>
+    <a href="{% url 'my_bookings' %}" class="btn-primary">My Bookings</a>
+
+</div>
+
 {% endblock %}

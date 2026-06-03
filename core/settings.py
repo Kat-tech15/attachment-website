@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     #'allauth.socialaccount.providers.google',
-    #'attachment',
     'accounts',
     'housing',
     'opportunities',
@@ -86,7 +85,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                #'attachment.context_processors.notifications',
             ],
         },
     },
@@ -160,7 +158,7 @@ USE_I18N = True
 USE_TZ = True
 
 AUTHENTICATION_BACKENDS = [
-    'attachment.backend.EmailAuthBackend',
+    'accounts.backend.EmailAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 # Static files (CSS, JavaScript, Images)

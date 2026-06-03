@@ -1,46 +1,100 @@
-{% extends 'base.html' %}
+{% extends "dashboards/base_dashboard.html" %}
 
 {% block title %}Tenant Dashboard{% endblock %}
 
-{% block content %}
-<div class="dashboard-container">
-<h2>Landlord Dashboard</h2>
-    <div class="dashboard-actions">
-        <a href="{% url 'post_house'%}" class="btn">Post House</a>
-        <a href="{% url 'my_houses'%}" class="btn">My Houses</a> 
-        <a href="{% url 'all_houses'%}" class="btn">All Houses</a>
-        <a href="{% url 'tenant_house_bookings' %}" class="btn">Bookings</a>
-        <a href="{% url 'view_booked_rooms' %}" class="btn">Booked Rooms</a>
-    </div>
+{% block dashboard_cards %}
+
+<div class="dashboard-card">
+    <h4>Total Bookings</h4>
+    <p>{{ booking_count|default:0 }}</p>
 </div>
-<style>
-    .dashboard-container {
-        padding: 20px;
-        text-align: center;
-        margin-top: 160px;
-    }
-    h2 {
-        color: #358f92;
-        font-style: oblique;
-    }
-    .dashboard-actions {
-        margin-top: 30px;
-    }
 
-    .btn {
-        display: inline-block;
-        margin: 10px;
-        padding: 12px;
-        background-color: #007bff;
-        color: white;
-        font-weight: bold;
-        text-decoration: none;
-        border-radius: 50px;
-    }
+<div class="dashboard-card">
+    <h4>Active Bookings</h4>
+    <p>{{ active_booking_count|default:0 }}</p>
+</div>
 
-    .btn:hover {
-        background-color: #0056b3;
-    }
-</style>
-    
+<div class="dashboard-card">
+    <h4>Pending Bookings</h4>
+    <p>{{ pending_bookings|default:0 }}</p>
+</div>
+
+<div class="dashboard-card">
+    <h4>Available Houses</h4>
+    <p>{{ house_count|default:0 }}</p>
+</div>
+
+{% endblock %}
+
+
+{% block dashboard_left %}
+
+<h3 class="dashboard-title">Quick Actions</h3>
+
+<div class="dashboard-actions">
+
+    <a href="{% url 'post_house' %}" class="dashboard-btn">
+        Post House   
+    </a>
+
+    <a href="{% url 'all_houses' %}" class="dashboard-btn">
+        Browse Houses
+    </a>
+
+    <a href="{% url 'tenant_house_bookings' %}" class="dashboard-btn">
+        My Bookings
+    </a>
+
+    <a href="{% url 'view_booked_rooms' %}" class="dashboard-btn">
+        Booked Rooms
+    </a>
+
+    <a href="{% url 'my_houses' %}" class="dashboard-btn">
+        My Listings
+    </a>
+
+</div>
+
+<hr>
+
+<h3 class="dashboard-title">Recent Bookings</h3>
+
+{% if recent_bookings %}
+<table class="dashboard-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>House</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in recent_bookings %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ booking.house.name|default:"House" }}</td>
+            <td>{{ booking.created_at|date:"M d, Y" }}</td>
+            <td>{{ booking.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No bookings yet.</p>
+{% endif %}
+
+{% endblock %}
+
+
+{% block dashboard_right %}
+
+<h3 class="dashboard-title">Overview</h3>
+
+<ul class="dashboard-list">
+    <li><strong>Total Houses:</strong> {{ house_count|default:0 }}</li>
+    <li><strong>Active Bookings:</strong> {{ active_booking_count|default:0 }}</li>
+    <li><strong>Pending:</strong> {{ pending_bookings|default:0 }}</li>
+</ul>
+
 {% endblock %}
