@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <h4>See You Soon</h4>
+            <p>You have been successfully logged out</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "logout" in message.tags %}
+                    <div class="alert alert-{{message.level_tag}}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <div style="text-align:center; margin-top: 20px;">
+
+            <p style="margin-bottom: 20px;">
+                What would you like to do next?
+            </p>
+
+            <div class="auth-footer">
+
+                <a href="{% url 'login' %}" class="auth-btn" style="display:block; text-decoration:none;">
+                    Login Again
+                </a>
+
+                <a href="{% url 'register' %}"
+                   class="auth-btn"
+                   style="display:block; margin-top:10px; background:transparent; border:1px solid var(--primary); color:var(--primary);">
+                    Create Account
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

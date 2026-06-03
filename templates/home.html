@@ -1,92 +1,59 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Home{% endblock %}
-
 {% block content %}
 
-
 <section class="hero-section">
-
     <div class="container">
-
         <div class="row align-items-center hero-row">
-
             <div class="col-lg-6" data-aos="fade-right">
-
                 <span class="badge bg-warning text-dark px-3 py-2 mb-3">
                     Kenya's Student Attachment Platform
                 </span>
-
                 <h1 class="display-3 fw-bold mb-4">
                     Find Your Next
                     <span class="text-warning">Attachment</span>,
                     Internship & Student Housing
                 </h1>
-
                 <p class="lead mb-4">
                     Connect with companies offering attachment opportunities,
                     discover internships, and secure student-friendly housing.
                 </p>
-
                 <form action="{% url 'view_attachments' %}" method="GET">
-
                     <div class="input-group input-group-lg shadow">
-
                         <input type="text"
                                name="q"
                                class="form-control"
                                placeholder="Search attachments, internships...">
-
                         <button class="btn btn-warning fw-semibold">
                             <i class="fas fa-search me-2"></i>
                             Search
                         </button>
-
                     </div>
-
                 </form>
-
                 <div class="mt-4 d-flex flex-wrap gap-3">
-
                     <a href="{% url 'all_attachment_posts' %}"
                        class="btn btn-primary btn-lg">
-
                         Explore Opportunities
-
                     </a>
-
                     <a href="{% url 'all_houses' %}"
                        class="btn btn-outline-light btn-lg">
-
                         Browse Housing
-
                     </a>
-
                 </div>
-
             </div>
-            
-
             <div class="col-lg-6 text-center" data-aos="fade-left">
-
                 <img src="{% static 'images/hero-students.png' %}"
                      alt="Students"
                      class="img-fluid hero-image">
-
             </div>
-
         </div>
-
     </div>
-
 </section>
 
-<section class="section-block bg-light">
-
+<section class="section-block">
     <div class="container">
-
         <div class="row text-center g-4">
-
             <div class="col-md-3">
                 <div class="stats-card">
                     <i class="fas fa-briefcase"></i>
@@ -94,7 +61,6 @@
                     <p>Attachments Posted</p>
                 </div>
             </div>
-
             <div class="col-md-3">
                 <div class="stats-card">
                     <i class="fas fa-home"></i>
@@ -102,7 +68,6 @@
                     <p>Housing Listings</p>
                 </div>
             </div>
-
             <div class="col-md-3">
                 <div class="stats-card">
                     <i class="fas fa-building"></i>
@@ -110,7 +75,6 @@
                     <p>Companies</p>
                 </div>
             </div>
-
             <div class="col-md-3">
                 <div class="stats-card">
                     <i class="fas fa-users"></i>
@@ -118,355 +82,226 @@
                     <p>Registered Users</p>
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </section>
 
 <section id="about" class="section-block why-section">
-
     <div class="container">
-
         <div class="section-header text-center mb-5">
-
             <span class="section-badge">Why Choose Us</span>
-
             <h2 class="fw-bold mt-3">
                 Everything Students Need In One Platform
             </h2>
-
             <p class="text-soft mx-auto" style="max-width:700px;">
                 We bring together attachment opportunities, internships and housing in one system.
             </p>
-
         </div>
-
-        <div class="row g-4">
-            <!-- unchanged cards -->
-        </div>
-
     </div>
-
 </section>
 
 <section class="section-block how-it-works">
-
     <div class="container">
-
         <div class="section-header text-center mb-5">
-
             <span class="section-badge">Simple Process</span>
             <h2 class="fw-bold mt-3">How It Works</h2>
-
             <p class="text-soft">
                 Get started in just a few steps.
             </p>
-
         </div>
-
         <div class="row g-4 align-items-strech">
-
             <div class="col-lg-3 col-md-6">
-
                 <div class="process-card">
-
                     <div class="step-number">01</div>
-
-                    <i class="fas fa-user-plus process-icon"></i>
-
-                    <h5>Create Account</h5>
-
-                    <p>
-                        Register as a student, company,
-                        or housing provider.
-                    </p>
-
+                        <i class="fas fa-user-plus process-icon"></i>
+                        <h5>Create Account</h5>
+                        <p>
+                            Register as a student, company,
+                            or housing provider.
+                        </p>
                 </div>
-
             </div>
-
             <div class="col-lg-3 col-md-6">
-
                 <div class="process-card">
-
                     <div class="step-number">02</div>
-
-                    <i class="fas fa-search process-icon"></i>
-
-                    <h5>Search Opportunities</h5>
-
-                    <p>
-                        Browse internships,
-                        attachments and housing.
-                    </p>
-
+                        <i class="fas fa-search process-icon"></i>
+                        <h5>Search Opportunities</h5>
+                        <p>
+                            Browse internships,
+                            attachments and housing.
+                        </p>
                 </div>
-
             </div>
-
             <div class="col-lg-3 col-md-6">
-
                 <div class="process-card">
-
                     <div class="step-number">03</div>
-
-                    <i class="fas fa-paper-plane process-icon"></i>
-
-                    <h5>Apply & Connect</h5>
-
-                    <p>
-                        Contact companies and
-                        secure your placement.
-                    </p>
-
+                        <i class="fas fa-paper-plane process-icon"></i>
+                        <h5>Apply & Connect</h5>
+                        <p>
+                            Contact companies and
+                            secure your placement.
+                        </p>
                 </div>
-
             </div>
-
             <div class="col-lg-3 col-md-6">
-
                 <div class="process-card">
-
                     <div class="step-number">04</div>
-
-                    <i class="fas fa-rocket process-icon"></i>
-
-                    <h5>Start Your Journey</h5>
-
-                    <p>
-                        Begin your attachment
-                        and grow your career.
-                    </p>
-
+                        <i class="fas fa-rocket process-icon"></i>
+                        <h5>Start Your Journey</h5>
+                        <p>
+                            Begin your attachment
+                            and grow your career.
+                        </p>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </section>
 
 <section class="section-block featured-houses">
-
     <div class="container">
-
         <div class="section-header text-center mb-5">
-
             <span class="section-badge">Accommodation</span>
             <h2 class="fw-bold mt-3">Featured Student Housing</h2>
-
             <p class="text-soft">
                 Affordable and verified housing near attachment locations.
             </p>
-
         </div>
-
         <div class="row g-4">
-
             {% for house in featured_houses %}
-
             <div class="col-lg-4 col-md-6">
-
                 <div class="house-card shadow-sm h-100">
-
-                    <!-- Image Wrapper -->
                     <div class="house-image position-relative">
-
                         {% if house.image %}
                         <img src="{{ house.image.url }}" alt="{{ house.title }}">
                         {% else %}
                         <img src="{% static 'images/house-placeholder.jpg' %}" alt="House">
                         {% endif %}
-
-                        <!-- Rent Badge -->
                         <div class="rent-badge">
                             KES {{ house.rent }}
                         </div>
-
                     </div>
-
-                    <!-- Body -->
                     <div class="house-body p-3">
-
                         <h5 class="fw-bold mb-1">
                             {{ house.title }}
                         </h5>
-
                         <p class="house-location text-soft mb-2">
                             <i class="fas fa-map-marker-alt me-1"></i>
                             {{ house.location }}
                         </p>
-
                         <p class="house-desc text-soft small mb-0">
                             {{ house.description|truncatewords:18 }}
                         </p>
-
                     </div>
-
-                    <!-- Footer -->
                     <div class="house-footer p-3 pt-0">
-
                         <a href="{% url 'all_houses' %}" class="btn btn-outline-primary w-100">
                             View Details
                         </a>
-
                     </div>
-
                 </div>
-
             </div>
-
             {% endfor %}
-
         </div>
-
     </div>
-
 </section>
 
-<section class="section-block bg-light">
-
+<section class="section-block">
     <div class="container">
-
         <div class="section-header text-center mb-5">
-
             <span class="section-badge">Opportunities</span>
             <h2 class="fw-bold mt-3">Recent Attachments</h2>
 
             <p class="text-soft">
                 Latest opportunities posted by companies.
             </p>
-
         </div>
-
         <div class="row g-4">
-
             {% for att in recent_attachments %}
-
             <div class="col-md-4">
-
                 <div class="card h-100 border-0 shadow-sm">
-
                     <div class="card-body">
-
                         <h5 class="fw-bold">
                             {{ att.title }}
                             <span class="badge bg-success ms-2">Open</span>
                         </h5>
-
                         <p><strong>Company:</strong> {{ att.company }}</p>
                         <p><strong>Location:</strong> {{ att.location }}</p>
                         <p><strong>Deadline:</strong> {{ att.application_deadline|date:"F d, Y" }}</p>
-
                         {% if att.link %}
                         <a href="{{ att.link }}" target="_blank">
                             View More / Apply
                         </a>
                         {% endif %}
-
                     </div>
-
                 </div>
-
             </div>
-
             {% endfor %}
-
         </div>
-
     </div>
-
 </section>
 
 <section class="section-block testimonial-section text-center">
-
     <div class="container">
-
         <div class="section-header mb-5">
-
             <span class="section-badge">Testimonials</span>
             <h2 class="fw-bold mt-3">What Our Users Say</h2>
-
             <p class="text-soft  mx-auto" style="max-width:700px;">
                 Real feedback from students using our platform.
             </p>
-
         </div>
-
         <div class="row g-4 justify-content-center">
-
             <div class="col-md-6 col-lg-3">
                 <div class="testimonial-card">
-                    <img src="{% static 'images/about6.jpg' %}" alt="">
+                    <img src="{% static 'images/kevin.jpg' %}" alt="">
                     <p class="testimonial-text">
                         "This platform helped me get an attachment quickly!"
-                    </p>
-                    <h6 class="testimonial-name">Sarah W.</h6>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="testimonial-card">
-                    <img src="{% static 'images/about6.jpg' %}" alt="">
-                    <p class="testimonial-text">
-                        "Clean UI and smooth navigation."
                     </p>
                     <h6 class="testimonial-name">Kevin M.</h6>
                 </div>
             </div>
-
             <div class="col-md-6 col-lg-3">
                 <div class="testimonial-card">
-                    <img src="{% static 'images/about6.jpg' %}" alt="">
+                    <img src="{% static 'images/sarah.jpg' %}" alt="">
+                    <p class="testimonial-text">
+                        "Clean UI and smooth navigation."
+                    </p>
+                    <h6 class="testimonial-name">Sarah W.</h6>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="testimonial-card">
+                    <img src="{% static 'images/andrew.jpg' %}" alt="">
                     <p class="testimonial-text">
                         "Booking a house was never this easy!"
                     </p>
-                    <h6 class="testimonial-name">Lucy A.</h6>
+                    <h6 class="testimonial-name">Andrew A.</h6>
                 </div>
             </div>
-
             <div class="col-md-6 col-lg-3">
                 <div class="testimonial-card">
-                    <img src="{% static 'images/about6.jpg' %}" alt="">
+                    <img src="{% static 'images/john.jpg' %}" alt="">
                     <p class="testimonial-text">
                         "Highly recommended for students."
                     </p>
                     <h6 class="testimonial-name">John O.</h6>
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </section>
 
-
-<section id="feedback" class="section-block bg-light">
-
+<section id="feedback" class="section-block">
     <div class="container">
-
         <div class="section-header text-center mb-5">
-
             <span class="section-badge">Feedback</span>
             <h2 class="fw-bold mt-3">We Value Your Feedback</h2>
-
             <p class="text-soft  mx-auto" style="max-width:700px;">
                 Help us improve the platform by sharing your experience.
             </p>
-
         </div>
-
         <div class="row justify-content-center">
-
             <div class="col-lg-6">
-
                 <div class="feedback-card">
-
                     {% if messages %}
                         {% for message in messages %}
                             {% if "feedback" in message.tags %}
@@ -476,24 +311,17 @@
                             {% endif %}
                         {% endfor %}
                     {% endif %}
-
                     <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-
                         <button type="submit" class="btn btn-primary w-100 mt-3">
                             Submit Feedback
                         </button>
                     </form>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </section>
 
 {% endblock %}

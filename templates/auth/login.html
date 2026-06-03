@@ -1,0 +1,24 @@
+{% extends "auth/auth_base.html" %}
+
+{% block auth_header %}
+<div class="auth-header">
+    <h4>Welcome Back</h4>
+    <p>Login to your account</p>
+</div>
+{% endblock %}
+
+{% block auth_content %}
+<form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="auth-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="auth-btn">Login</button>
+</form>
+{% endblock %}

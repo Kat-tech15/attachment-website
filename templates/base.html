@@ -14,107 +14,73 @@
           rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
-
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm">
-
     <div class="container">
-
         <a class="navbar-brand" href="{% url 'home' %}">
             <i class="fas fa-graduation-cap me-2"></i>
             Attachment Portal
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="nav">
-
-    <!-- CENTER NAV LINKS -->
     <ul class="navbar-nav mx-auto text-center">
-
         <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home</a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}#about">About</a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}#services">Services</a>
         </li>
-
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 Dashboards
             </a>
-
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{% url 'attachee_dashboard' %}">Student</a></li>
                 <li><a class="dropdown-item" href="{% url 'company_dashboard' %}">Company</a></li>
                 <li><a class="dropdown-item" href="{% url 'tenants_dashboard' %}">Housing</a></li>
             </ul>
         </li>
-
     </ul>
-
-    <!-- RIGHT SIDE CONTROLS -->
     <ul class="navbar-nav ms-auto align-items-center">
-
-        <!-- Notifications -->
         <li class="nav-item me-2">
             <a class="nav-link position-relative" href="{% url 'notification_list' %}">
                 <i class="fas fa-bell"></i>
                 <span class="notification-count">3</span>
             </a>
         </li>
-
-        <!-- THEME TOGGLE -->
         <li class="nav-item me-2">
             <button id="themeToggle" class="btn btn-sm btn-outline-light">
                 <i class="fas fa-moon"></i>
             </button>
         </li>
-
-        <!-- AUTH DROPDOWN -->
         {% if user.is_authenticated %}
-
         <li class="nav-item dropdown">
-
             <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
                 <i class="fas fa-user-circle me-2"></i>
                 {{ user.username }}
             </a>
-
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
             </ul>
-
         </li>
-
         {% else %}
-
         <li class="nav-item dropdown">
-
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 Account
             </a>
-
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
                 <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
             </ul>
-
         </li>
-
         {% endif %}
-
     </ul>
-
 </div>
 </nav>
 
@@ -123,29 +89,21 @@
 </main>
 
 <footer class="footer">
-
     <div class="container">
-
         <div class="row g-4 footer-top">
-
             <div class="col-lg-4">
                 <div class="footer-brand">
-
                     <h5 class="mb-3">
                         <i class="fas fa-graduation-cap me-2"></i>
                         Attachment Portal
                     </h5>
-
                     <p class="small">
                         Connecting students with internships, attachments, and housing opportunities across Kenya.
                     </p>
-
                 </div>
             </div>
-
             <div class="col-lg-4">
                 <h6 class="footer-title">Quick Links</h6>
-
                 <ul class="footer-links">
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'home' %}#about">About</a></li>
@@ -153,16 +111,13 @@
                     <li><a href="{% url 'notification_list' %}">Notifications</a></li>
                 </ul>
             </div>
-
             <div class="col-lg-4">
                 <h6 class="footer-title">Contact</h6>
-
                 <div class="footer-contact small">
                     <p><i class="fas fa-envelope me-2"></i> email@example.com</p>
                     <p><i class="fas fa-phone me-2"></i> +254 112 871 337</p>
                     <p><i class="fas fa-map-marker-alt me-2"></i> Kilifi, Kenya</p>
                 </div>
-
                 <div class="footer-social mt-3">
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -170,11 +125,8 @@
                     <a href="#"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
-
             </div>
-
         </div>
-
         <div class="footer-bottom text-center mt-4 pt-3 border-top border-secondary">
             <small>© {% now "Y" %} Attachment Portal. All Rights Reserved.</small>
         </div>

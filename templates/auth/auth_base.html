@@ -1,0 +1,33 @@
+<!-- templates/auth/auth_base.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        {% block auth_header %}
+        {% endblock %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.level_tag }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="auth-body">
+            {% block auth_content %}
+            {% endblock %}
+        </div>
+
+        {% block auth_footer %}
+        {% endblock %}
+
+    </div>
+
+</div>
+
+{% endblock %}

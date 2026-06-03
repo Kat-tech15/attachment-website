@@ -25,7 +25,7 @@ from notifications.models import Testimonials
 from notifications.forms import FeedbackForm
 
 def home(request):
-    featured_houses = House.objects.all().order_by('?')[:4]
+    featured_houses = House.objects.all().order_by('?')[:8]
     recent_attachments = AttachmentPost.objects.order_by('-id')[:2]
     testimonials = Testimonials.objects.all()[:5]
     query = request.GET.get('q')
@@ -77,7 +77,7 @@ def register_view(request):
             return redirect('verify_otp')
     else:
         form = CustomUserCreationForm()
-    return render(request,'registration/register.html', {'form': form})
+    return render(request,'auth/register.html', {'form': form})
 
 def verify_otp(request):
     email = request.session.get('email')
@@ -130,7 +130,7 @@ def verify_otp(request):
             messages.error(request, "User not found. Please register again.", extra_tags="verify")
             return redirect('register')
         
-    return render(request, 'registration/verify_otp.html')
+    return render(request, 'auth/verify_otp.html')
 
 def resend_otp(request):
     session_email = request.session.get('email')    
@@ -173,7 +173,7 @@ def resend_otp(request):
             messages.error(request, "User not found. Please register again.", extra_tags="resend")
             return redirect('register')
         
-    return render(request, 'registration/resend_otp.html')    
+    return render(request, 'auth/resend_otp.html')    
 
 
 def login_view(request):
@@ -211,13 +211,13 @@ def login_view(request):
 
     else:
         form = EmailLoginForm()
-    return render(request, 'registration/login.html', {'form': form}) 
+    return render(request, 'auth/login.html', {'form': form}) 
     
       
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.', extra_tags="logout")
-    return render(request, 'registration/logout.html')
+    return render(request, 'auth/logout.html')
 
 
 

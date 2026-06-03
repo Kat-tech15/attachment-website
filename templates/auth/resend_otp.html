@@ -1,0 +1,21 @@
+{% extends "auth/auth_base.html" %}
+
+{% block auth_header %}
+<div class="auth-header">
+    <h4>Resend OTP</h4>
+    <p>Enter your email to receive a new code</p>
+</div>
+{% endblock %}
+
+{% block auth_content %}
+<form method="post">
+    {% csrf_token %}
+
+    <div class="auth-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+    </div>
+
+    <button class="auth-btn">Resend OTP</button>
+</form>
+{% endblock %}
