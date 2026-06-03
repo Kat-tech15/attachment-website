@@ -311,8 +311,8 @@ section {
     position: fixed;
     bottom: 25px;
     right: 25px;
-    width: 46px;
-    height: 46px;
+    width: 20px;
+    height: 20px;
     border: none;
     border-radius: 50%;
     background: var(--primary);
@@ -441,7 +441,11 @@ body.dark-mode .feature-card,
 body.dark-mode .stats-card,
 body.dark-mode .process-card,
 body.dark-mode .testimonial-card,
-body.dark-mode .feedback-card {
+body.dark-mode .feedback-card,
+body.dark-mode .dashboard-card,
+body.dark-mode .dashboard-right,
+body.dark-mode .dashboard-left,
+body.dark-mode .dashboard-list{
     background: #1e293b;
     color: #e2e8f0;
 }
@@ -788,17 +792,6 @@ body.dark-mode .auth-form .helptext {
    DASHBOARD LAYOUT
 ========================= */
 
-.dashboard-page {
-    padding: 30px;
-}
-
-.dashboard-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 100px auto;
-    padding: 20px;
-}
-
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -822,9 +815,9 @@ body.dark-mode .auth-form .helptext {
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
 .dashboard-content {
@@ -846,15 +839,40 @@ body.dark-mode .auth-form .helptext {
 
 .dashboard-card {
     background: white;
-    padding: 20px;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
+    padding: 18px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .dashboard-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+}
+.dashboard-card h4 {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.dashboard-card p {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+}
+@media (max-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
 }
 /* =========================
    DASHBOARD TABLES
@@ -960,10 +978,45 @@ body.dark-mode .auth-form .helptext {
     background: var(--primary);
     color: white;
 }
-/* =========================
-   DASHBOARD ACTIONS
-========================= */
 
+
+.dashboard-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.action-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-decoration: none;
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.action-icon {
+    font-size: 24px;
+}
+
+.action-card span:last-child {
+    font-weight: 600;
+    text-align: center;
+}
 .dashboard-actions {
     margin-top: 20px;
     display: flex;
@@ -974,12 +1027,14 @@ body.dark-mode .auth-form .helptext {
     display: flex;
     min-height: 100vh;
 }
-
 .dashboard-sidebar {
     width: 250px;
+    min-height: 100vh;
     background: #0f172a;
     color: white;
     padding: 20px;
+    position: sticky;
+    top: 0;
 }
 
 .dashboard-main {
@@ -987,20 +1042,29 @@ body.dark-mode .auth-form .helptext {
     padding: 25px;
     background: #f8fafc;
 }
-.sidebar-nav a.active-link {
-    background: rgba(59, 130, 246, 0.2);
-    color: #ffffff;
-    border-left: 4px solid var(--primary);
-    padding-left: 12px;
-    font-weight: 600;
+@media (max-width: 768px) {
+    .dashboard-actions-grid {
+        grid-template-columns: 1fr;
+    }
 }
 .sidebar-link {
-    display: block;
-    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 20px;
+    padding: 12px;
     border-radius: 8px;
+    flex-shrink: 0;
     text-decoration: none;
     color: #cbd5e1;
+
     transition: 0.2s ease;
+}
+
+.sidebar-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 15px;
 }
 
 .sidebar-link:hover {
@@ -1008,9 +1072,11 @@ body.dark-mode .auth-form .helptext {
     color: white;
 }
 
-.active-link {
-    background: #1e40af;
-    color: white;
+.sidebar-link.active-link {
+    background: rgba(59, 130, 246, 0.2);
+    color: #fff;
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
     font-weight: 600;
 }
 

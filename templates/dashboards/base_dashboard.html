@@ -15,48 +15,56 @@
 
             <a href="{% url 'dashboard_router' %}"
             class="sidebar-link {% if request.resolver_match.url_name == 'dashboard_router' %}active-link{% endif %}">
-                🏠 Overview
+                <i class="fas fa-chart-line"></i>
+                <span>Overview</span>
             </a>
 
             {% if request.user.role == 'attachee' %}
 
                 <a href="{% url 'view_attachments' %}"
                 class="sidebar-link {% if request.resolver_match.url_name == 'view_attachments' %}active-link{% endif %}">
-                    📄 Attachments
+                    <i class="fas fa-briefcase"></i>
+                    <span>Attachments</span>
                 </a>
 
                 <a href="{% url 'view_houses' %}"
                 class="sidebar-link {% if request.resolver_match.url_name == 'view_houses' %}active-link{% endif %}">
-                    🏡 Houses
+                    <i class="fas fa-house"></i>
+                    <span>Houses</span>
                 </a>
 
                 <a href="{% url 'my_bookings' %}"
                 class="sidebar-link {% if request.resolver_match.url_name == 'my_bookings' %}active-link{% endif %}">
-                    📅 Bookings
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Bookings</span>
                 </a>
 
             {% elif request.user.role == 'company' %}
 
                 <a href="{% url 'post_attachment' %}"
                 class="sidebar-link {% if request.resolver_match.url_name == 'post_attachment' %}active-link{% endif %}">
-                    ➕ Post Attachment
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post Attachment</span>
                 </a>
 
                 <a href="{% url 'my_attachment_posts' %}"
                 class="sidebar-link {% if request.resolver_match.url_name == 'my_attachment_posts' %}active-link{% endif %}">
-                    📁 My Posts
+                    <i class="fas fa-folder-open"></i>
+                    <span>My Posts</span>
                 </a>
 
             {% elif request.user.role == 'tenant' %}
 
                 <a href="{% url 'all_houses' %}"
                 class="sidebar-link {% if request.resolver_match.url_name == 'all_houses' %}active-link{% endif %}">
-                    🔍 Browse Houses
+                    <i class="fas fa-search"></i>
+                    <span>Browse Houses</span>
                 </a>
 
                 <a href="{% url 'tenant_house_bookings' %}"
                 class="sidebar-link {% if request.resolver_match.url_name == 'tenant_house_bookings' %}active-link{% endif %}">
-                    📦 My Bookings
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Bookings</span>
                 </a>
 
             {% endif %}
@@ -64,7 +72,8 @@
             <hr>
 
             <a href="{% url 'logout' %}" class="sidebar-link logout">
-                🚪 Logout
+                <i class="fas fa-right-from-bracket"></i>
+                <span>Logout</span>
             </a>
 
         </nav>
@@ -77,7 +86,12 @@
 
         {% block dashboard_body %}
 
-        {% block dashboard_cards %}{% endblock %}
+        <div class="dashboard-grid">
+
+            {% block dashboard_cards %}
+            {% endblock %}
+
+        </div>
 
         <div class="dashboard-content">
 

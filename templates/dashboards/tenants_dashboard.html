@@ -26,31 +26,30 @@
 
 {% endblock %}
 
-
 {% block dashboard_left %}
 
 <h3 class="dashboard-title">Quick Actions</h3>
 
 <div class="dashboard-actions">
 
-    <a href="{% url 'post_house' %}" class="dashboard-btn">
-        Post House   
+    <a href="{% url 'post_house' %}" class="btn-primary">
+        🏠 Post House
     </a>
 
-    <a href="{% url 'all_houses' %}" class="dashboard-btn">
-        Browse Houses
+    <a href="{% url 'all_houses' %}" class="btn-outline">
+        🔍 Browse Houses
     </a>
 
-    <a href="{% url 'tenant_house_bookings' %}" class="dashboard-btn">
-        My Bookings
+    <a href="{% url 'tenant_house_bookings' %}" class="btn-outline">
+        📅 My Bookings
     </a>
 
-    <a href="{% url 'view_booked_rooms' %}" class="dashboard-btn">
-        Booked Rooms
+    <a href="{% url 'view_booked_rooms' %}" class="btn-outline">
+        🛏️ Booked Rooms
     </a>
 
-    <a href="{% url 'my_houses' %}" class="dashboard-btn">
-        My Listings
+    <a href="{% url 'my_houses' %}" class="btn-outline">
+        📋 My Listings
     </a>
 
 </div>

@@ -35,6 +35,15 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}#services">Services</a>
         </li>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'home'%}#houses" >Houses</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'home'%}#opportunities">Opportunities</a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'home'%}#testimony" class="nav-link">Testimonials</a>
+        </div>
         {% if user.is_authenticated %}
         <li class="nav-item">
             <a class="nav-link" href="{% url 'dashboard_router' %}">
