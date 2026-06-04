@@ -2,23 +2,48 @@
 
 {% block content %}
 
+<div class="auth-page">
 
-<div class="form-container">
-  <h2>Edit Attachment</h2>
-  {% if messages %}
-        {% for message in messages %}
-            {% if "edit_attachment" in message.tags %}
-                <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div style="display: flex; gap: 10px;">
-      <button type="submit" class="btn btn-primary">Update</button>
-      <a href="{% url 'company_dashboard' %}" class="btn btn-secondary">Cancel</a>
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>Edit Attachment</h4>
+            <p>Update the attachment opportunity details below.</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "edit_attachment" in message.tags %}
+                    <div class="alert alert-{{message.level_tag}}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="attachment-form">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="attachment-form-actions">
+
+                <button type="submit" class="auth-btn">
+                    Update Attachment
+                </button>
+
+                <a href="{% url 'company_dashboard' %}"
+                   class="auth-btn-outline text-center">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
     </div>
-  </form>
+
 </div>
+
 {% endblock %}

@@ -1,20 +1,63 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<div class="delete-confirm-box">
-  <h3>⚠️ Confirm Deletion</h3>
-  {% if messages %}
-        {% for message in messages %}
-            {% if "delete_attachment" in message.tags %}
-                <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-  <p>Are you sure you want to delete <strong>{{ attachment.title }}</strong>?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    <a href="{% url 'company_dashboard' %}" class="btn btn-secondary">Cancel</a>
-  </form>
+<div class="auth-page">
+
+    <div class="delete-card">
+
+        <div class="delete-icon">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+
+        <div class="text-center mb-4">
+            <h3>Confirm Deletion</h3>
+            <p>
+                This action cannot be undone.
+            </p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "delete_attachment" in message.tags %}
+                    <div class="alert alert-{{ message.level_tag }}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <div class="delete-details">
+            <p>
+                Are you sure you want to delete:
+            </p>
+
+            <h5>
+                {{ attachment.title }}
+            </h5>
+        </div>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="delete-actions">
+
+                <button type="submit" class="btn-delete">
+                    Yes, Delete
+                </button>
+
+                <a href="{% url 'company_dashboard' %}"
+                   class="btn-cancel">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
+
 {% endblock %}

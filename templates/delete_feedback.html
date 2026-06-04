@@ -1,28 +1,68 @@
 {% extends "base.html" %}
+
 {% block title %}Delete Feedback{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Confirm Feedback Deletion</h2>
-    {% if messages %}
-        {% for message in messages %}
-            {% if "delete_feedback" in message.tags %}
-                <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-    <p>Are you sure you want to delete the following feedback?</p>
-    <div class="border p-3 mb-3">
-        <p><strong>Name:</strong> {{ feedback.name|default:"Anonymous" }}</p>
-        <p><strong>Email:</strong> {{ feedback.email }}</p>
-        <p><strong>Message:</strong> {{ feedback.message }}</p>
-        <p><strong>Submitted At:</strong> {{ feedback.submitted_at|date:"M d, Y H:i" }}</p>
+
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>🗑️ Confirm Feedback Deletion</h4>
+            <p>This action cannot be undone</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "delete_feedback" in message.tags %}
+                    <div class="alert-message alert-{{ message.level_tag }}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <div class="delete-warning">
+            <p>Are you sure you want to delete this feedback?</p>
+        </div>
+
+        <div class="feedback-preview">
+
+            <div class="attachment-opportunity-card">
+
+                <div class="attachment-meta">
+                    <p><strong>Name:</strong> {{ feedback.name|default:"Anonymous" }}</p>
+                    <p><strong>Email:</strong> {{ feedback.email }}</p>
+                    <p><strong>Message:</strong> {{ feedback.message }}</p>
+                    <p><strong>Submitted At:</strong> {{ feedback.submitted_at|date:"M d, Y H:i" }}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <form method="post" class="attachment-form">
+
+            {% csrf_token %}
+
+            <div class="attachment-form-actions">
+
+                <a href="{% url 'admin_feedback_list' %}"
+                   class="auth-btn-outline">
+                    Cancel
+                </a>
+
+                <button type="submit" class="auth-btn delete-btn">
+                    Delete
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
-    <form method="post">
-        {% csrf_token %}
-        <a href="{% url 'admin_feedback_list' %}" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
+
 </div>
 
 {% endblock %}

@@ -3,20 +3,48 @@
 {% block title %}Announcements{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2>All Announcements</h2>
-  <ul class="list-group">
-    {% for ann in announcements %}
-      <li class="list-group-item">
-        <a href="{% url 'announcement_detail' ann.id %}">
-          <strong>{{ ann.title }}</strong>
-        </a>
-        <br>
-        <small class="text-soft">{{ ann.created_at|date:"M d, Y H:i" }}</small>
-      </li>
-    {% empty %}
-      <li class="list-group-item text-soft">No announcements yet.</li>
-    {% endfor %}
-  </ul>
+
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>Announcements</h4>
+            <p>Latest updates and notices</p>
+        </div>
+
+        <div class="announcement-list">
+
+            {% for ann in announcements %}
+
+                <div class="attachment-opportunity-card">
+
+                    <div class="attachment-title">
+                        <a href="{% url 'announcement_detail' ann.id %}">
+                            {{ ann.title }}
+                        </a>
+                    </div>
+
+                    <div class="attachment-description">
+                        <small>
+                            {{ ann.created_at|date:"M d, Y H:i" }}
+                        </small>
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="attachment-search-card">
+                    <p>No announcements yet.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
 </div>
+
 {% endblock %}

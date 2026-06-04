@@ -1,56 +1,139 @@
 {% extends "base.html" %}
 
 {% block title %}My Bookings{% endblock %}
+
 {% block content %}
-<div class="booking-container">
-  <h3>📚 My Bookings</h3>
-  <table class="booking-table">
-      <thead>
-        <tr>
-          <th>Index</th>
-          <th>Room Id</th>
-          <th>Location</th>
-          <th>Price</th>
-          <th>Move in Date</th>
-          <th>Date Booked</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-         {% if bookings %}
-        {% for booking in bookings %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ booking.room.room_number }}</td>
-          <td>{{ booking.house_post.location }}</td>
-          <td>{{ booking.house_post.rent }}</td>
-          <td>{{ booking.move_in_date|date:"M d, Y " }}</td>
-          <td>{{ booking.move_out_date|date:"M d, Y " }}</td>
-          <td>{{ booking.room.status}}</td>
-          <td>
-            {% if booking.status != 'cancelled' and booking.move_in_date > today %}
-            <a href="{% url 'edit_booking' booking.id %}" class="bt-action edit-btn">Edit</a><br>
-            <br>
-            <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
-              {% csrf_token %}
-              <button type="submit" class="btn-action btn-cancel">Cancel</button>
-            </form>
-            {% else %}
-             <span style="color: gray; font-style: italic;">No Actions</span>
-            {% endif %}
-            {% if booking.status == 'cancelled' %}
-            <form method="post" action="{% url 'delete_booking' booking.id %}" style="margin-top: 10px;">
-              {% csrf_token %}
-              <button type="submit" onclick="return confirm('Delete this booking permanently?')" class="btn-cancel">
-                Delete
-              </button>
-            </form>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-        {% endif %}
-      </tbody>
-  </div>
+
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>My Bookings</h4>
+            <p>Track your room and house bookings</p>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="attachment-table">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Room</th>
+                        <th>Location</th>
+                        <th>Price</th>
+                        <th>Move-In</th>
+                        <th>Booked On</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% if bookings %}
+
+                        {% for booking in bookings %}
+
+                            <tr>
+
+                                <td>{{ forloop.counter }}</td>
+
+                                <td class="table-title">
+                                    {{ booking.room.room_number }}
+                                </td>
+
+                                <td>
+                                    {{ booking.house_post.location }}
+                                </td>
+
+                                <td>
+                                    {{ booking.house_post.rent }}
+                                </td>
+
+                                <td>
+                                    {{ booking.move_in_date|date:"M d, Y" }}
+                                </td>
+
+                                <td>
+                                    {{ booking.move_out_date|date:"M d, Y" }}
+                                </td>
+
+                                <td>
+                                    {% if booking.status == 'cancelled' %}
+                                        <span class="status-badge status-expired">
+                                            Cancelled
+                                        </span>
+                                    {% else %}
+                                        <span class="status-badge status-open">
+                                            {{ booking.room.status }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+
+                                    {% if booking.status != 'cancelled' and booking.move_in_date > today %}
+
+                                        <a href="{% url 'edit_booking' booking.id %}"
+                                           class="table-link">
+                                            Edit
+                                        </a>
+
+                                        <form method="post"
+                                              action="{% url 'cancel_booking' booking.id %}"
+                                              style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                    class="auth-btn"
+                                                    onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                                Cancel
+                                            </button>
+                                        </form>
+
+                                    {% elif booking.status == 'cancelled' %}
+
+                                        <form method="post"
+                                              action="{% url 'delete_booking' booking.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                    class="auth-btn"
+                                                    onclick="return confirm('Delete this booking permanently?')">
+                                                Delete
+                                            </button>
+                                        </form>
+
+                                    {% else %}
+
+                                        <span class="table-empty">No Actions</span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="8" class="table-empty">
+                                No bookings found.
+                            </td>
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

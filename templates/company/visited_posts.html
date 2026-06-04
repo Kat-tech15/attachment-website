@@ -3,43 +3,78 @@
 {% block title %}Visited Posts{% endblock %}
 
 {% block content %}
-<div class="feedback-container">
-  <h3>Visited Attachment Posts</h3>
 
-  <table class="feedback-table">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Attachment Title</th>
-        <th>Company</th>
-        <th>Visited On</th>
-        <th>Link</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% if visits %}
-        {% for visit in visits %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ visit.attachment_post.title }}</td>
-          <td>{{ visit.attachment_post.company.name }}</td>
-          <td>{{ visit.visited_at|date:"M d, Y H:i" }}</td>
-          <td>
-            <a href="{{ visit.attachment_post.application_link }}" target="_blank">
-              🔗 Visit Site
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      {% else %}
-        <tr>
-          <td colspan="5" style="text-align: center; font-style: italic; color: #999;">
-            You haven't visited any posts yet.
-          </td>
-        </tr>
-      {% endif %}
-    </tbody>
-  </table>
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>Visited Attachment Posts</h4>
+            <p>History of all attachment opportunities you have viewed</p>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="attachment-table">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Attachment Title</th>
+                        <th>Company</th>
+                        <th>Visited On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% if visits %}
+
+                        {% for visit in visits %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+
+                            <td class="table-title">
+                                {{ visit.attachment_post.title }}
+                            </td>
+
+                            <td>
+                                {{ visit.attachment_post.company.name }}
+                            </td>
+
+                            <td>
+                                {{ visit.visited_at|date:"M d, Y H:i" }}
+                            </td>
+
+                            <td>
+                                <a href="{{ visit.attachment_post.application_link }}"
+                                   target="_blank"
+                                   class="table-link">
+                                    🔗 Visit Site
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="5" class="table-empty">
+                                You haven't visited any posts yet.
+                            </td>
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
 </div>
 
 {% endblock %}

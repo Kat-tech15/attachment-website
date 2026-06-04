@@ -3,49 +3,106 @@
 {% block title %}All Feedback{% endblock %}
 
 {% block content %}
-<div class="feedback-container">
-  <h3>All Feedbacks</h3>
 
-  {% if feedbacks %}
-    <table class="feedback-table">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Message</th>
-          <th>Submitted At</th>
-          <th>Registered</th>
-          {% if request.user.is_superuser %}
-            <th>Action</th>
-          {% endif %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for feedback in feedbacks %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ feedback.name|default:"Anonymous" }}</td>
-          <td>{{ feedback.email }}</td>
-          <td>{{ feedback.message|truncatechars:100 }}</td>
-          <td>{{ feedback.submitted_at|date:"M d, Y H:i" }}</td>
-          <td>{{ feedback.is_registered_user|yesno:"Yes,No" }}</td>
-          {% if request.user.is_superuser %}
-          <td>
-            <form method="post" action="{% url 'delete_feedback' feedback.id %}" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
-              {% csrf_token %}
-              <button type="submit" class="btn-delete">Delete</button>
-            </form>
-          </td>
-          {% endif %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No feedback has been submitted yet.</p>
-  {% endif %}
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>All Feedback</h4>
+            <p>Manage user feedback submissions</p>
+        </div>
+
+        <div class="table-responsive">
+
+            {% if feedbacks %}
+
+                <table class="attachment-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                            <th>Submitted At</th>
+                            <th>Registered</th>
+                            {% if request.user.is_superuser %}
+                                <th>Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for feedback in feedbacks %}
+
+                            <tr>
+
+                                <td>{{ forloop.counter }}</td>
+
+                                <td class="table-title">
+                                    {{ feedback.name|default:"Anonymous" }}
+                                </td>
+
+                                <td>
+                                    {{ feedback.email }}
+                                </td>
+
+                                <td>
+                                    {{ feedback.message|truncatechars:100 }}
+                                </td>
+
+                                <td>
+                                    {{ feedback.submitted_at|date:"M d, Y H:i" }}
+                                </td>
+
+                                <td>
+                                    {{ feedback.is_registered_user|yesno:"Yes,No" }}
+                                </td>
+
+                                {% if request.user.is_superuser %}
+
+                                    <td>
+
+                                        <form method="post"
+                                              action="{% url 'delete_feedback' feedback.id %}"
+                                              style="display:inline;">
+
+                                            {% csrf_token %}
+
+                                            <button type="submit"
+                                                    class="auth-btn delete-btn"
+                                                    onclick="return confirm('Are you sure you want to delete this feedback?');">
+                                                Delete
+                                            </button>
+
+                                        </form>
+
+                                    </td>
+
+                                {% endif %}
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            {% else %}
+
+                <div class="attachment-search-card">
+                    <p>No feedback has been submitted yet.</p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
 </div>
-
 
 {% endblock %}

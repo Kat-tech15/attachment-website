@@ -1,31 +1,62 @@
-<!-- templates/attachee/view_attachments.html -->
 {% extends "base.html" %}
+
 {% block title %}Available Attachments{% endblock %}
 
 {% block content %}
 
-<div class="attachment-card color-white text-center">
-    <h3>Availabe Attachments and Internships</h3>
-    <div class="attachment-grid">
-        {% for att in attachments %}
-        <div class="attachment-card">
-            <div class="attachment-title">{{ att.title }}</div>
-            <div class="attachment-info">Company: {{ att.company }}</div>
-            <div class="attachment-info">Location: {{ att.location }}</div>
-            <div class="attachment-info">Description: {{ att.description }}</div>
-            <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
-            {% if att.application_link %}
-                <div class="attachment-link">
-                    <a href="{{ att.application_link }}" target="_blank" rel="noopener noreferrer">
-                        Click here to apply
-                    </a>
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header text-center">
+            <h4>Available Attachments & Internships</h4>
+            <p>Browse and apply for current opportunities</p>
+        </div>
+
+        <div class="attachment-grid">
+
+            {% for att in attachments %}
+
+                <div class="attachment-opportunity-card">
+
+                    <div class="attachment-title">
+                        {{ att.title }}
+                    </div>
+
+                    <div class="attachment-meta">
+                        <p><strong>Company:</strong> {{ att.company }}</p>
+                        <p><strong>Location:</strong> {{ att.location }}</p>
+                        <p><strong>Deadline:</strong> {{ att.application_deadline }}</p>
+                    </div>
+
+                    <div class="attachment-description">
+                        {{ att.description }}
+                    </div>
+
+                    {% if att.application_link %}
+                        <div class="attachment-description">
+                            <a href="{{ att.application_link }}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                Click here to apply
+                            </a>
+                        </div>
+                    {% endif %}
+
                 </div>
-            
-            {% endif %}  
-          {% empty %}
-                <p >No application link provided</p> 
-        {% endfor %}
-      </div>
+
+            {% empty %}
+
+                <div class="attachment-search-card text-center">
+                    <p>No attachments available at the moment.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
 </div>
 
 {% endblock %}

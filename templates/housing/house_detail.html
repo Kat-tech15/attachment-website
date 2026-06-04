@@ -1,53 +1,102 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
 
-<div class="container">
-    <h2>{{ house.owner_name }}'s House</h2>
-    <p><strong>Location:</strong> {{ house.location }}</p>
-    <p><strong>Contact:</strong> {{ house.phone_number }}</p>
-    <hr>
+{% block content %}
 
-<h3>Available Rooms</h3>
-{% if available_rooms %}
-    <div class="room-grid">
-        {% for room in available_rooms %}
-        <div class="room-card">
-            {% if room.image %}
-                <img src="{{ room.image.url }}" alt="Room Image" class="room-img">
-            {% endif %}
-            <h4>Room {{ room.room_number }}</h4>
-            <p><strong>Type:</strong> {{ room.room_type }}</p>
-            <p><strong>Price:</strong> Ksh {{ room.price }}</p>
-            <p><strong>Status:</strong> 
-                <span class="available">Available</span>
-            </p>
-            <a href="{% url 'book_room' room.id %}" class="btn">Book Now</a>
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>{{ house.owner_name }}'s House</h4>
+            <p>{{ house.location }} • Contact: {{ house.phone_number }}</p>
         </div>
-        {% endfor %}
+
+        <hr>
+
+        <!-- AVAILABLE ROOMS -->
+        <h4 class="section-title">Available Rooms</h4>
+
+        {% if available_rooms %}
+
+            <div class="room-grid">
+
+                {% for room in available_rooms %}
+
+                    <div class="attachment-opportunity-card">
+
+                        {% if room.image %}
+                            <img src="{{ room.image.url }}" class="room-img" alt="Room Image">
+                        {% endif %}
+
+                        <div class="attachment-title">
+                            Room {{ room.room_number }}
+                        </div>
+
+                        <div class="attachment-meta">
+                            <p><strong>Type:</strong> {{ room.room_type }}</p>
+                            <p><strong>Price:</strong> Ksh {{ room.price }}</p>
+                        </div>
+
+                        <span class="status-badge status-open">Available</span>
+
+                        <div class="attachment-form-actions">
+                            <a href="{% url 'book_room' room.id %}"
+                               class="auth-btn">
+                                Book Now
+                            </a>
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="table-empty">No rooms available for this house at the moment.</p>
+
+        {% endif %}
+
+        <hr>
+
+        <!-- BOOKED ROOMS -->
+        <h4 class="section-title">Booked Rooms</h4>
+
+        {% if booked_rooms %}
+
+            <div class="room-grid">
+
+                {% for room in booked_rooms %}
+
+                    <div class="attachment-opportunity-card">
+
+                        {% if room.image %}
+                            <img src="{{ room.image.url }}" class="room-img" alt="Room Image">
+                        {% endif %}
+
+                        <div class="attachment-title">
+                            Room {{ room.room_number }}
+                        </div>
+
+                        <div class="attachment-meta">
+                            <p><strong>Type:</strong> {{ room.room_type }}</p>
+                            <p><strong>Price:</strong> Ksh {{ room.price|default:house.rent }}</p>
+                        </div>
+
+                        <span class="status-badge status-expired">Booked</span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
     </div>
-{% else %}
-    <p>No rooms available for this house at the moment.</p>
-{% endif %}
-<hr>
-<h3 class="mt-5">Booked Rooms</h3>
-{% if booked_rooms %}
-    <div class="room-grid">
-        {% for room in booked_rooms %}
-        <div class="room-card">
-            {% if room.image %}
-                <img src="{{ room.image.url }}" alt="Room Image" class="room-img">
-            {% endif %}
-            <h4>Room {{ room.room_number }}</h4>
-            <p><strong>Type:</strong> {{ room.room_type }}</p>
-            <p><strong>Price:</strong> Ksh {{ room.price|default:house.rent }}</p>
-            <p><strong>Status:</strong> 
-                <span class="unavailable">Booked</span>
-            </p>
-        </div>
-        {% endfor %}
-    </div>
-{% endif %}
+
 </div>
 
 {% endblock %}

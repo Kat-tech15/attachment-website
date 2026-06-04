@@ -1,24 +1,60 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
 
-<div class="house-container">
-    <h3>Available Houses</h3>
-    <div class="house-grid">
-        {% for house in houses %}
-        <div class="house-card">
-            <div class="house-info"><img src="{{ house.image.url }}" width="100%"></div>
-            <div class="house-title">{{ house.owner_name }}'s House</div>
-            <div class="house-info">📍 {{ house.location }}</div>
-            <div class="house-info">☎️ {{ house.phone_number }}</div>
-            <div class="house-info">💰 Ksh {{ house.rent }}</div>
-            <div class="house-link">
-                <a href="{% url 'house_detail' house.id %}" class="btn">View Rooms</a>
-            </div>
+{% block content %}
+
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>Available Houses</h4>
+            <p>Browse available rental houses and view rooms</p>
         </div>
-        {% empty %}
-        <p>No houses available.</p>
-        {% endfor %}
+
+        <div class="house-grid">
+
+            {% for house in houses %}
+
+                <div class="attachment-opportunity-card">
+
+                    <div class="house-image">
+                        <img src="{{ house.image.url }}" alt="House Image">
+                    </div>
+
+                    <div class="attachment-title">
+                        {{ house.owner_name }}'s House
+                    </div>
+
+                    <div class="attachment-meta">
+                        <p>📍 {{ house.location }}</p>
+                        <p>☎️ {{ house.phone_number }}</p>
+                        <p>💰 Ksh {{ house.rent }}</p>
+                    </div>
+
+                    <div class="attachment-form-actions">
+
+                        <a href="{% url 'house_detail' house.id %}"
+                           class="auth-btn">
+                            View Rooms
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="attachment-search-card">
+                    <p>No houses available at the moment.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
     </div>
+
 </div>
+
 {% endblock %}

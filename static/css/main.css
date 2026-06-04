@@ -1091,3 +1091,1390 @@ body.dark-mode .auth-form .helptext {
     color: white;
 }
 
+/* =========================
+   ATTACHMENT OPPORTUNITIES
+========================= */
+
+.attachment-search-card {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.attachment-input {
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.attachment-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+}
+
+.attachment-opportunity-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.attachment-opportunity-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+}
+
+.attachment-title {
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.attachment-meta p {
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.attachment-description {
+    color: #64748b;
+    margin: 15px 0;
+    flex-grow: 1;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-open {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+}
+
+.status-soon {
+    background: rgba(245,158,11,0.12);
+    color: #f59e0b;
+}
+
+.status-expired {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+}
+body.dark-mode .attachment-search-card,
+body.dark-mode .attachment-opportunity-card {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark-mode .attachment-input {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark-mode .attachment-description {
+    color: #cbd5e1;
+}
+
+/* =========================
+   COMPANY ATTACHMENTS
+========================= */
+
+.company-attachment-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.company-attachment-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+}
+
+.company-attachment-title {
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.company-attachment-meta p {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.company-attachment-description {
+    color: #64748b;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+/* EMPTY STATE */
+
+.empty-state-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 60px 30px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(59,130,246,0.1);
+    color: var(--primary);
+
+    font-size: 30px;
+}
+
+.empty-state-card h4 {
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+body.dark-mode .company-attachment-card,
+body.dark-mode .empty-state-card {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark-mode .company-attachment-description {
+    color: #cbd5e1;
+}
+
+/* =========================
+   DELETE CONFIRMATION
+========================= */
+
+.delete-card {
+    width: 100%;
+    max-width: 520px;
+    background: white;
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.delete-card:hover {
+    transform: translateY(-4px);
+}
+
+.delete-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+
+    font-size: 30px;
+}
+
+.delete-card h3 {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.delete-card p {
+    color: #64748b;
+}
+
+.delete-details {
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 12px;
+    margin: 25px 0;
+}
+
+.delete-details h5 {
+    margin: 0;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.delete-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-delete {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #ef4444;
+    color: white;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-cancel:hover {
+    background: #f1f5f9;
+}
+body.dark-mode .delete-card {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark-mode .delete-details {
+    background: #0f172a;
+}
+
+body.dark-mode .btn-cancel {
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark-mode .btn-cancel:hover {
+    background: #334155;
+}
+/* =========================
+   ATTACHMENT FORM
+========================= */
+
+.attachment-form-card {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.attachment-form-card:hover {
+    transform: translateY(-4px);
+}
+
+.attachment-form p {
+    margin-bottom: 18px;
+}
+
+.attachment-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.attachment-form input,
+.attachment-form select,
+.attachment-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.attachment-form textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.attachment-form input:focus,
+.attachment-form select:focus,
+.attachment-form textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+}
+
+.attachment-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.attachment-form-actions .auth-btn,
+.attachment-form-actions .auth-btn-outline {
+    flex: 1;
+    min-width: 180px;
+}
+body.dark-mode .attachment-form-card {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark-mode .attachment-form input,
+body.dark-mode .attachment-form select,
+body.dark-mode .attachment-form textarea {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark-mode .attachment-form input::placeholder,
+body.dark-mode .attachment-form textarea::placeholder {
+    color: #64748b;
+}
+
+/* =========================
+   MY POSTS ACTION LAYOUT
+========================= */
+
+.dashboard-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.dashboard-actions .btn-primary,
+.dashboard-actions .btn-outline {
+    flex: 1;
+    text-align: center;
+}
+
+/* Improve spacing inside management cards */
+.company-attachment-card p {
+    margin-bottom: 6px;
+}
+
+/* Make links cleaner */
+.company-attachment-card a {
+    text-decoration: none;
+}
+body.dark-mode .company-attachment-card {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+/* =========================
+   ATTACHMENT FORM (POST / EDIT)
+========================= */
+
+.attachment-form-card {
+    background: white;
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    max-width: 650px;
+    margin: auto;
+    transition: var(--transition);
+}
+
+.attachment-form-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.auth-header h4 {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+.auth-header p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* FORM STRUCTURE */
+.attachment-form-group p {
+    margin-bottom: 15px;
+}
+
+/* LABELS (Django form default) */
+.attachment-form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 14px;
+}
+
+/* INPUT FIELDS */
+.attachment-form-group input,
+.attachment-form-group textarea,
+.attachment-form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+/* FOCUS STATE */
+.attachment-form-group input:focus,
+.attachment-form-group textarea:focus,
+.attachment-form-group select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    outline: none;
+}
+
+/* TEXTAREA HEIGHT */
+.attachment-form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* ACTION BUTTONS AREA */
+.attachment-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
+/* PRIMARY BUTTON */
+.auth-btn {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.auth-btn:hover {
+    background: #2563eb;
+}
+
+/* OUTLINE BUTTON */
+.auth-btn-outline {
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.auth-btn-outline:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .attachment-form-card {
+        padding: 20px;
+    }
+
+    .attachment-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* =========================
+   ATTACHMENT GRID (VIEW PAGE)
+========================= */
+
+.attachment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* OVERRIDE CONFLICT: prevent nested .attachment-card issues */
+.attachment-grid .attachment-card {
+    display: none;
+}
+
+/* TITLE STYLE (shared reuse) */
+.attachment-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+/* META TEXT BLOCK */
+.attachment-meta p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #334155;
+}
+
+/* DESCRIPTION */
+.attachment-description {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 10px;
+}
+
+/* LINK STYLE */
+.attachment-description a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.attachment-description a:hover {
+    text-decoration: underline;
+}
+
+/* EMPTY STATE */
+.attachment-search-card {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* =========================
+   ATTACHMENT TABLE (VISITS PAGE)
+========================= */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+/* TABLE BASE */
+.attachment-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+/* HEADER */
+.attachment-table thead {
+    background: var(--primary);
+    color: white;
+}
+
+.attachment-table th {
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* BODY */
+.attachment-table td {
+    padding: 12px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    color: #334155;
+}
+
+/* ROW HOVER */
+.attachment-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.06);
+}
+
+/* TITLE STYLE */
+.table-title {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* LINK STYLE */
+.table-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.table-link:hover {
+    text-decoration: underline;
+}
+
+/* EMPTY STATE */
+.table-empty {
+    text-align: center;
+    font-style: italic;
+    color: #94a3b8;
+    padding: 20px;
+}
+
+/* DARK MODE SUPPORT */
+body.dark-mode .attachment-table {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark-mode .attachment-table td {
+    color: #cbd5e1;
+    border-bottom: 1px solid #334155;
+}
+
+body.dark-mode .attachment-table tbody tr:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* =========================
+   HOUSE LISTING (UNIFIED UI STYLE)
+========================= */
+
+.house-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* IMAGE */
+.house-image img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+}
+
+/* HOUSE CARD (inherits attachment-opportunity-card) */
+.attachment-opportunity-card {
+    overflow: hidden;
+}
+
+/* HOUSE META (reuse system style) */
+.attachment-meta p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #334155;
+}
+
+/* OPTIONAL HOVER ENHANCEMENT */
+.attachment-opportunity-card:hover .house-image img {
+    transform: scale(1.03);
+    transition: var(--transition);
+}
+
+/* EMPTY STATE */
+.attachment-search-card {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* =========================
+   ALERT MESSAGES (UNIFIED STYLE)
+========================= */
+
+.alert-message {
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* SUCCESS */
+.alert-success {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+    border: 1px solid rgba(16,185,129,0.3);
+}
+
+/* ERROR */
+.alert-error {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.3);
+}
+
+/* WARNING */
+.alert-warning {
+    background: rgba(245,158,11,0.12);
+    color: #f59e0b;
+    border: 1px solid rgba(245,158,11,0.3);
+}
+
+/* INFO */
+.alert-info {
+    background: rgba(59,130,246,0.12);
+    color: var(--primary);
+    border: 1px solid rgba(59,130,246,0.3);
+}
+
+/* FORM CONSISTENCY (ensures booking forms match attachment forms) */
+.attachment-form {
+    margin-top: 10px;
+}
+
+/* =========================
+   HOUSE FORM CONSISTENCY
+========================= */
+
+.attachment-form-group p {
+    margin-bottom: 15px;
+}
+
+/* reuses your existing input styling system */
+.attachment-form-group input,
+.attachment-form-group textarea,
+.attachment-form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.attachment-form-group input:focus,
+.attachment-form-group textarea:focus,
+.attachment-form-group select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    outline: none;
+}
+
+/* FILE INPUT (important for house image uploads) */
+.attachment-form-group input[type="file"] {
+    padding: 8px;
+    background: #f8fafc;
+}
+
+/* ENSURE CONSISTENT SPACING */
+.attachment-form-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* =========================
+   HOUSE TABLE (MY POSTS)
+========================= */
+
+/* reuse existing table system */
+.attachment-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+/* HEADER */
+.attachment-table thead {
+    background: var(--primary);
+    color: white;
+}
+
+.attachment-table th,
+.attachment-table td {
+    padding: 12px 14px;
+    font-size: 14px;
+}
+
+/* ROW STYLE */
+.attachment-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.attachment-table tbody tr:hover {
+    background: rgba(59,130,246,0.06);
+}
+
+/* TITLE STYLE */
+.table-title {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* ACTION LINKS */
+.table-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 4px;
+}
+
+.table-link:hover {
+    text-decoration: underline;
+}
+
+/* EMPTY STATE */
+.attachment-search-card {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* RESPONSIVE */
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+/* DARK MODE SUPPORT */
+body.dark-mode .attachment-table {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark-mode .attachment-table td {
+    border-bottom: 1px solid #334155;
+}
+
+/* =========================
+   BOOKING STATUS (UNIFIED BADGES)
+========================= */
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Approved */
+.status-open {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+}
+
+/* Pending */
+.status-soon {
+    background: rgba(245,158,11,0.12);
+    color: #f59e0b;
+}
+
+/* Rejected / Other */
+.status-expired {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+}
+
+/* TABLE ACTION BUTTONS INSIDE TABLE */
+.attachment-table form {
+    margin: 0;
+}
+
+/* ALIGN BUTTONS IN TABLE CELLS */
+.attachment-table td {
+    vertical-align: middle;
+}
+
+/* EMPTY / NO ACTION TEXT */
+.table-empty {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* =========================
+   RENTAL PAGE (UNIFIED SYSTEM)
+========================= */
+
+.rental-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+/* IMAGE */
+.rental-image-wrapper img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-top: 10px;
+}
+
+/* ROOM SUMMARY */
+.room-summary {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #334155;
+}
+
+/* ROOM GRID */
+.room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+/* ROOM CARD */
+.room-card {
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+/* AVAILABLE */
+.room-available {
+    border-left: 4px solid #10b981;
+}
+
+/* BOOKED */
+.room-booked {
+    border-left: 4px solid #ef4444;
+    opacity: 0.85;
+}
+
+/* ROOM HOVER */
+.room-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ALERT SYSTEM (REUSE YOUR GLOBAL STYLE) */
+.alert-message {
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+/* EMPTY TEXT */
+.table-empty {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* =========================
+   BOOKING ACTIONS (UNIFIED SYSTEM)
+========================= */
+
+.table-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.table-link:hover {
+    text-decoration: underline;
+}
+
+/* BUTTON INLINE FIX IN TABLE */
+.attachment-table form {
+    display: inline;
+}
+
+/* STATUS BADGES (already exists, just reinforcing usage) */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* EMPTY ROW */
+.table-empty {
+    text-align: center;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* =========================
+   BOOKING V2 CLEAN SYSTEM
+========================= */
+
+/* INLINE FORM FIX */
+.attachment-table form {
+    display: inline;
+}
+
+/* STATUS BADGES (reuse existing system) */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-open {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+}
+
+.status-expired {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+}
+
+/* ACTION SPACING IN TABLE */
+.table-link {
+    margin-right: 8px;
+}
+
+/* EMPTY STATE */
+.table-empty {
+    font-size: 13px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* =========================
+   HOUSE DETAIL PAGE (ROOM VIEW)
+========================= */
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 15px 0;
+}
+
+/* ROOM GRID (reuse system style) */
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+/* ROOM IMAGE */
+.room-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+}
+
+/* STATUS BADGES (already global, just ensure usage) */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-open {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+}
+
+.status-expired {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+}
+
+/* EMPTY TEXT */
+.table-empty {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 10px;
+}
+
+/* =========================
+   EDIT FORM CONSISTENCY (HOUSE)
+========================= */
+
+/* FORM GROUP SPACING */
+.attachment-form-group p {
+    margin-bottom: 15px;
+}
+
+/* INPUT STYLING (already used across system, reinforced) */
+.attachment-form-group input,
+.attachment-form-group textarea,
+.attachment-form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+/* FOCUS STATE */
+.attachment-form-group input:focus,
+.attachment-form-group textarea:focus,
+.attachment-form-group select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    outline: none;
+}
+
+/* MESSAGE STYLING (if not already defined globally) */
+.alert-message {
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+}
+
+.alert-error {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+}
+
+/* ACTIONS */
+.attachment-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
+/* =========================
+   EDIT BOOKING FORM (UNIFIED)
+========================= */
+
+/* FORM GROUP SPACING */
+.attachment-form-group p {
+    margin-bottom: 15px;
+}
+
+/* INPUT FIELDS (shared system) */
+.attachment-form-group input,
+.attachment-form-group select,
+.attachment-form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+/* FOCUS STATE */
+.attachment-form-group input:focus,
+.attachment-form-group select:focus,
+.attachment-form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    outline: none;
+}
+
+/* ACTION BUTTON LAYOUT */
+.attachment-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
+/* ALERT SYSTEM (if not already globally defined) */
+.alert-message {
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+}
+
+.alert-error {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+}
+
+/* =========================
+   DELETE CONFIRMATION UI
+========================= */
+
+.delete-warning {
+    margin: 15px 0;
+    font-size: 15px;
+    color: #334155;
+    text-align: center;
+}
+
+/* DANGER BUTTON VARIANT */
+.delete-btn {
+    background: #ef4444 !important;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #dc2626 !important;
+}
+
+/* KEEP CONSISTENT BUTTON LAYOUT */
+.attachment-form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* ALERT SYSTEM (reuse global) */
+.alert-message {
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+/* DARK MODE SUPPORT (optional consistency) */
+body.dark-mode .delete-warning {
+    color: #e2e8f0;
+}
+
+/* =========================
+   ANNOUNCEMENTS FEED UI
+========================= */
+
+.announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* TITLE LINK STYLE */
+.attachment-title a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.attachment-title a:hover {
+    text-decoration: underline;
+}
+
+/* DATE META */
+.attachment-description small {
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* EMPTY STATE (reuse system) */
+.attachment-search-card {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+/* =========================
+   FEEDBACK DELETE PREVIEW UI
+========================= */
+
+.feedback-preview {
+    margin: 15px 0;
+}
+
+/* WARNING TEXT */
+.delete-warning {
+    text-align: center;
+    font-size: 15px;
+    color: #334155;
+    margin-bottom: 10px;
+}
+
+/* FEEDBACK CARD EMPHASIS */
+.feedback-preview .attachment-opportunity-card {
+    border-left: 4px solid #ef4444;
+}
+
+/* DANGER BUTTON */
+.delete-btn {
+    background: #ef4444 !important;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #dc2626 !important;
+}
+
+/* ALERT SYSTEM (reuse global) */
+.alert-message {
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+/* DARK MODE SUPPORT */
+body.dark-mode .delete-warning {
+    color: #e2e8f0;
+}
+
+/* =========================
+   FEEDBACK ADMIN TABLE
+========================= */
+
+/* INLINE FORM FIX */
+.attachment-table form {
+    display: inline;
+}
+
+/* DELETE BUTTON (reuse system) */
+.delete-btn {
+    background: #ef4444 !important;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #dc2626 !important;
+}
+
+/* EMPTY STATE */
+.attachment-search-card {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}

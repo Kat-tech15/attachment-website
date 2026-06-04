@@ -1,61 +1,133 @@
 {% extends "base.html" %}
-{% block content %}
-<div class="attachment-card text-center">
-    <h1>Attachment Opportunities</h1>
-  <div class="search-sort">
-    <form method="get">
-      <input type="text" name="q" placeholder="Search by title or location" value="{{ query|default_if_none:'' }}">
-      <button class="btn-primary" type="submit">Search</button>
-      <select name="sort" onchange="this.form.submit()">
-        <option value="description" {% if sort == 'description' %}selected{% endif %}>Description</option>
-        <option value="comany_name" {% if sort == 'company_name' %}selected{% endif %}>Company</option>
-        <option value="location" {% if sort == 'location' %}selected{% endif %}>Location</option>
-        <option value="application_deadline" {% if sort == 'application_deadline' %}selected{% endif %}>Deadline</option>
-      </select>
-    </form>
-  </div>
-  <div class="attachment-grid">
-    {% for att in page_obj %}
-      <div class="attachment-card">
-        <div class="attachment-title">{{ att.title }}</div>
-        <div class="attachment-info">Company: {{ att.company }}</div>
-        <div class="attachment-info">Location: {{ att.location }}</div>
-        <div class="attachment-info">Description: {{ att.description }}</div>
-        <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
-        {% if att.is_eapired %}
-          <span class="tag tag-soon">Deadline Passed</span>
-        {% elif att.is_soon %}
-          <span class="tag tag-soon">Closing Soon</span>
-        {% else %}
-          <span class="tag tag-upcoming">Open</span>
-        {% endif %}
-        {% if att.link %}
-          <a href="{{ att.link }}" class="attachment-link" target="_blank" aria-label="Apply for {{ att.title }}">View More / Apply</a>
-        {% endif %}
-      </div>
-    {% empty %}
-      <p>No attachments found.</p>
-    {% endfor %}
-  </div>
-</div>
 
-<style>
-  .attachment-card {
-    background-color: aliceblue;
-    border-radius: 15px;
-    outline: none;
-  }
-  .search-sort input{
-    border-radius: 15px;
-    outline: none;
-    border: 2px solid blueviolet;
-  }
-  .search-sort button{
-    color: white;
-    border-radius: 15px;
-    padding: 4px 7px;
-  }
-  
-</style>
+{% block content %}
+
+<section class="container py-5">
+
+    <div class="dashboard-header">
+        <div class="dashboard-welcome">
+            <h3>Attachment Opportunities</h3>
+            <p>Browse available attachment opportunities and apply before deadlines.</p>
+        </div>
+    </div>
+
+    <div class="attachment-search-card mb-4">
+
+        <form method="get" class="row g-3 align-items-center">
+
+            <div class="col-md-6">
+                <input
+                    type="text"
+                    name="q"
+                    class="form-control attachment-input"
+                    placeholder="Search by title or location"
+                    value="{{ query|default_if_none:'' }}">
+            </div>
+
+            <div class="col-md-3">
+                <select
+                    name="sort"
+                    class="form-select attachment-input"
+                    onchange="this.form.submit()">
+
+                    <option value="description" {% if sort == 'description' %}selected{% endif %}>
+                        Description
+                    </option>
+
+                    <option value="company_name" {% if sort == 'company_name' %}selected{% endif %}>
+                        Company
+                    </option>
+
+                    <option value="location" {% if sort == 'location' %}selected{% endif %}>
+                        Location
+                    </option>
+
+                    <option value="application_deadline" {% if sort == 'application_deadline' %}selected{% endif %}>
+                        Deadline
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <button type="submit" class="btn-primary w-100">
+                    Search
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="row g-4">
+
+        {% for att in page_obj %}
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="attachment-opportunity-card h-100">
+
+                <h5 class="attachment-title">
+                    {{ att.title }}
+                </h5>
+
+                <div class="attachment-meta">
+                    <p><strong>Company:</strong> {{ att.company }}</p>
+                    <p><strong>Location:</strong> {{ att.location }}</p>
+                    <p><strong>Deadline:</strong> {{ att.application_deadline }}</p>
+                </div>
+
+                <p class="attachment-description">
+                    {{ att.description|truncatewords:25 }}
+                </p>
+
+                <div class="mb-3">
+
+                    {% if att.is_expired %}
+                        <span class="status-badge status-expired">
+                            Deadline Passed
+                        </span>
+
+                    {% elif att.is_soon %}
+                        <span class="status-badge status-soon">
+                            Closing Soon
+                        </span>
+
+                    {% else %}
+                        <span class="status-badge status-open">
+                            Open
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                {% if att.link %}
+                    <a
+                        href="{{ att.link }}"
+                        target="_blank"
+                        class="btn-primary text-center w-100">
+
+                        View More / Apply
+
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                No attachment opportunities found.
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
 
 {% endblock %}

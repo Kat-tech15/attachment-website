@@ -1,21 +1,51 @@
 {% extends 'base.html' %}
-{% block content %}
-<div class="booking-container">
-  <h2>Edit Booking</h2>
-  {% if messages %}
-        {% for message in messages %}
-            {% if "edit_booking" in message.tags %}
-                <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-edit">Update Booking</button>
-    <a href="{% url redirect_url %}" class="btn-cancel" style="margin-left: 10px;">Cancel</a>
-  </form>
-</div>
 
+{% block content %}
+
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>Edit Booking</h4>
+            <p>Update your booking details</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "edit_booking" in message.tags %}
+                    <div class="alert-message alert-{{ message.level_tag }}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="attachment-form">
+
+            {% csrf_token %}
+
+            <div class="attachment-form-group">
+                {{ form.as_p }}
+            </div>
+
+            <div class="attachment-form-actions">
+
+                <button type="submit" class="auth-btn">
+                    Update Booking
+                </button>
+
+                <a href="{% url redirect_url %}"
+                   class="auth-btn-outline">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

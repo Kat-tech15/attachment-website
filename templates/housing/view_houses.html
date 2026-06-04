@@ -1,58 +1,96 @@
-
 {% extends "base.html" %}
 {% block title %}Available Rentals{% endblock %}
 
 {% block content %}
-{% load static %}
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} mt-2" role="alert">
-            {{ message }}
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>Available Rentals</h4>
+            <p>Browse available houses and book rooms</p>
         </div>
-    {% endfor %}
-{% endif %}
 
-<div class="rental-list">
-    <h3>Available Houses</h3>
-
-    {% for rental in rentals %}
-    <div class="container">
-        <h3>{{ rental.landlord.user.username }}</h3>
-        <p><strong>Location:</strong> {{ rental.location }}</p>
-        <p><strong>Description:</strong> {{ rental.description }}</p>
-        <p><strong>Rent:</strong> {{ rental.rent }}</p>
-
-        {% if rental.photo %}
-            <img src="{{ rental.image.url }}" alt="Rental Image" class="rental-image">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert-message alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         {% endif %}
 
-        <div class="room-summary">
-            <p><strong>Total Rooms:</strong> {{ rental.total_rooms }}</p>
-            <p><strong>Available Rooms:</strong> {{ rental.available_rooms }}</p>
-            <p><strong>Booked Rooms:</strong> {{ rental.booked_rooms }}</p>
+        <div class="rental-list">
+
+            {% for rental in rentals %}
+
+                <div class="attachment-opportunity-card">
+
+                    <div class="attachment-title">
+                        {{ rental.landlord.user.username }}
+                    </div>
+
+                    <div class="attachment-meta">
+                        <p><strong>📍 Location:</strong> {{ rental.location }}</p>
+                        <p><strong>📝 Description:</strong> {{ rental.description }}</p>
+                        <p><strong>💰 Rent:</strong> {{ rental.rent }}</p>
+                    </div>
+
+                    {% if rental.photo %}
+                        <div class="rental-image-wrapper">
+                            <img src="{{ rental.photo.url }}"
+                                 alt="Rental Image"
+                                 class="rental-image">
+                        </div>
+                    {% endif %}
+
+                    <div class="room-summary">
+                        <p><strong>Total Rooms:</strong> {{ rental.total_rooms }}</p>
+                        <p><strong>Available:</strong> {{ rental.available_rooms }}</p>
+                        <p><strong>Booked:</strong> {{ rental.booked_rooms }}</p>
+                    </div>
+
+                    <div class="room-list">
+
+                        {% for room in rental.rooms.all %}
+
+                            <div class="room-card {% if room.is_booked %}room-booked{% else %}room-available{% endif %}">
+
+                                <div class="room-info">
+                                    <strong>{{ room.room_number }}</strong><br>
+
+                                    {% if room.is_booked %}
+                                        <span class="status-badge status-expired">Booked</span>
+                                    {% else %}
+                                        <span class="status-badge status-open">Available</span>
+                                    {% endif %}
+                                </div>
+
+                                {% if not room.is_booked %}
+                                    <a href="{% url 'book_room' room.id %}"
+                                       class="auth-btn">
+                                        Book Now
+                                    </a>
+                                {% endif %}
+
+                            </div>
+
+                        {% empty %}
+
+                            <p class="table-empty">No rooms found.</p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
         </div>
 
-        <div class="room-list">
-            {% for room in rental.rooms.all %}
-                <div class="room-card {% if room.is_booked %}booked{% else %}available{% endif %}">
-                    <div class="room-info">
-                        <strong>{{ room.room_number }}</strong><br>
-                        {% if room.is_booked %}
-                            <span class="status-red">Booked</span>
-                        {% else %}
-                            <span class="status-green">Available</span>
-                        {% endif %}
-                    </div>
-                    {% if not room.is_booked %}
-                        <a href="{% url 'book_room' room.id %}" class="btn">Book Now</a>
-                    {% endif %}
-                </div>
-            {% empty %}
-                <p>No rooms found.</p>
-            {% endfor %}
-        </div>
     </div>
-    {% endfor %}
+
 </div>
+
 {% endblock %}

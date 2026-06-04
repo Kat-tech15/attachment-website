@@ -1,20 +1,54 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<div class="delete-confirm-box">
-  <h3>⚠️ Confirm Deletion</h3>
-  {% if messages %}
-        {% for message in messages %}
-            {% if "delete_house" in message.tags %}
-                <div class="alert alert-{{message.level_tag}}">{{ message }}</div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-  <p>Are you sure you want to delete <strong>{{ house.title }}</strong>?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    <a href="{% url 'my_houses' %}" class="btn btn-secondary">Cancel</a>
-  </form>
+<div class="auth-page">
+
+    <div class="attachment-form-card">
+
+        <div class="auth-header">
+            <h4>⚠️ Confirm Deletion</h4>
+            <p>This action cannot be undone</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "delete_house" in message.tags %}
+                    <div class="alert-message alert-{{ message.level_tag }}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <div class="delete-warning">
+            <p>
+                Are you sure you want to delete
+                <strong>{{ house.title }}</strong>?
+            </p>
+        </div>
+
+        <form method="post" class="attachment-form">
+
+            {% csrf_token %}
+
+            <div class="attachment-form-actions">
+
+                <button type="submit" class="auth-btn delete-btn">
+                    Yes, Delete
+                </button>
+
+                <a href="{% url 'my_houses' %}"
+                   class="auth-btn-outline">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
+
 {% endblock %}
