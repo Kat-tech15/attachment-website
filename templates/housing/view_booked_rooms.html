@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title%} Booked Rooms {% endblock %}
+
+{% block content%}
+  <div class="room-list">
+    <h3>Booked Rooms</h3>
+      <table class="room-table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Room Id</th>
+                <th>Attachee</th>
+                <th>Moe-In</th>
+                <th>Status</th>
+                <th>Deposit</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for booking in bookings%}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ booking.room.room_number }}</td>
+                <td>{{ booking.full_name }}</td>
+                <td>{{ booking.move_in_date|default:"-" }}</td>
+                <td>
+                  {% if booking.status == 'approved' %}
+                    <span class="text-success">Approved</span>
+                    {% elif booking.status == 'pending' %}
+                      <span class="text-warning">Pending</span>
+                    {% else %}
+                      <span class="text-danger">{{ b.status|capfirst }}</span>
+                    {% endif %}
+                  </td>
+                <td>{{ booking.room.price }}</td>
+                <td>
+                    {% if booking.status != 'pending' %}
+                    <form action="{% url 'approve_booking' booking.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="approve-btn">Approve</button>
+                    </form>
+                    {% else %}
+                    <span class="badge badge-secondary">No action</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center">No booked rooms found.</td></tr>
+            {% endfor %}
+        </tbody>
+      </table>
+  </div>
+
+{% endblock %}

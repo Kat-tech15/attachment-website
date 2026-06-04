@@ -1,0 +1,31 @@
+<!-- templates/attachee/view_attachments.html -->
+{% extends "base.html" %}
+{% block title %}Available Attachments{% endblock %}
+
+{% block content %}
+
+<div class="attachment-card color-white text-center">
+    <h3>Availabe Attachments and Internships</h3>
+    <div class="attachment-grid">
+        {% for att in attachments %}
+        <div class="attachment-card">
+            <div class="attachment-title">{{ att.title }}</div>
+            <div class="attachment-info">Company: {{ att.company }}</div>
+            <div class="attachment-info">Location: {{ att.location }}</div>
+            <div class="attachment-info">Description: {{ att.description }}</div>
+            <div class="attachment-info">Deadline: {{ att.application_deadline }}</div>
+            {% if att.application_link %}
+                <div class="attachment-link">
+                    <a href="{{ att.application_link }}" target="_blank" rel="noopener noreferrer">
+                        Click here to apply
+                    </a>
+                </div>
+            
+            {% endif %}  
+          {% empty %}
+                <p >No application link provided</p> 
+        {% endfor %}
+      </div>
+</div>
+
+{% endblock %}

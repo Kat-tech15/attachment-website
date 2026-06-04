@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Visited Posts{% endblock %}
+
+{% block content %}
+<div class="feedback-container">
+  <h3>Visited Attachment Posts</h3>
+
+  <table class="feedback-table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Attachment Title</th>
+        <th>Company</th>
+        <th>Visited On</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if visits %}
+        {% for visit in visits %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ visit.attachment_post.title }}</td>
+          <td>{{ visit.attachment_post.company.name }}</td>
+          <td>{{ visit.visited_at|date:"M d, Y H:i" }}</td>
+          <td>
+            <a href="{{ visit.attachment_post.application_link }}" target="_blank">
+              🔗 Visit Site
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="5" style="text-align: center; font-style: italic; color: #999;">
+            You haven't visited any posts yet.
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

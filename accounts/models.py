@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('attachee', 'Attachee'),
         ('company', 'Company'),
-        ('tenant', 'Tenant')
+        ('landlord', 'Landlord')
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     email = models.EmailField(unique=True)
@@ -72,7 +72,7 @@ class Company(models.Model):
     def __str__(self):
         return self.user.username
     
-class Tenant(models.Model):
+class Landlord(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     phone_number = PhoneNumberField(region='KE')

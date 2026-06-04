@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
-from .models import CustomUser, Contact, Attachee, Company, Tenant
+from .models import CustomUser, Contact, Attachee, Company, Landlord
 from .forms import CustomUserCreationForm, EmailLoginForm
 from opportunities.models import ApplicationVisit
-from housing.models import Booking
-from notifications.models import Feedback
+from notifications.models import Feedback, Testimonials
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
@@ -21,7 +20,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 from housing.models import House, Booking
 from opportunities.models import AttachmentPost, ApplicationVisit
-from notifications.models import Testimonials
 from notifications.forms import FeedbackForm
 
 def home(request):
@@ -202,8 +200,8 @@ def login_view(request):
             elif role == 'company':
                 return render(request, 'dashboards/company_dashboard.html')
 
-            elif role == 'tenant':
-                return render(request, 'dashboards/tenants_dashboard.html')
+            elif role == 'landlord':
+                return render(request, 'dashboards/landlords_dashboard.html')
             else:
                 return redirect('home')
         else:
@@ -253,8 +251,8 @@ def dashboard_router(request):
     elif role == 'company':
         return render(request, 'dashboards/company_dashboard.html')
 
-    elif role == 'tenant':
-        return render(request, 'dashboards/tenants_dashboard.html')
+    elif role == 'landlord':
+        return render(request, 'dashboards/landlords_dashboard.html')
 
     return render(request, 'error.html', {
         'message': 'Unknown role.'
@@ -267,7 +265,7 @@ def admin_dashboard(request):
     users_by_role_json = json.dumps(users_by_role, cls=DjangoJSONEncoder)
     booking_count =Booking.objects.count()
     application_count= ApplicationVisit.objects.count()
-    tenant_count = Tenant.objects.count()
+    landlord_count = Landlord.objects.count()
     attachee_count = Attachee.objects.count()
     company_count = Company.objects.count()
 
@@ -296,7 +294,7 @@ def admin_dashboard(request):
         'users_by_role_json': users_by_role_json,
         'booking_count': booking_count,
         'application_count': application_count,
-        'tenant_count': tenant_count,
+        'landlord_count': landlord_count,
         'attachee_count': attachee_count,
         'company_count': company_count,
         'booking_month_labels': json.dumps(booking_month_labels),
@@ -380,17 +378,17 @@ def company_dashboard(request):
     return render(request, 'dashboards/company_dashboard.html', context)
 
 @login_required
-def tenants_dashboard(request):
+def landlords_dashboard(request):
 
-    tenant = getattr(request.user, 'tenant', None)
+    landlord = getattr(request.user, 'landlord', None)
 
-    if not tenant:
-        messages.error(request, "Tenant profile not found.")
+    if not landlord:
+        messages.error(request, "Landlord profile not found.")
         return redirect('home')
 
     from housing.models import House, Booking
 
-    bookings = Booking.objects.filter(tenant=tenant).order_by('-created_at')
+    bookings = Booking.objects.filter(landlord=landlord).order_by('-created_at')
     houses = House.objects.all()
 
     context = {
@@ -403,7 +401,7 @@ def tenants_dashboard(request):
         'pending_bookings': bookings.filter(status='pending').count(),
     }
 
-    return render(request, 'dashboards/tenant_dashboard.html', context)
+    return render(request, 'dashboards/landlord_dashboard.html', context)
 
 
 

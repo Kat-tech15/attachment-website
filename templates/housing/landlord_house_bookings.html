@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings{% endblock %}
+{% block content %}
+<div class="booking-container">
+  <h3>📚 My Bookings</h3>
+  <table class="booking-table">
+      <thead>
+        <tr>
+          <th>Index</th>
+          <th>Room Id</th>
+          <th>Location</th>
+          <th>Price</th>
+          <th>Move in Date</th>
+          <th>Date Booked</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+         {% if bookings %}
+        {% for booking in bookings %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ booking.room.room_number }}</td>
+          <td>{{ booking.house_post.location }}</td>
+          <td>{{ booking.house_post.rent }}</td>
+          <td>{{ booking.move_in_date|date:"M d, Y " }}</td>
+          <td>{{ booking.move_out_date|date:"M d, Y " }}</td>
+          <td>{{ booking.room.status}}</td>
+          <td>
+            {% if booking.status != 'cancelled' and booking.move_in_date > today %}
+            <a href="{% url 'edit_booking' booking.id %}" class="bt-action edit-btn">Edit</a><br>
+            <br>
+            <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+              {% csrf_token %}
+              <button type="submit" class="btn-action btn-cancel">Cancel</button>
+            </form>
+            {% else %}
+             <span style="color: gray; font-style: italic;">No Actions</span>
+            {% endif %}
+            {% if booking.status == 'cancelled' %}
+            <form method="post" action="{% url 'delete_booking' booking.id %}" style="margin-top: 10px;">
+              {% csrf_token %}
+              <button type="submit" onclick="return confirm('Delete this booking permanently?')" class="btn-cancel">
+                Delete
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+      </tbody>
+  </div>
+{% endblock %}

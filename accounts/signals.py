@@ -2,8 +2,10 @@ from rest_framework import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from housing.models import Booking
+from accounts.models import Attachee, Company, Landlord
 from django.contrib.auth import get_user_model
 from notifications.models import Notification
+from opportunities.models import AttachmentPost
 
 
 User = settings.AUTH_USER_MODEL
@@ -17,9 +19,9 @@ def create_user_profile(sender, instance, created, **kwargs):
         elif instance.role == 'company':
             Company.objects.create(user=instance)
             print("Company profile created for:", instance.username)
-        elif instance.role == 'tenant':
-            Tenant.objects.create(user=instance)
-            print("Tenant profile created for:", instance.username)
+        elif instance.role == 'landlord':
+            Landlord.objects.create(user=instance)
+            print("Landlord profile created for:", instance.username)
 
 @receiver(post_save, sender=Booking)
 def booking_status_notification(sender, instance, created, **kwargs):
@@ -40,10 +42,10 @@ def booking_status_notification(sender, instance, created, **kwargs):
             ) 
 
 @receiver(post_save, sender=Booking)
-def notify_tenant_on_booking(sender, instance, created, **kwargs):
+def notify_landlord_on_booking(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(
-            user=instance.house.tenant,
+            user=instance.house.landlrd,
             message=f"{instance.attachee.username} booked your house: {instance.house.title}",
             url=f"/houses/{instance.id}/",
             notify_type="booking"

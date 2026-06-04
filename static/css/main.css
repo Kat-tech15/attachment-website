@@ -37,7 +37,7 @@ section {
     background: linear-gradient(135deg, #0f172a, #1e293b);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255,255,255,0.08);
-}
+} 
 
 .nav-link {
     position: relative;
@@ -445,7 +445,8 @@ body.dark-mode .feedback-card,
 body.dark-mode .dashboard-card,
 body.dark-mode .dashboard-right,
 body.dark-mode .dashboard-left,
-body.dark-mode .dashboard-list{
+body.dark-mode .dashboard-list,
+body.dark-mode .form-container{
     background: #1e293b;
     color: #e2e8f0;
 }
@@ -1089,3 +1090,4 @@ body.dark-mode .auth-form .helptext {
     background: #7f1d1d;
     color: white;
 }
+

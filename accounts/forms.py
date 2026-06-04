@@ -10,7 +10,7 @@ class CustomUserCreationForm(UserCreationForm):
     ROLE_CHOICES = [ 
         ('attachee', 'Attachee'),
         ('company', 'Company'),
-        ('tenant', 'Tenant'),
+        ('landlord', 'Landlord'),
     ]
     role = forms.ChoiceField(choices=ROLE_CHOICES)
 

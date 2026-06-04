@@ -1,12 +1,12 @@
 from django.db import models
-from accounts.models import Tenant, Attachee
+from accounts.models import Landlord, Attachee
 from phonenumber_field.modelfields import PhoneNumberField
 
 
 
 
 class House(models.Model):
-    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
+    landlord = models.ForeignKey(Landlord, on_delete=models.CASCADE, null=True, blank=True)
     owner_name  = models.CharField(max_length=200)
     phone_number = PhoneNumberField(region='KE')
     location = models.CharField(max_length=200)

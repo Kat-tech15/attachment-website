@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container">
+    <h2>{{ house.owner_name }}'s House</h2>
+    <p><strong>Location:</strong> {{ house.location }}</p>
+    <p><strong>Contact:</strong> {{ house.phone_number }}</p>
+    <hr>
+
+<h3>Available Rooms</h3>
+{% if available_rooms %}
+    <div class="room-grid">
+        {% for room in available_rooms %}
+        <div class="room-card">
+            {% if room.image %}
+                <img src="{{ room.image.url }}" alt="Room Image" class="room-img">
+            {% endif %}
+            <h4>Room {{ room.room_number }}</h4>
+            <p><strong>Type:</strong> {{ room.room_type }}</p>
+            <p><strong>Price:</strong> Ksh {{ room.price }}</p>
+            <p><strong>Status:</strong> 
+                <span class="available">Available</span>
+            </p>
+            <a href="{% url 'book_room' room.id %}" class="btn">Book Now</a>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No rooms available for this house at the moment.</p>
+{% endif %}
+<hr>
+<h3 class="mt-5">Booked Rooms</h3>
+{% if booked_rooms %}
+    <div class="room-grid">
+        {% for room in booked_rooms %}
+        <div class="room-card">
+            {% if room.image %}
+                <img src="{{ room.image.url }}" alt="Room Image" class="room-img">
+            {% endif %}
+            <h4>Room {{ room.room_number }}</h4>
+            <p><strong>Type:</strong> {{ room.room_type }}</p>
+            <p><strong>Price:</strong> Ksh {{ room.price|default:house.rent }}</p>
+            <p><strong>Status:</strong> 
+                <span class="unavailable">Booked</span>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "dashboards/base_dashboard.html" %}
+
+{% block title %}Landlord Dashboard{% endblock %}
+
+{% block dashboard_cards %}
+
+<div class="dashboard-card">
+    <h4>Total Bookings</h4>
+    <p>{{ booking_count|default:0 }}</p>
+</div>
+
+<div class="dashboard-card">
+    <h4>Active Bookings</h4>
+    <p>{{ active_booking_count|default:0 }}</p>
+</div>
+
+<div class="dashboard-card">
+    <h4>Pending Bookings</h4>
+    <p>{{ pending_bookings|default:0 }}</p>
+</div>
+
+<div class="dashboard-card">
+    <h4>Available Houses</h4>
+    <p>{{ house_count|default:0 }}</p>
+</div>
+
+{% endblock %}
+
+{% block dashboard_left %}
+
+<h3 class="dashboard-title">Quick Actions</h3>
+
+<div class="dashboard-actions">
+
+    <a href="{% url 'post_house' %}" class="btn-primary">
+        Post House
+    </a>
+
+    <a href="{% url 'all_houses' %}" class="btn-outline">
+        Browse Houses
+    </a>
+    <a href="{% url 'view_booked_rooms' %}" class="btn-outline">
+        Booked Rooms
+    </a>
+
+    <a href="{% url 'my_houses' %}" class="btn-outline">
+        My Listings
+    </a>
+
+</div>
+
+<hr>
+
+<h3 class="dashboard-title">Recent Bookings</h3>
+
+{% if recent_bookings %}
+<table class="dashboard-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>House</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in recent_bookings %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ booking.house.name|default:"House" }}</td>
+            <td>{{ booking.created_at|date:"M d, Y" }}</td>
+            <td>{{ booking.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No bookings yet.</p>
+{% endif %}
+
+{% endblock %}
+
+
+{% block dashboard_right %}
+
+<h3 class="dashboard-title">Overview</h3>
+
+<ul class="dashboard-list">
+    <li><strong>Total Houses:</strong> {{ house_count|default:0 }}</li>
+    <li><strong>Active Bookings:</strong> {{ active_booking_count|default:0 }}</li>
+    <li><strong>Pending:</strong> {{ pending_bookings|default:0 }}</li>
+</ul>
+
+{% endblock %}

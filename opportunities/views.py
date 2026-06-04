@@ -8,13 +8,11 @@ from .forms import AttachmentPostForm
 from django.core.paginator import Paginator
 from django.db.models import Avg  
 from django.contrib import messages  
-from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseForbidden
 
-# Create your views here.
 @login_required
 def all_attachment_posts(request):
-    if not request.user.has_privilege(['company']):
+    if not request.user.has_privilege(['company', 'attachee']):
         return HttpResponseForbidden()
     
     query = request.GET.get('q')
@@ -43,7 +41,7 @@ def all_attachment_posts(request):
 
     company = getattr(request.user, 'company', None)
     average_rating = company.reviews.aggregate(avg=Avg('rating'))['avg'] if company else None
-    return render(request, 'all_attachment_posts.html', {
+    return render(request, 'company/all_attachment_posts.html', {
         'page_obj': page_obj,
         'query': query,
         'sort': sort,
@@ -55,12 +53,11 @@ def all_attachment_posts(request):
     })
 
 
-#@login_required
 def view_attachments(request):
     if not request.user.has_privilege(['attachee', 'company']):
         return HttpResponseForbidden()
         
-    return render(request, 'view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
+    return render(request, 'company/view_attachments.html', {'attachments': AttachmentPost.objects.all()}) 
 
  
 @login_required
@@ -83,7 +80,9 @@ def post_attachment(request):
     else:
         form = AttachmentPostForm(user=request.user)
 
-    return render(request, 'post_attachment.html', {'form': form})
+    return render(request, 'company/post_attachment.html', {'form': form})
+
+
 @login_required
 def my_attachment_posts(request):
     if not request.user.has_privilege(['company']):
@@ -91,7 +90,7 @@ def my_attachment_posts(request):
 
     my_attachment_posts = AttachmentPost.objects.filter(company__user=request.user)
     
-    return render(request, 'my_attachment_posts.html', {
+    return render(request, 'company/my_attachment_posts.html', {
         'my_attachment_posts': my_attachment_posts
     })
 
@@ -109,7 +108,7 @@ def edit_attachment(request, attachment_id):
     else:
         form = AttachmentPostForm(instance=attachment, user=request.user)
     
-    return render(request, 'edit_attachment.html', {
+    return render(request, 'company/edit_attachment.html', {
         'form': form,
         'attachment': attachment
     })
@@ -123,7 +122,7 @@ def delete_attachment(request, attachment_id):
         messages.success(request, "Attachment deleted successfully.")
         return redirect('company_dashboard')
 
-    return render(request, 'delete_attachment.html', {'attachment': attachment})
+    return render(request, 'company/delete_attachment.html', {'attachment': attachment})
 
 def visited_posts(request):
     if not request.user.has_privilege(['attachee']):
@@ -131,7 +130,7 @@ def visited_posts(request):
     
     attachee = request.user
     visits = ApplicationVisit.objects.filter(attachee=attachee).select_related('attachment_post__company')
-    return render(request, 'visited_posts.html', {'visits': visits})
+    return render(request, 'company/visited_posts.html', {'visits': visits})
 
 def attachee_list(request):
     applications = Attachee.objects.all()

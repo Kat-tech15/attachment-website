@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import CustomUser, Company, Attachee, Tenant, Contact
+from .models import CustomUser, Company, Attachee, Landlord, Contact
 
 
 admin.site.register(CustomUser)
 admin.site.register(Company)
-admin.site.register(Tenant)
+admin.site.register(Landlord)
 admin.site.register(Attachee)
 admin.site.register(Contact)

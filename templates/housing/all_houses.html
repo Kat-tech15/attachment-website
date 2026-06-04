@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="house-container">
+    <h3>Available Houses</h3>
+    <div class="house-grid">
+        {% for house in houses %}
+        <div class="house-card">
+            <div class="house-info"><img src="{{ house.image.url }}" width="100%"></div>
+            <div class="house-title">{{ house.owner_name }}'s House</div>
+            <div class="house-info">📍 {{ house.location }}</div>
+            <div class="house-info">☎️ {{ house.phone_number }}</div>
+            <div class="house-info">💰 Ksh {{ house.rent }}</div>
+            <div class="house-link">
+                <a href="{% url 'house_detail' house.id %}" class="btn">View Rooms</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No houses available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

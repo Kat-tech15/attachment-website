@@ -21,8 +21,8 @@ def mark_as_read(request, notification_id):
 def company_dashboard(request):
     return render(request, 'dashboards/company_dashboard.html')
 @login_required
-def tenants_dashboard(request):
-    return render(request, 'dashboards/tenants_dashboard.html')
+def landlords_dashboard(request):
+    return render(request, 'dashboards/landlords_dashboard.html')
 
 def submit_feedback(request):
     if request.method == 'POST':
