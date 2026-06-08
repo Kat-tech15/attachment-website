@@ -14,7 +14,9 @@
 
         {% if messages %}
             {% for message in messages %}
-                <div class="alert-message alert-{{ message.tags }}">
+                {# FIX #7: was alert-{{ message.tags }} which produces compound class names  #}
+                {# like "alert-success housing" — should be alert-{{ message.level_tag }}    #}
+                <div class="alert-message alert-{{ message.level_tag }}">
                     {{ message }}
                 </div>
             {% endfor %}
@@ -33,7 +35,7 @@
                     <div class="attachment-meta">
                         <p><strong>📍 Location:</strong> {{ rental.location }}</p>
                         <p><strong>📝 Description:</strong> {{ rental.description }}</p>
-                        <p><strong>💰 Rent:</strong> {{ rental.rent }}</p>
+                        <p><strong>💰 Rent:</strong> Ksh {{ rental.rent }}</p>
                     </div>
 
                     {% if rental.photo %}

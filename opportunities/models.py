@@ -9,7 +9,7 @@ class AttachmentPost(models.Model):
     description = models.CharField(max_length=255)
     slots = models.IntegerField()
     application_link = models.URLField(help_text="Link to the application page.")
-    application_deadline = models.DateField(auto_created=True)
+    application_deadline = models.DateField(null=True, blank=True)
     post_type = models.CharField(max_length=30, choices=[('attachment', 'Attachment'),('internship','Internship')])
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -27,4 +27,4 @@ class ApplicationVisit(models.Model):
         unique_together = ('attachee', 'attachment_post')
 
     def __str__(self):
-        return f"{self.full_name} visited {self.accounts.company.name}"
+        return f"{self.attachee} visited {self.attachment_post}"

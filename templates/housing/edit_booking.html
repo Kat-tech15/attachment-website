@@ -34,11 +34,15 @@
                 <button type="submit" class="auth-btn">
                     Update Booking
                 </button>
-
-                <a href="{% url redirect_url %}"
-                   class="auth-btn-outline">
-                    Cancel
-                </a>
+                {% if redirect_url %}
+                    <a href="{{ redirect_url }}" class="auth-btn-outline">
+                        Cancel
+                    </a>
+                {% else %}
+                    <a href="{% url 'landlord_house_bookings' %}" class="auth-btn-outline">
+                        Cancel
+                    </a>
+                {% endif %}
 
             </div>
 

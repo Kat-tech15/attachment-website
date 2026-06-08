@@ -20,6 +20,9 @@
     {% endfor %}
 
     <button type="submit" class="auth-btn">Register</button>
-    <p>Already have an accout? <a href="{% url 'login'%}">Login</a></p>
+
+    <p style="text-align:center; margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
+        Already have an account? <a href="{% url 'login' %}">Login</a>
+    </p>
 </form>
 {% endblock %}

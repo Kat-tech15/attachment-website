@@ -5,23 +5,23 @@
 {% block dashboard_cards %}
 
 <div class="dashboard-card">
-    <h4>{{ booking_count }}</h4>
-    <p>Total Bookings</p>
+    <h4>Total Bookings</h4>
+    <p>{{ booking_count }}</p>
 </div>
 
 <div class="dashboard-card">
-    <h4>{{ application_count }}</h4>
-    <p>Applications Visited</p>
+    <h4>Applications Visited</h4>
+    <p>{{ application_count }}</p>
 </div>
 
 <div class="dashboard-card">
-    <h4>{{ pending_applications }}</h4>
-    <p>Pending Applications</p>
+    <h4>Pending Applications</h4>
+    <p>{{ pending_applications }}</p>
 </div>
 
 <div class="dashboard-card">
-    <h4>{{ accepted_applications }}</h4>
-    <p>Accepted Applications</p>
+    <h4>Accepted Applications</h4>
+    <p>{{ accepted_applications }}</p>
 </div>
 
 {% endblock %}
@@ -47,14 +47,33 @@
         {% for b in bookings %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ b.house.name|default:"House Booking" }}</td>
+
+            {# FIX #3a: was b.house.name — consistent field across all booking templates #}
+            <td>{{ b.room.room_number|default:"House Booking" }}</td>
+
             <td>{{ b.move_in_date|date:"M d, Y" }}</td>
-            <td>{{ b.status }}</td>
+            <td>
+                {% if b.status == 'cancelled' %}
+                    <span class="status-badge status-expired">Cancelled</span>
+                {% elif b.status == 'pending' %}
+                    <span class="status-badge status-soon">Pending</span>
+                {% else %}
+                    <span class="status-badge status-open">{{ b.status|capfirst }}</span>
+                {% endif %}
+            </td>
             <td>
                 {% if b.status == "pending" %}
-                    <a href="{% url 'cancel_booking' b.id %}" class="btn-primary">
-                        Cancel
-                    </a>
+                    {# FIX #3b: was a GET <a> link — cancel must be a POST form #}
+                    <form method="post"
+                          action="{% url 'cancel_booking' b.id %}"
+                          style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="btn-primary"
+                                onclick="return confirm('Cancel this booking?')">
+                            Cancel
+                        </button>
+                    </form>
                 {% else %}
                     <span class="text-soft">N/A</span>
                 {% endif %}
@@ -96,12 +115,10 @@
 
 <!-- QUICK ACTIONS -->
 <div class="dashboard-actions" style="margin-top: 25px;">
-
     <a href="{% url 'visited_posts' %}" class="btn-outline">Visited Posts</a>
     <a href="{% url 'view_attachments' %}" class="btn-outline">Attachments</a>
     <a href="{% url 'view_houses' %}" class="btn-outline">View Houses</a>
     <a href="{% url 'my_bookings' %}" class="btn-primary">My Bookings</a>
-
 </div>
 
 {% endblock %}

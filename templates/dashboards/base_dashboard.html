@@ -14,7 +14,7 @@
         <nav class="sidebar-nav">
 
             <a href="{% url 'dashboard_router' %}"
-            class="sidebar-link {% if request.resolver_match.url_name == 'dashboard_router' %}active-link{% endif %}">
+               class="sidebar-link {% if request.resolver_match.url_name == 'dashboard_router' %}active-link{% endif %}">
                 <i class="fas fa-chart-line"></i>
                 <span>Overview</span>
             </a>
@@ -22,19 +22,19 @@
             {% if request.user.role == 'attachee' %}
 
                 <a href="{% url 'view_attachments' %}"
-                class="sidebar-link {% if request.resolver_match.url_name == 'view_attachments' %}active-link{% endif %}">
+                   class="sidebar-link {% if request.resolver_match.url_name == 'view_attachments' %}active-link{% endif %}">
                     <i class="fas fa-briefcase"></i>
                     <span>Attachments</span>
                 </a>
 
                 <a href="{% url 'view_houses' %}"
-                class="sidebar-link {% if request.resolver_match.url_name == 'view_houses' %}active-link{% endif %}">
+                   class="sidebar-link {% if request.resolver_match.url_name == 'view_houses' %}active-link{% endif %}">
                     <i class="fas fa-house"></i>
                     <span>Houses</span>
                 </a>
 
                 <a href="{% url 'my_bookings' %}"
-                class="sidebar-link {% if request.resolver_match.url_name == 'my_bookings' %}active-link{% endif %}">
+                   class="sidebar-link {% if request.resolver_match.url_name == 'my_bookings' %}active-link{% endif %}">
                     <i class="fas fa-calendar-check"></i>
                     <span>Bookings</span>
                 </a>
@@ -42,33 +42,54 @@
             {% elif request.user.role == 'company' %}
 
                 <a href="{% url 'post_attachment' %}"
-                class="sidebar-link {% if request.resolver_match.url_name == 'post_attachment' %}active-link{% endif %}">
+                   class="sidebar-link {% if request.resolver_match.url_name == 'post_attachment' %}active-link{% endif %}">
                     <i class="fas fa-plus-circle"></i>
                     <span>Post Attachment</span>
                 </a>
 
                 <a href="{% url 'my_attachment_posts' %}"
-                class="sidebar-link {% if request.resolver_match.url_name == 'my_attachment_posts' %}active-link{% endif %}">
+                   class="sidebar-link {% if request.resolver_match.url_name == 'my_attachment_posts' %}active-link{% endif %}">
                     <i class="fas fa-folder-open"></i>
                     <span>My Posts</span>
                 </a>
 
             {% elif request.user.role == 'landlord' %}
 
+                {# FIX #9: landlord sidebar was missing 3 nav links that the dashboard    #}
+                {# template uses in Quick Actions — pages were completely unreachable       #}
+                {# from the sidebar. Added: Post House, My Houses, Booked Rooms.           #}
+
+                <a href="{% url 'post_house' %}"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'post_house' %}active-link{% endif %}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post House</span>
+                </a>
+
+                <a href="{% url 'my_houses' %}"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'my_houses' %}active-link{% endif %}">
+                    <i class="fas fa-home"></i>
+                    <span>My Houses</span>
+                </a>
+
+                <a href="{% url 'view_booked_rooms' %}"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'view_booked_rooms' %}active-link{% endif %}">
+                    <i class="fas fa-door-open"></i>
+                    <span>Booked Rooms</span>
+                </a>
+
                 <a href="{% url 'all_houses' %}"
-                class="sidebar-link {% if request.resolver_match.url_name == 'all_houses' %}active-link{% endif %}">
+                   class="sidebar-link {% if request.resolver_match.url_name == 'all_houses' %}active-link{% endif %}">
                     <i class="fas fa-search"></i>
                     <span>Browse Houses</span>
                 </a>
 
                 <a href="{% url 'landlord_house_bookings' %}"
-                class="sidebar-link {% if request.resolver_match.url_name == 'landlord_house_bookings' %}active-link{% endif %}">
+                   class="sidebar-link {% if request.resolver_match.url_name == 'landlord_house_bookings' %}active-link{% endif %}">
                     <i class="fas fa-clipboard-list"></i>
                     <span>Bookings</span>
                 </a>
 
             {% endif %}
-
 
             <a href="{% url 'logout' %}" class="sidebar-link logout">
                 <i class="fas fa-right-from-bracket"></i>
@@ -85,10 +106,8 @@
         {% block dashboard_body %}
 
         <div class="dashboard-grid">
-
             {% block dashboard_cards %}
             {% endblock %}
-
         </div>
 
         <div class="dashboard-content">

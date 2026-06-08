@@ -24,7 +24,8 @@
                         <th>Location</th>
                         <th>Price</th>
                         <th>Move-In</th>
-                        <th>Booked On</th>
+                        {# FIX #4: was "Booked On" but rendered move_out_date — corrected label #}
+                        <th>Move-Out</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -49,7 +50,7 @@
                                 </td>
 
                                 <td>
-                                    {{ booking.house_post.rent }}
+                                    Ksh {{ booking.house_post.rent }}
                                 </td>
 
                                 <td>
@@ -78,7 +79,7 @@
 
                                         <a href="{% url 'edit_booking' booking.id %}"
                                            class="table-link">
-                                            Edit
+                                            ✏️ Edit
                                         </a>
 
                                         <form method="post"

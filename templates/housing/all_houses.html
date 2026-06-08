@@ -18,8 +18,13 @@
 
                 <div class="attachment-opportunity-card">
 
+                    {# FIX #6: was unconditional house.image.url — crashes if image is blank/null #}
                     <div class="house-image">
-                        <img src="{{ house.image.url }}" alt="House Image">
+                        {% if house.image %}
+                            <img src="{{ house.image.url }}" alt="House Image">
+                        {% else %}
+                            <img src="{% static 'images/house-placeholder.jpg' %}" alt="House">
+                        {% endif %}
                     </div>
 
                     <div class="attachment-title">

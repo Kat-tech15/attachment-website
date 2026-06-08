@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.utils import timezone
 from .models import House, Room, Booking
-from accounts.models import CustomUser, Landlord
+from accounts.models import CustomUser, Landlord, Attachee
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -28,7 +28,7 @@ def post_house(request):
             house.landlord = landlord
             house.save()
             messages.success(request, "House posted successfully!", extra_tags="post_house")
-            return redirect('my_houses')
+            return redirect('landlords_dashboard')
 
     else:
         form = HouseForm()
@@ -193,7 +193,7 @@ def delete_past_bookings(request):
 
 @login_required
 def my_bookings(request):
-    if not request.user.has_privilege(['attachee', 'landlord']) and not request.user.is_superuser:
+    if not request.user.has_privilege(['attachee', 'landlord']):
         return HttpResponseForbidden()
     
     user = request.user
@@ -266,44 +266,46 @@ def create_room(sender, instance, created, **kwargs):
 
 @login_required
 def book_room(request, room_id):
-    if not request.user.has_privilege(['landlord','attachee']):
-        return HttpResponseForbidden()
-    
-    
 
     room = get_object_or_404(Room, id=room_id)
     house = room.house
 
     if room.is_booked:
-        messages.warning(request, "Sorry, this room is already booked.")
+        messages.warning(
+            request,
+            "Sorry, this room is already booked."
+        )
         return redirect('all_houses')
 
-    
-    attachee = None
-    full_name = "Admin"
-    phone_number = "N/A"
-
-    
-    if request.user.has_privilege(['attachee']) and not request.user.is_superuser:
+    try:
         attachee = request.user.attachee
-        full_name = attachee.full_name
-        phone_number = attachee.phone_number
-       
+
+    except Attachee.DoesNotExist:
+        messages.error(
+            request,
+            "Only registered attachees can book rooms."
+        )
+        return redirect('all_houses')
 
     booking = Booking.objects.create(
         attachee=attachee,
-        house_post=room.house,
+        house_post=house,
         room=room,
-        full_name=full_name,
-        phone_number=phone_number,
+        full_name=attachee.full_name,
+        phone_number=attachee.phone_number,
         move_in_date=timezone.now().date(),
     )
+
     room.is_booked = True
     room.save()
 
-    messages.success(request, f"Room{room.room_number} booked successfully!", extra_tags="book_room")
+    messages.success(
+        request,
+        f"Room {room.room_number} booked successfully!",
+        extra_tags="book_room"
+    )
 
-    return redirect('house_detail', house_id=house.id)
+    return redirect('attachee_dashboard', house_id=house.id)
 
 def house_detail(request, house_id):
     house = get_object_or_404(House, id=house_id)

@@ -21,7 +21,7 @@ def all_attachment_posts(request):
     attachments = AttachmentPost.objects.all()
 
     if query:
-        attachments = attachments.filter(email__icontains=query) | attachments.filter(slots_icontains=query)
+        attachments = attachments.filter(email__icontains=query) | attachments.filter(slots__icontains=query)
 
     if sort == 'deadline':
         attachments = attachments.order_by('deadline')

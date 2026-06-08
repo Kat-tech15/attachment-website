@@ -28,26 +28,6 @@
 
 {% block dashboard_left %}
 
-<h3 class="dashboard-title">Quick Actions</h3>
-
-<div class="dashboard-actions">
-
-    <a href="{% url 'post_house' %}" class="btn-primary">
-        Post House
-    </a>
-
-    <a href="{% url 'all_houses' %}" class="btn-outline">
-        Browse Houses
-    </a>
-    <a href="{% url 'view_booked_rooms' %}" class="btn-outline">
-        Booked Rooms
-    </a>
-
-    <a href="{% url 'my_houses' %}" class="btn-outline">
-        My Listings
-    </a>
-
-</div>
 
 <hr>
 
@@ -67,7 +47,7 @@
         {% for booking in recent_bookings %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ booking.house.name|default:"House" }}</td>
+            <td>{{ booking.house_post.owner_name|default:"House" }}</td>
             <td>{{ booking.created_at|date:"M d, Y" }}</td>
             <td>{{ booking.status }}</td>
         </tr>

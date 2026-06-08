@@ -22,9 +22,12 @@
         {% endif %}
 
         <div class="delete-warning">
+            {# FIX #10: was house.title which doesn't exist on this model.              #}
+            {# Other templates (all_houses, my_houses) use owner_name and location.     #}
             <p>
                 Are you sure you want to delete
-                <strong>{{ house.title }}</strong>?
+                <strong>{{ house.owner_name }}'s house</strong>
+                at <strong>{{ house.location }}</strong>?
             </p>
         </div>
 

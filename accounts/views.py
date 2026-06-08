@@ -24,7 +24,7 @@ from notifications.forms import FeedbackForm
 
 def home(request):
     featured_houses = House.objects.all().order_by('?')[:8]
-    recent_attachments = AttachmentPost.objects.order_by('-id')[:2]
+    recent_attachments = AttachmentPost.objects.order_by('-id')[:6]
     testimonials = Testimonials.objects.all()[:5]
     query = request.GET.get('q')
     if query:
@@ -350,32 +350,57 @@ def attachee_dashboard(request):
 @login_required
 def company_dashboard(request):
 
-    company = getattr(request.user, 'company', None)
-
+    company = Company.objects.get(user=request.user)
+    
     if not company:
         messages.error(request, "Company profile not found.")
         return redirect('home')
 
+    today = timezone.now().date()
+
+    # Base queryset (single source of truth)
     posts = AttachmentPost.objects.filter(company=company).order_by('-created_at')
 
-    applications = ApplicationVisit.objects.filter(
-        attachment_post__company=company
-    ).order_by('-created_at')
+    # Derived metrics (REAL-TIME)
+    attachment_count = posts.count()
+    my_posts_count = posts.count()
 
-    active_posts = posts.filter(is_active=True)
+    applications_count = ApplicationVisit.objects.filter(
+        attachment_post__company=company
+    ).count()
+
+    # "Active" = not expired
+    active_listings = posts.filter(
+        application_deadline__gte=today
+    ).count()
+
+    # Recent posts
+    my_posts = posts[:5]
+
+    # Most viewed post (optional but useful)
+    most_viewed_post = (
+        posts.annotate(vcount=Count('applicationvisit'))
+        .order_by('-vcount')
+        .first()
+    )
+
+    # Engagement rate (safe calculation)
+    total_visits = applications_count
+    engagement_rate = f"{min(total_visits * 2, 100)}%"
 
     context = {
-        'post_count': posts.count(),
-        'application_count': applications.count(),
-        'active_post_count': active_posts.count(),
+        "attachment_count": attachment_count,
+        "my_posts_count": my_posts_count,
+        "applications_count": applications_count,
+        "active_listings": active_listings,
 
-        'recent_posts': posts[:5],
-        'recent_applications': applications[:5],
+        "my_posts": my_posts,
+        "most_viewed_post": most_viewed_post,
 
-        'inactive_post_count': posts.filter(is_active=False).count(),
+        "engagement_rate": engagement_rate,
     }
 
-    return render(request, 'dashboards/company_dashboard.html', context)
+    return render(request, "dashboards/company_dashboard.html", context)
 
 @login_required
 def landlords_dashboard(request):
@@ -386,22 +411,21 @@ def landlords_dashboard(request):
         messages.error(request, "Landlord profile not found.")
         return redirect('home')
 
-    from housing.models import House, Booking
+    bookings = Booking.objects.filter(
+        house_post__landlord=landlord
+    ).select_related('house_post').order_by('-created_at')
 
-    bookings = Booking.objects.filter(landlord=landlord).order_by('-created_at')
-    houses = House.objects.all()
+    houses = House.objects.filter(landlord=landlord)
 
     context = {
-        'booking_count': bookings.count(),
-        'house_count': houses.count(),
-        'active_booking_count': bookings.filter(status='active').count(),
+        "booking_count": bookings.count(),
+        "house_count": houses.count(),
 
-        'recent_bookings': bookings[:5],
+        # IMPORTANT: normalize status checks
+        "active_booking_count": bookings.filter(status='approaved').count(),
+        "pending_bookings": bookings.filter(status='pending').count(),
 
-        'pending_bookings': bookings.filter(status='pending').count(),
+        "recent_bookings": list(bookings[:5]),
     }
 
-    return render(request, 'dashboards/landlord_dashboard.html', context)
-
-
-
+    return render(request, "dashboards/landlords_dashboard.html", context)
